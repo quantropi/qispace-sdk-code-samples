@@ -1,0 +1,653 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D3130912891B49B00F75076 /* libqeep-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3130902891B49B00F75076 /* libqeep-ios.a */; };
+		1D3130932891B4FC00F75076 /* QiSpace_Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D3130922891B4FC00F75076 /* QiSpace_Info.swift */; };
+		37159BD02847B9880077C39C /* QeepDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37159BCF2847B9880077C39C /* QeepDemo.swift */; };
+		37159BD22847B9910077C39C /* SequrDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37159BD12847B9910077C39C /* SequrDemo.swift */; };
+		37159BD42847B9AC0077C39C /* MasqDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37159BD32847B9AC0077C39C /* MasqDemo.swift */; };
+		3732B6E7288EEFEE005213F5 /* TODO.md in Resources */ = {isa = PBXBuildFile; fileRef = 3732B6E6288EEFEE005213F5 /* TODO.md */; };
+		3743A5062846A8A1009E7EC2 /* qeepSwiftWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3743A5052846A8A1009E7EC2 /* qeepSwiftWrapper.swift */; };
+		3743A5082846AF37009E7EC2 /* sequrSwiftWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3743A5072846AF36009E7EC2 /* sequrSwiftWrapper.swift */; };
+		37D79D84284FF3CB00077D6A /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D79D83284FF3CA00077D6A /* LandingView.swift */; };
+		37D9A68128495DB000C80F6C /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 37D9A68028495DAF00C80F6C /* .gitignore */; };
+		37EBE56A289190F600D82391 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 37EBE569289190F600D82391 /* README.md */; };
+		CFB7C4B026AF1282002AF496 /* QiSpaceiOSDemoAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB7C4AF26AF1282002AF496 /* QiSpaceiOSDemoAppApp.swift */; };
+		CFB7C4B426AF1283002AF496 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFB7C4B326AF1283002AF496 /* Assets.xcassets */; };
+		CFB7C4B726AF1283002AF496 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFB7C4B626AF1283002AF496 /* Preview Assets.xcassets */; };
+		CFB7C4C226AF1283002AF496 /* QiSpaceiOSDemoAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB7C4C126AF1283002AF496 /* QiSpaceiOSDemoAppTests.swift */; };
+		CFB7C4CD26AF1283002AF496 /* QiSpaceiOSDemoAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB7C4CC26AF1283002AF496 /* QiSpaceiOSDemoAppUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CFB7C4BE26AF1283002AF496 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CFB7C4A426AF1282002AF496 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFB7C4AB26AF1282002AF496;
+			remoteInfo = QEEPiOSDemoApp;
+		};
+		CFB7C4C926AF1283002AF496 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CFB7C4A426AF1282002AF496 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFB7C4AB26AF1282002AF496;
+			remoteInfo = QEEPiOSDemoApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1D31308C2891B49B00F75076 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
+		1D31308D2891B49B00F75076 /* qispace_pqrnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qispace_pqrnd.h; sourceTree = "<group>"; };
+		1D31308E2891B49B00F75076 /* qispace_qeep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qispace_qeep.h; sourceTree = "<group>"; };
+		1D31308F2891B49B00F75076 /* qispace_sequr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qispace_sequr.h; sourceTree = "<group>"; };
+		1D3130902891B49B00F75076 /* libqeep-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libqeep-ios.a"; sourceTree = "<group>"; };
+		1D3130922891B4FC00F75076 /* QiSpace_Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QiSpace_Info.swift; sourceTree = "<group>"; };
+		37159BCF2847B9880077C39C /* QeepDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QeepDemo.swift; sourceTree = "<group>"; };
+		37159BD12847B9910077C39C /* SequrDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequrDemo.swift; sourceTree = "<group>"; };
+		37159BD32847B9AC0077C39C /* MasqDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasqDemo.swift; sourceTree = "<group>"; };
+		3732B6E6288EEFEE005213F5 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		3743A5052846A8A1009E7EC2 /* qeepSwiftWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = qeepSwiftWrapper.swift; sourceTree = "<group>"; };
+		3743A5072846AF36009E7EC2 /* sequrSwiftWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sequrSwiftWrapper.swift; sourceTree = "<group>"; };
+		37D79D83284FF3CA00077D6A /* LandingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
+		37D9A68028495DAF00C80F6C /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		37EBE56228918FA400D82391 /* QiSpaceiOSDemoApp-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "QiSpaceiOSDemoApp-Bridging-Header.h"; path = "../../../../Desktop/QiSpace_SDK_Demos copy/Swift/QiSpace_SDK_Lib/QiSpaceiOSDemoApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		37EBE569289190F600D82391 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		CFB7C4AC26AF1282002AF496 /* QiSpaceiOSDemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QiSpaceiOSDemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFB7C4AF26AF1282002AF496 /* QiSpaceiOSDemoAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiSpaceiOSDemoAppApp.swift; sourceTree = "<group>"; };
+		CFB7C4B326AF1283002AF496 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CFB7C4B626AF1283002AF496 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		CFB7C4B826AF1283002AF496 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CFB7C4BD26AF1283002AF496 /* QiSpaceiOSDemoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QiSpaceiOSDemoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFB7C4C126AF1283002AF496 /* QiSpaceiOSDemoAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiSpaceiOSDemoAppTests.swift; sourceTree = "<group>"; };
+		CFB7C4C326AF1283002AF496 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CFB7C4C826AF1283002AF496 /* QiSpaceiOSDemoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QiSpaceiOSDemoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFB7C4CC26AF1283002AF496 /* QiSpaceiOSDemoAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiSpaceiOSDemoAppUITests.swift; sourceTree = "<group>"; };
+		CFB7C4CE26AF1283002AF496 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CFB7C4A926AF1282002AF496 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D3130912891B49B00F75076 /* libqeep-ios.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFB7C4BA26AF1283002AF496 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFB7C4C526AF1283002AF496 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3732B6DE288EEE6B005213F5 /* QiSpace_SDK_Lib */ = {
+			isa = PBXGroup;
+			children = (
+				1D31308C2891B49B00F75076 /* error.h */,
+				1D3130902891B49B00F75076 /* libqeep-ios.a */,
+				1D31308D2891B49B00F75076 /* qispace_pqrnd.h */,
+				1D31308E2891B49B00F75076 /* qispace_qeep.h */,
+				1D31308F2891B49B00F75076 /* qispace_sequr.h */,
+				37EBE56228918FA400D82391 /* QiSpaceiOSDemoApp-Bridging-Header.h */,
+				3732B6E6288EEFEE005213F5 /* TODO.md */,
+			);
+			path = QiSpace_SDK_Lib;
+			sourceTree = "<group>";
+		};
+		CFB7C4A326AF1282002AF496 = {
+			isa = PBXGroup;
+			children = (
+				37EBE569289190F600D82391 /* README.md */,
+				3732B6DE288EEE6B005213F5 /* QiSpace_SDK_Lib */,
+				37D9A68028495DAF00C80F6C /* .gitignore */,
+				CFB7C4AE26AF1282002AF496 /* QiSpaceiOSDemoApp */,
+				CFB7C4C026AF1283002AF496 /* QiSpaceiOSDemoAppTests */,
+				CFB7C4CB26AF1283002AF496 /* QiSpaceiOSDemoAppUITests */,
+				CFB7C4AD26AF1282002AF496 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CFB7C4AD26AF1282002AF496 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CFB7C4AC26AF1282002AF496 /* QiSpaceiOSDemoApp.app */,
+				CFB7C4BD26AF1283002AF496 /* QiSpaceiOSDemoAppTests.xctest */,
+				CFB7C4C826AF1283002AF496 /* QiSpaceiOSDemoAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CFB7C4AE26AF1282002AF496 /* QiSpaceiOSDemoApp */ = {
+			isa = PBXGroup;
+			children = (
+				1D3130922891B4FC00F75076 /* QiSpace_Info.swift */,
+				37159BD12847B9910077C39C /* SequrDemo.swift */,
+				37159BCF2847B9880077C39C /* QeepDemo.swift */,
+				CFB7C4AF26AF1282002AF496 /* QiSpaceiOSDemoAppApp.swift */,
+				CFB7C4B326AF1283002AF496 /* Assets.xcassets */,
+				CFB7C4B826AF1283002AF496 /* Info.plist */,
+				CFB7C4B526AF1283002AF496 /* Preview Content */,
+				3743A5052846A8A1009E7EC2 /* qeepSwiftWrapper.swift */,
+				3743A5072846AF36009E7EC2 /* sequrSwiftWrapper.swift */,
+				37D79D83284FF3CA00077D6A /* LandingView.swift */,
+				37159BD32847B9AC0077C39C /* MasqDemo.swift */,
+			);
+			path = QiSpaceiOSDemoApp;
+			sourceTree = "<group>";
+		};
+		CFB7C4B526AF1283002AF496 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				CFB7C4B626AF1283002AF496 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CFB7C4C026AF1283002AF496 /* QiSpaceiOSDemoAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				CFB7C4C126AF1283002AF496 /* QiSpaceiOSDemoAppTests.swift */,
+				CFB7C4C326AF1283002AF496 /* Info.plist */,
+			);
+			path = QiSpaceiOSDemoAppTests;
+			sourceTree = "<group>";
+		};
+		CFB7C4CB26AF1283002AF496 /* QiSpaceiOSDemoAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				CFB7C4CC26AF1283002AF496 /* QiSpaceiOSDemoAppUITests.swift */,
+				CFB7C4CE26AF1283002AF496 /* Info.plist */,
+			);
+			path = QiSpaceiOSDemoAppUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CFB7C4AB26AF1282002AF496 /* QiSpaceiOSDemoApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CFB7C4D126AF1283002AF496 /* Build configuration list for PBXNativeTarget "QiSpaceiOSDemoApp" */;
+			buildPhases = (
+				CFB7C4A826AF1282002AF496 /* Sources */,
+				CFB7C4A926AF1282002AF496 /* Frameworks */,
+				CFB7C4AA26AF1282002AF496 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QiSpaceiOSDemoApp;
+			productName = QEEPiOSDemoApp;
+			productReference = CFB7C4AC26AF1282002AF496 /* QiSpaceiOSDemoApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CFB7C4BC26AF1283002AF496 /* QiSpaceiOSDemoAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CFB7C4D426AF1283002AF496 /* Build configuration list for PBXNativeTarget "QiSpaceiOSDemoAppTests" */;
+			buildPhases = (
+				CFB7C4B926AF1283002AF496 /* Sources */,
+				CFB7C4BA26AF1283002AF496 /* Frameworks */,
+				CFB7C4BB26AF1283002AF496 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CFB7C4BF26AF1283002AF496 /* PBXTargetDependency */,
+			);
+			name = QiSpaceiOSDemoAppTests;
+			productName = QEEPiOSDemoAppTests;
+			productReference = CFB7C4BD26AF1283002AF496 /* QiSpaceiOSDemoAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CFB7C4C726AF1283002AF496 /* QiSpaceiOSDemoAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CFB7C4D726AF1283002AF496 /* Build configuration list for PBXNativeTarget "QiSpaceiOSDemoAppUITests" */;
+			buildPhases = (
+				CFB7C4C426AF1283002AF496 /* Sources */,
+				CFB7C4C526AF1283002AF496 /* Frameworks */,
+				CFB7C4C626AF1283002AF496 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CFB7C4CA26AF1283002AF496 /* PBXTargetDependency */,
+			);
+			name = QiSpaceiOSDemoAppUITests;
+			productName = QEEPiOSDemoAppUITests;
+			productReference = CFB7C4C826AF1283002AF496 /* QiSpaceiOSDemoAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CFB7C4A426AF1282002AF496 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					CFB7C4AB26AF1282002AF496 = {
+						CreatedOnToolsVersion = 12.5.1;
+						LastSwiftMigration = 1250;
+					};
+					CFB7C4BC26AF1283002AF496 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = CFB7C4AB26AF1282002AF496;
+					};
+					CFB7C4C726AF1283002AF496 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = CFB7C4AB26AF1282002AF496;
+					};
+				};
+			};
+			buildConfigurationList = CFB7C4A726AF1282002AF496 /* Build configuration list for PBXProject "QiSpaceiOSDemoApp" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CFB7C4A326AF1282002AF496;
+			productRefGroup = CFB7C4AD26AF1282002AF496 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CFB7C4AB26AF1282002AF496 /* QiSpaceiOSDemoApp */,
+				CFB7C4BC26AF1283002AF496 /* QiSpaceiOSDemoAppTests */,
+				CFB7C4C726AF1283002AF496 /* QiSpaceiOSDemoAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CFB7C4AA26AF1282002AF496 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3732B6E7288EEFEE005213F5 /* TODO.md in Resources */,
+				CFB7C4B726AF1283002AF496 /* Preview Assets.xcassets in Resources */,
+				37EBE56A289190F600D82391 /* README.md in Resources */,
+				37D9A68128495DB000C80F6C /* .gitignore in Resources */,
+				CFB7C4B426AF1283002AF496 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFB7C4BB26AF1283002AF496 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFB7C4C626AF1283002AF496 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CFB7C4A826AF1282002AF496 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CFB7C4B026AF1282002AF496 /* QiSpaceiOSDemoAppApp.swift in Sources */,
+				3743A5082846AF37009E7EC2 /* sequrSwiftWrapper.swift in Sources */,
+				37159BD02847B9880077C39C /* QeepDemo.swift in Sources */,
+				3743A5062846A8A1009E7EC2 /* qeepSwiftWrapper.swift in Sources */,
+				37159BD42847B9AC0077C39C /* MasqDemo.swift in Sources */,
+				37D79D84284FF3CB00077D6A /* LandingView.swift in Sources */,
+				1D3130932891B4FC00F75076 /* QiSpace_Info.swift in Sources */,
+				37159BD22847B9910077C39C /* SequrDemo.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFB7C4B926AF1283002AF496 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CFB7C4C226AF1283002AF496 /* QiSpaceiOSDemoAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFB7C4C426AF1283002AF496 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CFB7C4CD26AF1283002AF496 /* QiSpaceiOSDemoAppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CFB7C4BF26AF1283002AF496 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CFB7C4AB26AF1282002AF496 /* QiSpaceiOSDemoApp */;
+			targetProxy = CFB7C4BE26AF1283002AF496 /* PBXContainerItemProxy */;
+		};
+		CFB7C4CA26AF1283002AF496 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CFB7C4AB26AF1282002AF496 /* QiSpaceiOSDemoApp */;
+			targetProxy = CFB7C4C926AF1283002AF496 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		CFB7C4CF26AF1283002AF496 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CFB7C4D026AF1283002AF496 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CFB7C4D226AF1283002AF496 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"QiSpaceiOSDemoApp/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = QiSpaceiOSDemoApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/QiSpace_SDK_Lib",
+					"$(PROJECT_DIR)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.quantropi.QiSpaceiOSDemoApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "QiSpace_SDK_Lib/QiSpaceiOSDemoApp-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CFB7C4D326AF1283002AF496 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"QiSpaceiOSDemoApp/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = QiSpaceiOSDemoApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/QiSpace_SDK_Lib",
+					"$(PROJECT_DIR)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.quantropi.QiSpaceiOSDemoApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "QiSpace_SDK_Lib/QiSpaceiOSDemoApp-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CFB7C4D526AF1283002AF496 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = QiSpaceiOSDemoAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.quantropi.QiSpaceiOSDemoAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QiSpaceiOSDemoApp.app/QiSpaceiOSDemoApp";
+			};
+			name = Debug;
+		};
+		CFB7C4D626AF1283002AF496 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = QiSpaceiOSDemoAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.quantropi.QiSpaceiOSDemoAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QiSpaceiOSDemoApp.app/QiSpaceiOSDemoApp";
+			};
+			name = Release;
+		};
+		CFB7C4D826AF1283002AF496 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = QiSpaceiOSDemoAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.quantropi.QiSpaceiOSDemoAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = QiSpaceiOSDemoApp;
+			};
+			name = Debug;
+		};
+		CFB7C4D926AF1283002AF496 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = QiSpaceiOSDemoAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.quantropi.QiSpaceiOSDemoAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = QiSpaceiOSDemoApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CFB7C4A726AF1282002AF496 /* Build configuration list for PBXProject "QiSpaceiOSDemoApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFB7C4CF26AF1283002AF496 /* Debug */,
+				CFB7C4D026AF1283002AF496 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CFB7C4D126AF1283002AF496 /* Build configuration list for PBXNativeTarget "QiSpaceiOSDemoApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFB7C4D226AF1283002AF496 /* Debug */,
+				CFB7C4D326AF1283002AF496 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CFB7C4D426AF1283002AF496 /* Build configuration list for PBXNativeTarget "QiSpaceiOSDemoAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFB7C4D526AF1283002AF496 /* Debug */,
+				CFB7C4D626AF1283002AF496 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CFB7C4D726AF1283002AF496 /* Build configuration list for PBXNativeTarget "QiSpaceiOSDemoAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFB7C4D826AF1283002AF496 /* Debug */,
+				CFB7C4D926AF1283002AF496 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CFB7C4A426AF1282002AF496 /* Project object */;
+}

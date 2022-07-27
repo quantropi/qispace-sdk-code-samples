@@ -1,2 +1,3 @@
 .DS_Store
-QiSpaceiOSDemoApp.xcodeproj
+.idea
+.gradle
