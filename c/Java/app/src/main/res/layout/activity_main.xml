@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="321dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="56dp"
+        android:text="QiSpace Demo App - Java"
+        android:textAlignment="center"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_to_sequr"
+        android:layout_width="152dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="120dp"
+        android:text="SEQUR DEMO"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/button_to_qeep"
+        android:layout_width="152dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="56dp"
+        android:text="QEEP DEMO"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_to_sequr" />
+
+    <Button
+        android:id="@+id/button_to_masq"
+        android:layout_width="184dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="129dp"
+        android:text="MASQ DEMO (placeholder)"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.531"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_to_qeep" />
+</androidx.constraintlayout.widget.ConstraintLayout>

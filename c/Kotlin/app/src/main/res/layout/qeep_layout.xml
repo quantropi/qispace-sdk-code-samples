@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".qeepActivity">
+
+    <TextView
+        android:id="@+id/decrypted_message_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="36dp"
+        android:text="Decrypted Message:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_decrypt" />
+
+    <EditText
+        android:id="@+id/message_in"
+        android:layout_width="216dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="135dp"
+        android:layout_marginBottom="88dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Enter message"
+        app:layout_constraintBottom_toTopOf="@+id/encrypt_message_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/button_get_qk"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button_encrypt"
+        android:layout_width="125dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="28dp"
+        android:text="Encrypt"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/message_in"
+        app:layout_constraintTop_toBottomOf="@+id/button_get_qk" />
+
+    <Button
+        android:id="@+id/button_decrypt"
+        android:layout_width="178dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="124dp"
+        android:layout_marginBottom="228dp"
+        android:text="Decode"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/encrypt_message_title"
+        android:layout_width="146dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="172dp"
+        android:text="Encrypted Message:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_get_qk" />
+
+    <TextView
+        android:id="@+id/encrypt_message_result"
+        android:layout_width="186dp"
+        android:layout_height="87dp"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="172dp"
+        android:text="encrypted message"
+        android:textAlignment="center"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/encrypt_message_title"
+        app:layout_constraintTop_toBottomOf="@+id/button_get_qk" />
+
+    <TextView
+        android:id="@+id/decrypted_message_result"
+        android:layout_width="179dp"
+        android:layout_height="82dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="36dp"
+        android:text="decrypted message"
+        android:textAlignment="center"
+        android:textSize="10sp"
+        app:layout_constraintStart_toEndOf="@+id/decrypted_message_title"
+        app:layout_constraintTop_toBottomOf="@+id/button_decrypt" />
+
+    <Button
+        android:id="@+id/button_get_qk"
+        android:layout_width="114dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="68dp"
+        android:text="Get QK"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_qeep_back"
+        android:layout_width="102dp"
+        android:layout_height="62dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginBottom="32dp"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

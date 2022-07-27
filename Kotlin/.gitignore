@@ -1,0 +1,11 @@
+lib
+.DS_Store
+.vscode
+*.o
+*.obj
+*.dylib
+*.dll
+*.a
+app/.cxx
+debug
+local.properties

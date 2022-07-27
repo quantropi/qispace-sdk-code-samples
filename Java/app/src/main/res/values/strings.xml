@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">qispace_sdk_java_demo</string>
+    <string name="decoded_message_text">Decoded message:</string>
+</resources>
