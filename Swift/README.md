@@ -1,48 +1,49 @@
-# Qeep-SDK-Demo-Swift-APP
+# QiSpace-SDK-Demo-Swift-App
+A functionality iOS demo app made using Swift and its standard SwiftUI library to demonstrate the functionality and usage of QiSpace QEEP and SEQUR APIs.
 
-An iOS demo app made using Swift and its standard SwiftUI library to demonstrate the functionality and usage of QiSpace QEEP and SEQUR APIs.
-Note: The app was developed on an emulated iPod touch (7th gen) so UI elements may be inaccurate on devices with different displays. Furthermore, internet access is required to run this app.
+Note: This app was developed on an emulated 7th gen iPod Touch. UI elements may differ on devices with different displays. Internet access is required to run this app.
 
-## **Overview:**
+## **Overview**
 - #### SEQUR: Demonstrates the functionality of SEQUR API and the QiSpace QE REST API
 - #### QEEP: Shows an instance of QEEP API usage and the accompanying QiSpace QK REST API
-- #### MASQ: The MASQ API is currently unsupported on iOS devices and will be coming soon. If urgent access is necessary, contact Quantropi support directly.
+- #### MASQ: Coming soon. The MASQ API is currently unsupported on iOS devices. If urgent access is necessary, contact Quantropi support directly.
 
-Starting on the landing page, the user can then access additonal demo pages that illustrate the SEQUR, QEEP and eventually MASQ APIs via buttons and text boxes. To navigate to another page, the back button may be pressed to return to the landing page.
+On the landing page, a user can access additional demo pages that illustrate the SEQUR, QEEP and MASQ (coming soon) APIs via buttons and text boxes. The back button may be pressed from any page to return to the landing page.
 
-## **Installation and Preparation:**
-1. Download this git repository to a local device
-2. Replace the current placeholder `/QiSpace_SDK_Lib` folder with the `/QiSpace_SDK_Lib` containing QEEP and SEQUR libraries
+## **Installation and Preparation**
+1. Download this git repository to a local device.
+2. Replace the current placeholder `/QiSpace_SDK_Lib` folder with the `/QiSpace_SDK_Lib` containing QEEP and SEQUR libraries.
     * Note: If those libraries and files are given under a folder with a different name, simply copy their contents into the `QiSpace_SDK_Lib` folder. The same libraries and files are compatible for the Swift and Objective C demos
-3. Copy the `QiSpace_Info.swift` file into `/QiSpaceiOSDemoApp` folder
-4. Open and setup XCode and select iPod touch (7th gen) as desired device
-5. Make sure to use Xcode add all files obtained at step 2 and 3 into the demo projects.
+3. Copy the `QiSpace_Info.swift` file into `/QiSpaceiOSDemoApp` folder.
+4. Open and setup XCode and select iPod touch (7th gen) as desired device.
+5. Use XCode to add all files obtained at Steps 2 and 3 into the demo projects.
 
-    * Note: If any files/directories mentioned above are not available, please contact Quantropi support to obtain yours. *
+    * Note: If any files/directories mentioned above are not available, please contact Quantropi support *
 
-## **Getting Started:**
+## **Getting Started**
 1. Open this downloaded repository within XCode
 2. Run the application
 
-## **Core Functionalities of this Demo:**
+## **Core Functionalities**
 ### SEQUR `SwiftDemo`:
 _Assume the API token is already established_
-- SETUP SUBKEY: establish the subscriber key by interfacing with QiSpace REST API and converts the result to operable state
-- GET QE: obtain the Quantum Entropy from QiSpace REST API and unpacks the data to operable byte array
-- GENERATE RANDOM STRING: configure and call Pseudo Quantum RaNdom Data API to generate random string with the QE as seed
-*Note: This demo page only shows an instance of QE decoding, but it can be applied to QK as well
+- SETUP SUBKEY: Establish the subscriber key by interfacing with QiSpace REST API and converts the result to operable state
+- GET QE: Obtain Quantum Entropy from QiSpace REST API and unpacks the data to operable byte array
+- GENERATE RANDOM STRING: Configure and call PQRND API to generate random string with the QE as seed
+
+*Note: This demo page only shows an instance of QE decoding, but it can also be applied to QK *
 
 ### QEEP `QeepDemo`:
-_Assume the sub_key and token are already established_
-- GET QK: retrieve, convert and decode the Quantum Key from QiSpace REST API
-- ENCRYPT: Use QEEP API to encrypt the message with the QK
-- DECRYPT: Use QEEP API to decrypt the encrypted message with the QK
+_Assume the sub_key and token are already established._
+- GET QK: Retrieve, convert, and decode Quantum Key from QiSpace REST API
+- ENCRYPT: Use QEEP API to encrypt the message with QK
+- DECRYPT: Use QEEP API to decrypt the encrypted message with QK
 
 ### MASQ `MasqDemo` (Coming soon):
 
-## **License:**
-See the [LICENSE] (LICENSE) file. Copyright © Quantropi, Inc
+## **License**
+See [LICENSE](LICENSE). Copyright © Quantropi, Inc
 
-For more information regarding the QiSpace APIs or the QEEP/SEQUR/pQrnd APIs, see official Quantropi documentation
+Refer to documentation site for more general information about SEQUR, QEEP, and PQRND APIs as well as QiSpace REST API.
 
 
