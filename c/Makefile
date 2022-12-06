@@ -19,9 +19,6 @@ endif
 all: sequr pqrnd qeep
 
 install_depends:
-# Install json
-git clone https://github.com/nlohmann/json.git
-
 # Install curl
 ifeq ($(PLATFORM_AUTODETECT),linux)
 	sudo apt-get install libcurl4-openssl-dev
@@ -31,6 +28,8 @@ endif
 ifeq ($(PLATFORM_AUTODETECT),osx)
 	brew install curl
 endif
+# Install json
+	git clone https://github.com/nlohmann/json.git
 
 %.$(OBJ_EXT): ./src/%.cpp
 	$(CPP) -std=c++11 $(CC_FLAG) $(CFLAGS) $(DEFINITIONS) $(OBJ_FLAG)$@ $<
