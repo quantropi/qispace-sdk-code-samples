@@ -259,9 +259,11 @@ int main(int argc, char **argv)
         printf("Compare message and decrypted message ...\n");
         if ( ret == 0 ) {
                 printf("Match. Demo exit ! \n");
+                printf("\n--------------------------------------------------------\n\n");
                 return 0;
         } else {
                 printf("No match (ret = %d). Demo exit! \n", ret);
+                printf("\n--------------------------------------------------------\n\n");
                 return 1;
         }
 }

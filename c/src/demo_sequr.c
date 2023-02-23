@@ -153,5 +153,7 @@ int main(int argc, char **argv)
         ret = QSC_close(qsc_handle_dec);
         printf("Done \n");
 
+        printf("\n--------------------------------------------------------\n\n");
+
         return 0;
 }

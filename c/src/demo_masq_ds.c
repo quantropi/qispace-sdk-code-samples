@@ -1,0 +1,199 @@
+/******************************************************************************
+ *
+ * Quantropi CONFIDENTIAL
+ * ----------------------
+ *
+ * This file is proprietary code and subject to the terms and conditions
+ * defined in the file 'LICENSE', which is part of this source code package.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Quantropi Incorporated and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Quantropi Incorporated and its suppliers and
+ * may be covered by Canadian, U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Quantropi Incorporated.
+ *
+ *****************************************************************************/
+
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include "../lib/masq_ds.h"
+#include "../lib/qispace_pqrnd.h"
+
+/* 
+ * This demo displays one example of the MASQ DS API, specifically MPPK level 5, 
+ * to sign a message between two parties(Alice & Bob) 
+ *
+ * In this case, Alice wants to send a secret message to Bob. 
+ * So, Alice begins by generating a public-private keypair.
+ * Alice uses its own private key and generate the signature. 
+ * Alice sends Bob, the public key and the signature. 
+ * Bob then uses Alice's public key to verify the message and signature. 
+ * Thus, both Alice and Bob arrive at the same message.
+ */
+
+unsigned char seed_orig[1024];
+int32_t seed_len = 32;  
+
+
+/* 
+* Initialize/set seed for any random number generator used
+* We recommand to call QiSpace API (i.e. QE) to get seed 
+* if no good quantum safe level entropy source
+*/
+int32_t seed_init()
+{
+    /* here we just use std lib rand to set seed for demo purpose */
+    srand(time(0));
+    for(int j = 0; j < seed_len; j++){
+            seed_orig[j] = rand() & 0xff;
+    }
+    return 1;
+}
+
+/* Customize the random callback function below according to specific needs. 
+ * Otherwise, default random CF is Quantropi 
+ */
+int32_t rand_cf(MASQ_RAND_handle rand_handle, int32_t rand_length,  uint8_t *rand_num){
+    
+    if (rand_num == NULL) return 0;
+    
+    if (rand_handle == NULL) 
+    {
+        for (int i = 0; i < rand_length; i++)
+        {
+            rand_num[i] = rand() & 0xff;
+        }
+    }
+    return 1;
+}
+
+int32_t rand_seed_cf(MASQ_RAND_handle rand_handle, uint8_t *seed, int32_t seed_length)
+{
+    if (seed == NULL) return 0;
+
+    if(rand_handle == NULL){
+        seed = seed_orig;
+    }
+    return 1;
+}
+
+static unsigned char *rand_string(unsigned char *str, size_t size)
+{
+    const unsigned char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJK0123456789";
+    if (size) {
+        --size;
+        for (size_t n = 0; n < size; n++) {
+            int key = rand() % (int) (sizeof charset - 1);
+            str[n] = charset[key];
+        }
+        str[size] = '\0';
+    }
+    return str;
+}
+
+
+void sendPubKey(){
+    printf("\n*Alice sends Bob her public key and signature..*\n");
+}
+
+int main(int argc, const char * argv[]) {
+
+    MASQ_DS_handle *ds_handle_alice, *ds_handle_bob;
+    int32_t len_pk_alice, len_sk_alice, len_signature;
+    unsigned char *pk_alice, *sk_alice, *signature;
+    int len_msg = 1024;
+    unsigned char *msg = malloc(len_msg + 1);
+    if(msg)
+    {
+        /* Generating random message */
+        rand_string(msg, len_msg);
+    }
+
+    /* Initialize random seed */ 
+    seed_init();
+
+    /* Init: Initialize MASQ DS handles for Alice and Bob */ 
+    printf("\nInitialize MASQ DS handle for Alice and Bob...\n");
+
+    /* Uses default Quantropi random callback function */
+    ds_handle_bob = MASQ_DS_init(MPPKL5, NULL, NULL, NULL); 
+
+    /* Uses provided random callback function */
+    //ds_handle_bob = MASQ_DS_init(MPPKL5, rand_cf, rand_seed_cf, NULL); 
+    
+    if(ds_handle_bob == NULL) {
+        printf("\nMASQ DS Handle init failed for Bob.\n");    
+        return MASQ_ERR_MEM_Alloc;    
+    }
+    
+    /* Uses default Quantropi random callback function */
+    ds_handle_alice = MASQ_DS_init(MPPKL5, NULL, NULL, NULL); 
+    
+    /* Uses provided random callback function */
+    //ds_handle_alice = MASQ_DS_init(MPPKL5, rand_cf, rand_seed_cf, NULL);  
+    
+    if(ds_handle_alice == NULL) {
+        printf("\nMASQ DS Handle init failed for Alice.\n");    
+        return MASQ_ERR_MEM_Alloc;    
+    }
+    printf("\nSuccess!\n");
+
+
+    /** Set the Seed for random number generator */
+    MASQ_ds_seed(ds_handle_bob, seed_orig, seed_len);
+    MASQ_ds_seed(ds_handle_alice, seed_orig, seed_len);
+
+    /* Create Alice's pk_alice & sk_alice keypair */
+    printf("\nCreate Alice's keypair...\n");
+    len_pk_alice = MASQ_DS_public_key_length(ds_handle_alice);
+    len_sk_alice = MASQ_DS_private_key_length(ds_handle_alice);
+    pk_alice = malloc(len_pk_alice);
+    sk_alice = malloc(len_sk_alice);
+
+    /* Setup Alice's signature */
+    len_signature = MASQ_DS_signature_length(ds_handle_alice);
+
+    signature = malloc(len_signature);
+   
+    /* Generate key pair*/
+    MASQ_DS_keypair(ds_handle_alice, pk_alice, sk_alice);  
+    printf("\nSuccess!\n");
+
+
+    /* Alice: Uses own private key to sign the message */
+    printf("\nAlice uses own private key to sign the message...");
+    MASQ_DS_sign(ds_handle_alice, sk_alice, msg, len_msg, signature, &len_signature);
+    printf("\nSuccess!\n");
+
+    /** Send Alice's public key and signature to Bob **/
+    sendPubKey();
+
+    /* Bob: Uses Alice's public key and verifies message and signature */
+    printf("\nBob uses Alice's public key to verify the message and signature...\n");
+    if(MASQ_DS_verify(ds_handle_bob, pk_alice, msg, len_msg, signature, len_signature) == 1)
+    {
+        printf("\nSuccess: Signature Verification Passed.\n");
+    }
+    else {
+        printf("\nFailure: Signature Verification Failed.\n");
+    }
+ 
+    /** Free MASQ DS Handle */
+    MASQ_DS_free(ds_handle_alice);
+    MASQ_DS_free(ds_handle_bob);
+    free(pk_alice);
+    free(sk_alice);
+    free(signature);
+    free(msg);
+
+    printf("\n--------------------------------------------------------\n\n");
+    
+    return 0;
+}

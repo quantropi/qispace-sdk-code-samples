@@ -1,18 +1,20 @@
 # QiSpace-SDK-Demo-C-App
 
-A functionality demo based in C/C++ to demonstrate the usage of the QEEP, SEQUR and PQRND APIs as well as QiSpace RESTful API. For best running experience, run the demo on an Ubuntu computer.
+A functionality demo based in C/C++ to demonstrate the usage of the SEQUR, QEEP and PQRND APIs, MASQ APIs as well as QiSpace RESTful API. For best running experience, run the demo on an Ubuntu computer.
 
 ## **Overview**
 - #### SEQUR: Demonstrates the use of SEQUR API to decode arbitrary QiSpace Enterprise payloads using either a pre-loaded or QiSpace-REST-API-retrieved subscriber key (subkey).
 - #### QEEP: Demonstrates the use of QEEP API for encryption/decryption and, if desired, the process of retrieving a Quantum Key (QK) from QiSpace Enterprise. 
 - #### PQRND: Demonstrates the use of PQRND API for generating Pseudo Quantum RaNdom Data with either pre-loaded Quantum Entropy (QE) or QiSpace-REST-API-retrieved QE.
+- #### MASQ: Provides Asymmetric Encryption Functionality. The two main functions of MASQ are *Key Exchange* and *Digital Signature* using a pair of public and private keys.
 
 ## **Installation and Preparation**
 1. Download this git repository to local machine
-2. Place the `lib` folder containing QEEP and SEQUR libraries for your OS under this repository's root (`/c`)
-3. Copy the `qispace_info.h` file which contains the QiSpace API URL and access token into `/src` directory
-  - Note: If the mentioned `lib` folder and `qispace_info.h` are not available to you, please contact Quantropi Support team.
-4. Run `make install_depends` to install required libraries 
+2. Get the QiSpace SDK from Quantropi. QiSpace SDK contains SEQUR, QEEP and MASQ libraries.
+3. Unzip/Untar all the contents of the libraries in `lib` folder for your OS under this repository's folder (`/c`)
+4. Copy the `qispace_info.h` file which contains the QiSpace API URL and access token into `/src` directory
+  - Note: If the above mentioned `lib` folder and `qispace_info.h` are not available to you, please contact Quantropi Support team.
+5. Run `make install_depends` to install required libraries 
   - nlohmann json
   - libcurl
 
@@ -20,7 +22,7 @@ A functionality demo based in C/C++ to demonstrate the usage of the QEEP, SEQUR 
 
 ## **Getting Started**
 ### Offline Mode (Dry-run) 
-  - Run "make [sequr, qeep, pqrnd]" (i.e `make qeep`)
+  - Run "make [sequr, qeep, pqrnd, masq_kem, masq_ds]" (i.e `make qeep`)
 
 ### Online Mode (QiSpace interaction is needed in this mode)
   - Run "make [sequr, seep, pqrnd] QISPACE_API_ON=1" (i.e `make pqrnd QISPACE_API_ON=1`)
@@ -47,10 +49,16 @@ Note: After a demo finishes, consider running `make clean` for consistent demo e
 - Obtain Quantum Entropy from QiSpace REST API 
 - Generate PQRND with the available data
 
-### MASQ KEM Demo (coming soon)
-### MASQ DS Demo (coming soon)
+### MASQ KEM Demo `demo_masq_kem`:
+- Generate Keypair using the MASQ KEM API
+- Encapsulation & Decapsulation of Shared Secert using MASQ KEM APIs
+
+### MASQ DS Demo `demo_masq_ds`:
+- Generate Keypair to sign the message
+- Sign the message
+- Verify the message and signature using MASQ DS API
  
 ## **License** 
 See [LICENSE](LICENSE). Copyright © Quantropi, Inc 
  
-Refer to documentation site for more general information about SEQUR, QEEP and PQRND APIs as well as QiSpace REST API.
+Refer to documentation site for more general information about SEQUR, QEEP and PQRND APIs, MASQ APIs as well as QiSpace REST API.

@@ -16,7 +16,7 @@ CFLAGS += $(INCLUDE_FLAG)./json/include
 UTIL_OBJS += RestApiUtil.$(OBJ_EXT)
 endif
 
-all: sequr pqrnd qeep
+all: sequr pqrnd qeep masq_kem masq_ds
 
 install_depends:
 # Install curl
@@ -28,6 +28,7 @@ endif
 ifeq ($(PLATFORM_AUTODETECT),osx)
 	brew install curl
 endif
+
 # Install json
 	git clone https://github.com/nlohmann/json.git
 
@@ -45,8 +46,16 @@ pqrnd: depends
 qeep: depends
 	make -f make.qeep QISPACE_API_ON=$(QISPACE_API_ON)
 
+masq_kem:
+	make -f make.kem
+
+masq_ds: 
+	make -f make.ds 
 
 clean:
 	make -f make.qeep clean
 	make -f make.sequr clean
 	make -f make.pqrnd clean
+	make -f make.kem clean
+	make -f make.ds clean
+
