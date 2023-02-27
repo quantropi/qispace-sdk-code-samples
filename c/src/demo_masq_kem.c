@@ -38,52 +38,64 @@
  * both Alice and Bob arrive at the same shared secret.
  */
 
-unsigned char seed_orig[1024];
-int32_t seed_len = 32; 
 
-
-/* 
-* Initialize/set seed for any random number generator used
-* We recommand to call QiSpace API (i.e. QE) to get seed 
-* if no good quantum safe level entropy source
-*/
-int32_t seed_init()
-{
-    /* here we just use std lib rand to set seed for demo purpose */
-    srand(time(0));
-    for(int j = 0; j < seed_len; j++){
-            seed_orig[j] = rand() & 0xff;
-    }
-    return 1;
-}
-
-/* Customize the random callback function below according to specific needs. 
- * Otherwise, default random CF is Quantropi 
+/* Customize the random callback function below according to your specific needs. 
+ * Below is template only.
+ * rand_handle is NULL for this callback functions. You can add your own structure handle to pass.
  */
 int32_t rand_cf(MASQ_RAND_handle rand_handle, int32_t rand_length,  uint8_t *rand_num){
     
     if (rand_num == NULL) return 0;
     
-    if (rand_handle == NULL) 
+    for (int i = 0; i < rand_length; i++)
     {
-        for (int i = 0; i < rand_length; i++)
-        {
-            rand_num[i] = rand() & 0xff;
-        }
+        rand_num[i] = rand() & 0xff;
     }
     return 1;
 }
 
+/* Customize the seed callback function below according to your specific needs. 
+ * Below is template only.
+ * rand_handle is NULL for this callback function. You can add your own structure handle to pass.
+ */
 
 int32_t rand_seed_cf(MASQ_RAND_handle rand_handle, uint8_t *seed, int32_t seed_length)
 {
     if (seed == NULL) return 0;
 
-    if(rand_handle == NULL){
-        seed = seed_orig;
+    unsigned int sd = 0;
+    for (int i=0; i < seed_length; i++)
+    {
+        sd ^= seed[i];
+        srand(sd);
     }
     return 1;
 }
+
+/* Initialize/set seed for any random number generator used by Alice and Bob
+* We recommand to call QiSpace API (i.e. QE) to get seed 
+* if no good quantum safe level entropy source */
+
+int32_t gen_rand_seed_bob(uint8_t *seed, int32_t seed_length)
+{
+    /* here we just use std lib rand to set seed for demo purpose */
+    srand(time(0));
+    for(int j = 0; j < seed_length; j++){
+            seed[j] = rand() & 0xff;
+    }
+    return 1;
+}
+
+int32_t gen_rand_seed_alice(uint8_t *seed, int32_t seed_length)
+{
+    /* here we just use std lib rand to set seed for demo purpose */
+    srand(time(0));
+    for(int j = 0; j < seed_length; j++){
+            seed[j] = rand() & 0xff;
+    }
+    return 1;
+}
+
 
 void sendPubKey(){
     printf("\n*Bob sends Alice his public key.*\n");
@@ -98,12 +110,12 @@ int main(int argc, const char * argv[]) {
     MASQ_KEM_handle *kem_handle_alice, *kem_handle_bob;
     int32_t len_pk_bob, len_sk_bob, len_ciphertext, len_ss;
     unsigned char *pk_bob, *sk_bob, *ciphertext, *ss_alice, *ss_bob;
-
-    /* Initialize random seed */ 
-    seed_init();
+    unsigned char alice_seed[1024], bob_seed[1024];
+    int seed_len = 32;
+    
 
     /* Init: Initialize MASQ KEM handles for Bob and Alice */
-    printf("\nInitialize MASQ KEM handles for Bob and Alice...");
+    printf("\nInitialize MASQ KEM handles for Bob and Alice...\n");
     
     /* Uses default Quantropi random callback function */    
     kem_handle_alice = MASQ_KEM_init(HPPKL3, NULL, NULL, NULL); 
@@ -129,9 +141,12 @@ int main(int argc, const char * argv[]) {
     printf("\nSuccess!\n");
 
 
-    /* Set the seed for random number generator */
-    MASQ_KEM_seed(kem_handle_alice, seed_orig, seed_len);
-    MASQ_KEM_seed(kem_handle_bob, seed_orig, seed_len);
+    /* Set the seed for random number generator for Alice */
+    gen_rand_seed_alice(alice_seed, seed_len);
+    MASQ_KEM_seed(kem_handle_alice, alice_seed, seed_len);
+    /** Set the Seed for random number generator for Bob*/
+    gen_rand_seed_bob(bob_seed, seed_len);
+    MASQ_KEM_seed(kem_handle_bob, bob_seed, seed_len);
 
 
     /* 1a. Setup Alice's shared secret */
@@ -159,7 +174,7 @@ int main(int argc, const char * argv[]) {
 
 
     /* 3. Alice: Use Bob's public key to encrypt the shared secret into ciphertext */
-    printf("\nAlice uses Bob's public key to encapsulate shared secret...\n");
+    printf("\nAlice uses Bob's public key to encapsulate the shared secret...\n");
     len_ciphertext = MASQ_KEM_ciphertext_length(kem_handle_alice);
     ciphertext = malloc(len_ciphertext);
     MASQ_KEM_encaps(kem_handle_alice, pk_bob, ss_alice, ciphertext);
@@ -171,7 +186,7 @@ int main(int argc, const char * argv[]) {
 
 
     /* 4. Bob: Use his own secret key to decrypt the shared secret into ciphertext */
-    printf("\nBob decapsulates Alice's ciphertext using his own private key...\n");
+    printf("\nBob decapsulate Alice's ciphertext using his own private key...\n");
     MASQ_KEM_decaps(kem_handle_bob, sk_bob, ciphertext, ss_bob);
     printf("\nSuccess!\n");
 
@@ -184,7 +199,7 @@ int main(int argc, const char * argv[]) {
     else {
         printf("%s\n", "\nSuccess: Shared Seceret Matches.\n");
     }
-    
+    printf("The Shared Secret Bob received: [%X]\n", ss_bob);
 
     /* Free MASQ KEM data */
     MASQ_KEM_free(kem_handle_alice);

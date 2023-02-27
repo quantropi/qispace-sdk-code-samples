@@ -12,6 +12,12 @@ A functionality demo based in C/C++ to demonstrate the usage of the SEQUR, QEEP 
 1. Download this git repository to local machine
 2. Get the QiSpace SDK from Quantropi. QiSpace SDK contains SEQUR, QEEP and MASQ libraries.
 3. Unzip/Untar all the contents of the libraries in `lib` folder for your OS under this repository's folder (`/c`)
+  
+    The `lib` folder will have below files:
+  
+  ![lib, the lib folder](lib.png)
+
+
 4. Copy the `qispace_info.h` file which contains the QiSpace API URL and access token into `/src` directory
   - Note: If the above mentioned `lib` folder and `qispace_info.h` are not available to you, please contact Quantropi Support team.
 5. Run `make install_depends` to install required libraries 
