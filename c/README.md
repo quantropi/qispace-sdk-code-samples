@@ -31,7 +31,7 @@ A functionality demo based in C/C++ to demonstrate the usage of the SEQUR, QEEP 
   - Run "make [sequr, qeep, pqrnd, masq_kem, masq_ds]" (i.e `make qeep`)
 
 ### Online Mode (QiSpace interaction is needed in this mode)
-  - Run "make [sequr, seep, pqrnd] QISPACE_API_ON=1" (i.e `make pqrnd QISPACE_API_ON=1`)
+  - Run "make [sequr, qeep, pqrnd] QISPACE_API_ON=1" (i.e `make pqrnd QISPACE_API_ON=1`)
 
 Note: After a demo finishes, consider running `make clean` for consistent demo execution. 
 
