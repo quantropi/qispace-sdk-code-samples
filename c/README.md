@@ -18,7 +18,7 @@ A functionality demo based in C/C++ to demonstrate the usage of the SEQUR, QEEP 
   ![lib, the lib folder](lib.png)
 
 
-4. Copy the `qispace_info.h` file which contains the QiSpace API URL and access token into `/src` directory
+4. **[Optional]** Copy the `qispace_info.h` file which contains the QiSpace API URL and access token into `/src` directory (This is only required for "Online Mode", MASQ demos do not require this file).
   - Note: If the above mentioned `lib` folder and `qispace_info.h` are not available to you, please contact Quantropi Support team.
 5. Run `make install_depends` to install required libraries 
   - nlohmann json
