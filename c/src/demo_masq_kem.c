@@ -199,7 +199,8 @@ int main(int argc, const char * argv[]) {
     else {
         printf("%s\n", "\nSuccess: Shared Seceret Matches.\n");
     }
-    printf("The Shared Secret Bob received: [%X]\n", ss_bob);
+    printf("The Shared Secret established for Alice: [%X]\n",  *ss_alice);
+    printf("The Shared Secret established for Bob: [%X]\n", *ss_bob);
 
     /* Free MASQ KEM data */
     MASQ_KEM_free(kem_handle_alice);

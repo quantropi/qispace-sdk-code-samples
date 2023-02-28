@@ -131,8 +131,6 @@ int main(int argc, const char * argv[]) {
         rand_string(msg, len_msg);
     }
 
-    printf("\nThe secret message Alice wants to send to Bob:\n\n[%s]\n", msg);
-
 
     /* Init: Initialize MASQ DS handles for Alice and Bob */ 
     printf("\nInitialize MASQ DS handle for Alice and Bob...\n");
@@ -156,7 +154,7 @@ int main(int argc, const char * argv[]) {
     
     if(ds_handle_alice == NULL) {
         printf("\nMASQ DS Handle init failed for Alice.\n");    
-        return MASQ_ERR_MEM_Alloc;    
+        return MASQ_ERR_MEM_Alloc;
     }
     printf("\nSuccess!\n");
 
