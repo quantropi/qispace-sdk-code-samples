@@ -1,0 +1,30 @@
+
+include make.auto_platform
+
+QEEP_LIB=./lib/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
+
+ifeq ("$(wildcard ${QEEP_LIB})","")
+    $(error QiSpace SDK not found, please contact Quantropi to obtain!!!)
+endif
+
+BN_LIB_SUFFIX=uc
+BN_LIB = ./lib/${LIB_PREFIX}masq_bn_util_$(BN_LIB_SUFFIX)-$(LIBNAME_SUFFIX).$(LIB_EXT) 
+
+
+MASQ_DS_LIB=./lib/${LIB_PREFIX}masq_ds-${LIBNAME_SUFFIX}.${LIB_EXT} $(BN_LIB) $(QEEP_LIB)
+
+ifeq ("$(wildcard ${MASQ_DS_LIB})","")
+    $(error MASQ DS library not found, please contact Quantropi to obtain!!!)
+endif
+
+%.$(OBJ_EXT): ./src/%.c 
+	$(CC) $(CC_FLAG) $(CFLAGS) $(DEFINITIONS) $(OBJ_FLAG)$@ $<
+
+all: demo_masq_ds
+
+demo_masq_ds:  demo_masq_ds.$(OBJ_EXT) 
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(MASQ_DS_LIB) $(LINK_GROUP_END) $(LDFLAGS)  
+	./$@$(EXE_EXT) 
+
+clean:
+	rm -f *.$(OBJ_EXT) demo_masq_ds

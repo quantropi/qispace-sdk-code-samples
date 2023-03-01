@@ -184,7 +184,8 @@ int main(int argc, char **argv)
 *    Step 5: Free PQRND handle  
 */
     ret = pQrndClose(qrnd_handle);
-    printf("done!\n");
+    printf("done!");
+    printf("\n--------------------------------------------------------\n\n");
     return (0);
 }
 

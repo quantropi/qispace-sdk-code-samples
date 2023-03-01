@@ -7,6 +7,16 @@
 *.obj
 *.elf
 
+# Demo binary files
+demo_masq_ds
+demo_masq_kem
+demo_pqrnd
+demo_qeep
+demo_sequr
+
+# Demo configuration files
+qispace_info.h
+
 # Linker output
 *.ilk
 *.map
