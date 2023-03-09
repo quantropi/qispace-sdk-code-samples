@@ -1,7 +1,8 @@
 package main
 /*
 #cgo CFLAGS: -I./lib
-#cgo CFLAGS: -g -DDEBUG
+#cgo LDFLAGS: -L./lib -lqsc
+#cgo CFLAGS: -g -Wall 
 #include "qispace_sequr.h"
 #include "error.h"
 */
@@ -52,7 +53,7 @@ func main() {
 	*    Step 1: Create SEQUR decoder handle
 	*/
 	fmt.Printf("initializing sequr handle...\n")
-	ret = C.QSC_init(&qsc_handle_dec)
+	ret := C.QSC_init(&qsc_handle_dec)
 	if (ret != C.QEEP_OK) { 
 		fmt.Printf("QSC_init fail\n")
 		os.Exit(-1)
