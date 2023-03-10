@@ -55,7 +55,6 @@ func main() {
 	var sub_key_len int
 	var iv []byte
 	var sub_key []uint8
-	plaintext := make([]byte, DEMO_PAYLOAD_BUFFER_SIZE)
 
 	/** 
 	* ##################################################################
@@ -159,13 +158,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	ret = C.QSC_qeep_decode(qsc_handle_dec, (*C.uchar)(unsafe.Pointer(&payload[0])), C.int(len(payload)), (*C.uchar)(unsafe.Pointer(&plaintext[0])));
+	payload_len := len(payload)
+	plaintext := make([]byte, payload_len)
+	ret = C.QSC_qeep_decode(qsc_handle_dec, (*C.uchar)(unsafe.Pointer(&payload[0])), C.int(payload_len), (*C.uchar)(unsafe.Pointer(&plaintext[0])));
 	if (ret != C.QEEP_OK) { 
 		fmt.Printf("QSC_qeep_decrypt fail\n")
 		os.Exit(-1)
 	}
-	fmt.Printf("plaintext %s\n", string(plaintext))
 	fmt.Printf("success!\n");
 
 	/**
