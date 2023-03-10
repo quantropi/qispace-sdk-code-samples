@@ -1,7 +1,8 @@
 package main
 /*
 #cgo CFLAGS: -I./lib
-#cgo LDFLAGS: -L./lib -lqsc
+#cgo LDFLAGS: -lstdc++ -lm
+#cgo LDFLAGS: ./lib/libqeep-x86_64-linux.a
 #cgo CFLAGS: -g -Wall 
 #include "qispace_sequr.h"
 #include "error.h"
@@ -11,6 +12,7 @@ import "C"
 import (
 	"fmt"
 	"os"
+	"unsafe"
 )
 
 /*
@@ -26,6 +28,9 @@ typedef struct QISPACE_SDK_Core_Handle_   *QSC_Handle
 const QEEP_OK = 1
 // iv size
 const IV_SIZE = 16
+const DEMO_SUB_KEY_BUFFER_SIZE = 3000
+const DEMO_PAYLOAD_BUFFER_SIZE = 3000
+const QISPACE_API_ON = false
 
 // default 
 
@@ -38,6 +43,7 @@ func main() {
 
 	var qsc_handle_dec C.QSC_Handle
 	var ret C.QEEP_RET
+	var sub_key []byte
 	//change string to byte array
 	// iv := []byte(iv_base64)
 	// seed := []byte(sub_key_hex_preload)
@@ -53,11 +59,34 @@ func main() {
 	*    Step 1: Create SEQUR decoder handle
 	*/
 	fmt.Printf("initializing sequr handle...\n")
-	ret := C.QSC_init(&qsc_handle_dec)
+	ret = C.QSC_init(&qsc_handle_dec)
 	if (ret != C.QEEP_OK) { 
 		fmt.Printf("QSC_init fail\n")
 		os.Exit(-1)
 	}
 	fmt.Printf("success!\n")
 
+	/**
+	*    Step 2: If QISPACE_API_ON defined, obtain the sub_key from QiSpace Enterprise. Else, use the pre-loaded sub_key (i.e. a QEEP key as subscriber key). 
+	*    Load the sub_key into SEQUR decode API
+	*/
+
+	if(QISPACE_API_ON){
+		// call 
+	}else{
+		sub_key, err := hex.DecodeString(sub_key_hex_preload)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("% x", sub_key)
+	}
+	sub_key_len := (C.uint) len(sub_key)
+
+	fmt.Printf("loading sub key...\n");
+	ret = C.QSC_qeep_key_load(qsc_handle_dec, sub_key, sub_key_len);
+	if (ret != C.QEEP_OK) { 
+		fmt.Printf("QSC_qeep_key_load fail ret = %d\n", ret)
+		os.Exit(-1)
+	}
+	fmt.Printf("success!\n");
 }
