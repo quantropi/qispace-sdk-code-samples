@@ -38,7 +38,7 @@ type Subkey struct {
 const IV_SIZE = 16
 const DEMO_SUB_KEY_BUFFER_SIZE = 3000
 const DEMO_PAYLOAD_BUFFER_SIZE = 3000
-const QISPACE_API_ON = true
+const QISPACE_API_ON = false
 
 // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjQ4NzksImRldmljZV9pZCI6NDg3OSwidG9rZW5faWQiOjQwOTgsImlhdCI6MTY3ODQ2Mjg0M30.YvGeNro_gd882yjTUffNYewLyCcj2_HKkn0_mV7P6Qk"
 // const URL = "https://enterprise.staging.qispace.info/kds/api/v1/sub_key"
@@ -89,8 +89,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		URL := os.Getenv("URL")
-		token := os.Getenv("TOKEN")
+		URL, url_err := os.LookupEnv("URL")
+		token, token_err := os.LookupEnv("TOKEN")
+		if (!url_err || ! token_err) {
+			fmt.Printf("Fail to get Enterprise URL or device token, please check your .env file \n")
+			os.Exit(-1)
+		}
 
 		// create request
 		req, err := http.NewRequest("POST", URL, nil)
