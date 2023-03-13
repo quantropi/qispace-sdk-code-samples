@@ -10,4 +10,5 @@ app/.cxx
 debug
 
 
-
+go/lib/*
+go/.env
