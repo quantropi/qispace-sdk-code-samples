@@ -40,10 +40,6 @@ const DEMO_SUB_KEY_BUFFER_SIZE = 3000
 const DEMO_PAYLOAD_BUFFER_SIZE = 3000
 const QISPACE_API_ON = false
 
-// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjQ4NzksImRldmljZV9pZCI6NDg3OSwidG9rZW5faWQiOjQwOTgsImlhdCI6MTY3ODQ2Mjg0M30.YvGeNro_gd882yjTUffNYewLyCcj2_HKkn0_mV7P6Qk"
-// const URL = "https://enterprise.staging.qispace.info/kds/api/v1/sub_key"
-// // default 
-
 func main() {
     fmt.Println("start!")
 	/* The pre-loaded variables are in the same format (Base64, Base64, hex string) as if they were retrieved from QiSpace REST API */
