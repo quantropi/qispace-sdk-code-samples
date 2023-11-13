@@ -7,7 +7,7 @@ ifeq ("$(wildcard ${QEEP_LIB})","")
     $(error QiSpace SDK not found, please contact Quantropi to obtain!!!)
 endif
 
-BN_LIB_SUFFIX=uc
+BN_LIB_SUFFIX=qtp
 BN_LIB = ./lib/${LIB_PREFIX}masq_bn_util_$(BN_LIB_SUFFIX)-$(LIBNAME_SUFFIX).$(LIB_EXT) 
 
 
@@ -23,7 +23,7 @@ endif
 all: demo_masq_ds
 
 demo_masq_ds:  demo_masq_ds.$(OBJ_EXT) 
-	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(MASQ_DS_LIB) $(LINK_GROUP_END) $(LDFLAGS)  
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(MASQ_DS_LIB) $(BN_LIB) $(LINK_GROUP_END) $(LDFLAGS)  
 	./$@$(EXE_EXT) 
 
 clean:
