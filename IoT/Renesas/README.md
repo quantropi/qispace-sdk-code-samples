@@ -1,4 +1,4 @@
-# qipace_m5
+# qispace_m5
 The qipace_m5 project in the ck-ra6m5_LED_Blink folder will be used to demo how to use our QiSpace: DS, KEM, QEEP and SEQUR 
 
 ## Device
