@@ -71,7 +71,7 @@ int32_t rand_cf(RAND_HANDLE *rand_handle, int32_t rand_length,  uint8_t *rand_nu
     } else {
         for (i = 0; i < rand_length; i++)
         {
-            srand(rand_handle->seed[i%rand_handle->seed_length]);
+            //srand(rand_handle->seed[i%rand_handle->seed_length]);
             rand_num[i] = (uint8_t) rand() & 0xff;
         }
     }
@@ -156,11 +156,11 @@ int kem_demo(void)
 
     if (memcmp(ss_a, ss_b, (unsigned int)len4) != 0) {
         PRINTF("%s\n\r", "Error: Shared Secret do not match");
-        ret4 = 0;
+        ret4 = 1;
     }
     else {
         PRINTF("%s\n\r", "Success: Shared Secret Matches\n\r\n\r");
-        ret4 = 1;
+        ret4 = 0;
     }
 
 bail:
