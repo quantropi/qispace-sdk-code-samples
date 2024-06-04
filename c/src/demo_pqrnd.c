@@ -34,14 +34,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-
-#include "../lib/qispace_pqrnd.h"
+#include "qispace_pqrnd.h"
 
 #include "base64.h"
 #ifdef QISPACE_API_ON
 #include "RestApiUtil.h"
-#include "../lib/qispace_sequr.h"
+#include "qispace_sequr.h"
 #endif
 
 #define RANDOM_SEED_LEN                     64

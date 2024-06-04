@@ -23,8 +23,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "../lib/masq_kem.h"
-#include "../lib/qispace_pqrnd.h"
+#include "masq_kem.h"
+#ifdef USE_KYBER_RANDOM
+#include "kyber_randombytes.h"
+#endif
 
 /* 
  * This demo displays one example of the MASQ KEM API, specifically HPPK level 3, 
@@ -58,7 +60,6 @@ int32_t rand_cf(MASQ_RAND_handle rand_handle, int32_t rand_length,  uint8_t *ran
  * Below is template only.
  * rand_handle is NULL for this callback function. You can add your own structure handle to pass.
  */
-
 int32_t rand_seed_cf(MASQ_RAND_handle rand_handle, uint8_t *seed, int32_t seed_length)
 {
     if (seed == NULL) return 0;
@@ -73,7 +74,7 @@ int32_t rand_seed_cf(MASQ_RAND_handle rand_handle, uint8_t *seed, int32_t seed_l
 }
 
 /* Initialize/set seed for any random number generator used by Alice and Bob
-* We recommand to call QiSpace API (i.e. QE) to get seed 
+* We recommend to call QiSpace API (i.e. QE) to get seed 
 * if no good quantum safe level entropy source */
 
 int32_t gen_rand_seed_bob(uint8_t *seed, int32_t seed_length)
@@ -117,26 +118,40 @@ int main(int argc, const char * argv[]) {
     /* Init: Initialize MASQ KEM handles for Bob and Alice */
     printf("\nInitialize MASQ KEM handles for Bob and Alice...\n");
     
-    /* Uses default Quantropi random callback function */    
-    kem_handle_alice = MASQ_KEM_init(HPPKL3, NULL, NULL, NULL); 
-    
-    /* Uses provided random callback function */   
-    //kem_handle_alice = MASQ_KEM_init(HPPKL3, rand_cf, rand_seed_cf, NULL);
+#ifndef USE_PQRND
+#ifdef USE_KYBER_RANDOM
+    /* Uses Kyber default random generator */
+    kem_handle_alice = MASQ_KEM_init(LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+#else
+    /* Uses Demo Provided Random Generator */
+    kem_handle_alice = MASQ_KEM_init(LEVEL3, rand_cf, rand_seed_cf, NULL);
+#endif
+#else
+    /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
+    kem_handle_alice = MASQ_KEM_qeep_init(LEVEL3); 
+#endif
     
     if(kem_handle_alice == NULL) {
         printf("\nMASQ KEM Handle init failed for Alice.\n");    
-        return MASQ_ERR_MEM_Alloc;    
+        return MASQ_ERR_MEM_ALLOC;    
     }
 
-    /* Uses default Quantropi random callback function */
-    kem_handle_bob = MASQ_KEM_init(HPPKL3, NULL, NULL, NULL);
-    
-    /* Uses provided random callback function */   
-    //kem_handle_bob = MASQ_KEM_init(HPPKL3, rand_cf, rand_seed_cf, NULL);
+#ifndef USE_PQRND
+#ifdef USE_KYBER_RANDOM
+    /* Uses Kyber default random generator */
+    kem_handle_bob = MASQ_KEM_init(LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+#else
+    /* Uses Demo Provided Random Generator */
+    kem_handle_bob = MASQ_KEM_init(LEVEL3, rand_cf, rand_seed_cf, NULL);
+#endif
+#else
+    /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
+    kem_handle_bob = MASQ_KEM_qeep_init(LEVEL3);
+#endif
     
     if(kem_handle_bob == NULL) {
         printf("\nMASQ KEM Handle init failed for Bob.\n");    
-        return MASQ_ERR_MEM_Alloc;    
+        return MASQ_ERR_MEM_ALLOC;    
     }
     printf("\nSuccess!\n");
 
@@ -153,6 +168,7 @@ int main(int argc, const char * argv[]) {
     printf("\nSetup Alice's shared secret...\n");
     len_ss = MASQ_KEM_shared_secret_length(kem_handle_alice);
     ss_alice = malloc(len_ss);
+    printf("\nSuccess!\n");
 
     /* 1b.  Initialize Bob's future shared secret */
     ss_bob = malloc(len_ss);
@@ -192,19 +208,24 @@ int main(int argc, const char * argv[]) {
 
 
     /* Check: Verify Alice and Bob shared secrets from KEM match */
-    printf("\nVerify shared secrets match...\n");
+    printf("\nVerify shared secret matches...\n");
     if (memcmp(ss_alice, ss_bob, len_ss) != 0) {
         printf("%s\n", "\nError: Shared Secret do not match.\n");
     }
     else {
-        printf("%s\n", "\nSuccess: Shared Seceret Matches.\n");
+        printf("%s\n", "\nSuccess: Shared Secret Matches.\n");
     }
     printf("The Shared Secret established for Alice: [%X]\n",  *ss_alice);
     printf("The Shared Secret established for Bob: [%X]\n", *ss_bob);
 
     /* Free MASQ KEM data */
+#ifndef USE_PQRND
     MASQ_KEM_free(kem_handle_alice);
     MASQ_KEM_free(kem_handle_bob);
+#else
+    MASQ_KEM_qeep_free(kem_handle_alice);
+    MASQ_KEM_qeep_free(kem_handle_bob);
+#endif
     free(pk_bob);
     free(sk_bob);
     free(ciphertext);

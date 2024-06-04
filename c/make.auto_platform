@@ -7,7 +7,7 @@ UNAME_OS := $(shell uname -a)
 
 ifneq ($(findstring CYGWIN_NT, $(UNAME_OS)),)
    PLATFORM_AUTODETECT=win
-   LIBNAME_SUFFIX= x86_64-win
+   LIBNAME_SUFFIX= msvc-x64
    LIB_PREFIX = 
    CC = cl.exe
    CPP = cl.exe
@@ -36,7 +36,7 @@ endif
 
 ifneq ($(findstring Darwin Kernel Version, $(UNAME_OS)),)
    PLATFORM_AUTODETECT=osx
-   LIBNAME_SUFFIX= x86_64-darwin
+   LIBNAME_SUFFIX= clang-x64
    LIB_PREFIX = lib
    CC = clang
    CPP = clang++
@@ -64,7 +64,7 @@ endif
 
 ifneq ($(findstring Linux, $(UNAME_OS)),)
    PLATFORM_AUTODETECT=linux
-   LIBNAME_SUFFIX= x86_64-linux
+   LIBNAME_SUFFIX= gcc-x64
    LIB_PREFIX = lib
    CC = gcc
    CPP = g++

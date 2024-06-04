@@ -1,6 +1,6 @@
 # QiSpace-SDK-Demo-Java-App
 
-A Java-based Android demo app demonstrating the functionality and usage of QiSpace QEEP and SEQUR APIs. Developed on Android API 32.
+A Java-based Android demo application demonstrating the functionality and usage of QiSpace QEEP and SEQUR APIs. Developed on Android API 32.
 
 Note: The app was developed on an emulated Google Pixel 2 running Android 12 (Pixel 2 API 31). UI elements may differ on devices with different displays. Internet access is required to properly run this demo app.
 

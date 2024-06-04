@@ -23,11 +23,13 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "../lib/masq_ds.h"
-#include "../lib/qispace_pqrnd.h"
+#include "masq_ds.h"
+#ifdef USE_DILITHIUM_RANDOM
+#include "dilithium_randombytes.h"
+#endif
 
 /* 
- * This demo displays one example of the MASQ DS API, specifically MPPK level 5, 
+ * This demo displays one example of the Digital Signature API, specifically level 5,
  * to sign a message between two parties(Alice & Bob) 
  *
  * In this case, Alice wants to send a secret message to Bob. 
@@ -58,7 +60,6 @@ int32_t rand_cf(MASQ_RAND_handle rand_handle, int32_t rand_length,  uint8_t *ran
  * Below is template only.
  * rand_handle is NULL for this callback function. You can add your own structure handle to pass.
  */
-
 int32_t rand_seed_cf(MASQ_RAND_handle rand_handle, uint8_t *seed, int32_t seed_length)
 {
     if (seed == NULL) return 0;
@@ -88,7 +89,7 @@ static unsigned char *rand_string(unsigned char *str, size_t size)
 }
 
 /* Initialize/set seed for any random number generator used by Alice and Bob
-* We recommand to call QiSpace API (i.e. QE) to get seed 
+* We recommend to call QiSpace API (i.e. QE) to get seed 
 * if no good quantum safe level entropy source */
 
 int32_t gen_rand_seed_bob(uint8_t *seed, int32_t seed_length)
@@ -135,36 +136,50 @@ int main(int argc, const char * argv[]) {
     /* Init: Initialize MASQ DS handles for Alice and Bob */ 
     printf("\nInitialize MASQ DS handle for Alice and Bob...\n");
 
-    /* Uses default Quantropi random callback function */
-    ds_handle_bob = MASQ_DS_init(MPPKL5, NULL, NULL, NULL); 
-
-    /* Uses provided random callback function */
-    //ds_handle_bob = MASQ_DS_init(MPPKL5, rand_cf, rand_seed_cf, NULL); 
+#ifndef USE_PQRND
+#ifdef USE_DILITHIUM_RANDOM
+    /* Uses Dilithium Default Random Generator */
+    ds_handle_bob = MASQ_DS_init(LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
+#else
+    /* Uses Demo Provided Random Generator */
+    ds_handle_bob = MASQ_DS_init(LEVEL5, rand_cf, rand_seed_cf, NULL);
+#endif
+#else
+    /* Uses Quantropi default random generator (i.e. SEQUR NGen) */
+    ds_handle_bob = MASQ_DS_qeep_init(LEVEL5);
+#endif 
     
     if(ds_handle_bob == NULL) {
         printf("\nMASQ DS Handle init failed for Bob.\n");    
-        return MASQ_ERR_MEM_Alloc;    
+        return MASQ_ERR_MEM_ALLOC;    
     }
-    
-    /* Uses default Quantropi random callback function */
-    ds_handle_alice = MASQ_DS_init(MPPKL5, NULL, NULL, NULL); 
-    
-    /* Uses provided random callback function */
-    //ds_handle_alice = MASQ_DS_init(MPPKL5, rand_cf, rand_seed_cf, NULL);  
+
+#ifndef USE_PQRND
+#ifdef USE_DILITHIUM_RANDOM
+    /* Uses Dilithium Default Random Generator */
+    ds_handle_alice = MASQ_DS_init(LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
+#else
+    /* Uses Demo Provided Random Generator */
+    ds_handle_alice = MASQ_DS_init(LEVEL5, rand_cf, rand_seed_cf, NULL);
+#endif
+#else
+    /* Uses Quantropi default random generator (i.e. SEQUR NGen) */
+    ds_handle_alice = MASQ_DS_qeep_init(LEVEL5);
+#endif
     
     if(ds_handle_alice == NULL) {
         printf("\nMASQ DS Handle init failed for Alice.\n");    
-        return MASQ_ERR_MEM_Alloc;
+        return MASQ_ERR_MEM_ALLOC;
     }
     printf("\nSuccess!\n");
 
 
     /** Set the Seed for random number generator for Bob*/
     gen_rand_seed_bob(bob_seed, seed_len);
-    MASQ_ds_seed(ds_handle_bob, bob_seed, seed_len);
+    MASQ_DS_seed(ds_handle_bob, bob_seed, seed_len);
     /** Set the Seed for random number generator for Alice*/
     gen_rand_seed_alice(alice_seed, seed_len);
-    MASQ_ds_seed(ds_handle_alice, alice_seed, seed_len);
+    MASQ_DS_seed(ds_handle_alice, alice_seed, seed_len);
 
     /* Create Alice's pk_alice & sk_alice keypair */
     printf("\nCreate Alice's keypair...\n");
@@ -193,7 +208,7 @@ int main(int argc, const char * argv[]) {
 
     /* Bob: Uses Alice's public key and verifies message and signature */
     printf("\nBob uses Alice's public key to verify the message and signature...\n");
-    if(MASQ_DS_verify(ds_handle_bob, pk_alice, msg, len_msg, signature, len_signature) == 1)
+    if(MASQ_DS_verify(ds_handle_bob, pk_alice, msg, len_msg, signature, len_signature) == 0)
     {
         printf("\nSuccess: Signature Verification Passed.\n");
     }
@@ -203,8 +218,13 @@ int main(int argc, const char * argv[]) {
     printf("\nThe secret message Bob received from Alice: \n\n[%s]\n", msg);
  
     /** Free MASQ DS Handle */
+#ifndef USE_PQRND
     MASQ_DS_free(ds_handle_alice);
     MASQ_DS_free(ds_handle_bob);
+#else
+    MASQ_DS_qeep_free(ds_handle_alice);
+    MASQ_DS_qeep_free(ds_handle_bob);
+#endif
     free(pk_alice);
     free(sk_alice);
     free(signature);
