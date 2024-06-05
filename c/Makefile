@@ -2,8 +2,12 @@ include make.auto_platform
 
 QISPACE_API_ON?=0
 
-ifeq ("$(wildcard ./lib)","")
-    $(error QiSpace SDK not found, please contact Quantropi to obtain!!!)
+ifeq ("$(wildcard ./libqeep)","")
+    $(error QiSpace QEEP SDK not found, please contact Quantropi to obtain!!!)
+endif
+
+ifeq ("$(wildcard ./libmasq)","")
+    $(error QiSpace MASQ SDK not found, please contact Quantropi to obtain!!!)
 endif
 
 UTIL_OBJS= base64.$(OBJ_EXT)

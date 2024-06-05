@@ -64,5 +64,6 @@ dkms.conf
 # Misc
 .vscode/*
 json/
-lib/
+libmasq
+libqeep
 .DS_Store

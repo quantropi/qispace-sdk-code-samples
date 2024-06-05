@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "../lib/qispace_qeep.h"
+#include "qispace_qeep.h"
 
 
 #define DEMO_SUB_KEY_BUFFER_SIZE          3000

@@ -1,6 +1,8 @@
 
 include make.auto_platform
 
+ROOT_DIR ?=.
+PQRND_DIR ?= $(ROOT_DIR)/libqeep
 
 UTIL_OBJS= base64.$(OBJ_EXT)
 
@@ -13,15 +15,16 @@ LDFLAGS += -lcurl
 UTIL_OBJS += RestApiUtil.$(OBJ_EXT)
 endif
 
-QEEP_LIB=./lib/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
+QEEP_LIB=$(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
 
 ifeq ("$(wildcard ${QEEP_LIB})","")
     $(error QiSpace SDK not found, please contact Quantropi to obtain!!!)
 endif
 
+INCLUDES = $(INCLUDE_FLAG)$(PQRND_DIR)
 
 %.$(OBJ_EXT): ./src/%.c 
-	$(CC) $(CC_FLAG) $(CFLAGS) $(DEFINITIONS) $(OBJ_FLAG)$@ $<
+	$(CC) $(CC_FLAG) $(CFLAGS) $(DEFINITIONS) $(INCLUDES) $(OBJ_FLAG)$@ $<
 
 all: demo_sequr
 

@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "../lib/qispace_sequr.h"
+#include "qispace_sequr.h"
 #include "base64.h"
 
 #ifdef QISPACE_API_ON
