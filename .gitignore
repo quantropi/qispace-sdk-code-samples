@@ -12,3 +12,7 @@ debug
 
 go/lib/*
 go/.env
+
+python/lib/*
+*/**/__pycache__
+Python/*.json
