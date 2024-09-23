@@ -3,14 +3,14 @@
 ## Sequr
 
 ### Setup
-  1. Place your Qeep `.whl` library file under `lib` folder. If you do not have one, please contact Quantropi Inc.
+  1. Place your QEEP `.whl` library file under `lib` folder. If you do not have one, please contact Quantropi Inc.
   1. Install demo dependencies and libraries: `./install.sh`
-  1. Have your qispace meta config `.json` file from Quantropi Inc ready. If you do not have one, please contact Quantropi Inc.
+  1. Have your QiSpace meta config `.json` file from Quantropi Inc ready. If you do not have one, please contact Quantropi Inc.
 
 ### Running the demo
 
   1. **Generate key demo:**
-      - Execute the `demo_sequr_key_gen.py` with the bellow aruments:
+      - Execute the `demo_sequr_key_gen.py` with the below arguments:
         ```
         usage: ./demo_sequr_key_gen.py [-h] --qispace_meta QISPACE_META [--key_size_bits KEY_SIZE_BITS]
 
@@ -21,7 +21,7 @@
           --key_size_bits KEY_SIZE_BITS
                                 Key size to generate (in bits, defaults: 256)
         ```
-      - You might get an output as bellow:
+      - You might get an output as below:
         ```
         ------------------------
         Key generation successful
@@ -30,7 +30,7 @@
         ------------------------
         ```
   1. **Query key demo:**
-      - Execute the `demo_sequr_key_query.py` with the bellow aruments:
+      - Execute the `demo_sequr_key_query.py` with the below arguments:
         ```
         usage: ./demo_sequr_key_gen.py [-h] --qispace_meta QISPACE_META --key_id KEY_ID
 
@@ -40,7 +40,7 @@
                                 Path to qispace meta .json file, provided by Quantropi Inc
           --key_id KEY_ID       Key ID to query
         ```
-      - You might get an output as bellow:
+      - You might get an output as below:
         ```
         ------------------------
         Key query successful
