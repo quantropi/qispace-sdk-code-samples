@@ -3,7 +3,7 @@
 ## Sequr
 
 ### Setup
-  1. Please copy & paste the `lib` folder from QEEP SDK into the current directory. If you do not have one, please contact Quantropi Inc..
+  1. Please copy & paste the `lib` folder from QEEP SDK into `libqeep` under the current directory. If you do not have one, please contact Quantropi.
   2. Install demo dependencies and libraries: `cjson` and `curl`
   3. Have your qispace meta config `.json` file from Quantropi Inc. ready. If you do not have one, please contact Quantropi Inc..
 

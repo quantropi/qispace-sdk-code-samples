@@ -1,13 +1,18 @@
-# To build demo_sequr_key_gen and demo_sequr_key_query on Linux successful, please follow below steps
+# Required building latform: Linux ubuntu and gcc 
+# To build demo_sequr_key_gen and demo_sequr_key_query, please follow below steps
 # 1. install libraries cjson and curl: sudo apt-get install libcjson-dev libcurl4-openssl-dev
-# 2. copy & paste the `lib` folder from QEEP SDK into the current directory
+# 2. copy & paste the `lib` folder from QEEP SDK Package into `libqeep` under the current directory
 # 3. run: make demo_sequr_key_gen & make demo_sequr_key_query
 
-QEEPLIB_DIR ?=./lib
+QEEPLIB_DIR ?=./libqeep
 QEEPLIB ?= $(QEEPLIB_DIR)/libqeep-gcc-x64.a
 
 CC = gcc
 CFLAGS = -Wall -I/usr/include/cjson -I/usr/include/curl -I$(QEEPLIB_DIR)
+
+ifeq ("$(wildcard ./libqeep)","")
+    $(error QiSpace QEEP SDK not found, please contact Quantropi to obtain!!!)
+endif
 
 # Libraries
 LDFLAGS = -lcjson -lcurl
