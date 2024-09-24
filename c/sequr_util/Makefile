@@ -1,46 +1,74 @@
-# Required building latform: Linux ubuntu and gcc 
-# To build demo_sequr_key_gen and demo_sequr_key_query, please follow below steps
-# 1. install libraries cjson and curl: sudo apt-get install libcjson-dev libcurl4-openssl-dev
+# Required building Patform: 
+#        - Ubuntu or RaspberryPI: gcc 
+#        - MacOS:  clang
+# To build sequr_util library, demo_sequr_key_gen and demo_sequr_key_query, please follow below steps
+# 1. install libraries cjson and curl: 
+#     - Linux and RaspberryPI:  sudo apt-get install libcjson-dev libcurl4-openssl-dev
+#     - MacOS: 	brew install curl cjson 
 # 2. copy & paste the `lib` folder from QEEP SDK Package into `libqeep` under the current directory
 # 3. run: make demo_sequr_key_gen & make demo_sequr_key_query
 
-QEEPLIB_DIR ?=./libqeep
-QEEPLIB ?= $(QEEPLIB_DIR)/libqeep-gcc-x64.a
 
-CC = gcc
-CFLAGS = -Wall -I/usr/include/cjson -I/usr/include/curl -I$(QEEPLIB_DIR)
+include make.auto_platform
+
+QEEPLIB_DIR ?=./libqeep
+QEEPLIB ?= $(QEEPLIB_DIR)/$(LIB_PREFIX)qeep-$(LIBNAME_SUFFIX).$(LIB_EXT)
+
+#CC = gcc
+#CFLAGS = -Wall -I/usr/include/cjson -I/usr/include/curl -I$(QEEPLIB_DIR)
 
 ifeq ("$(wildcard ./libqeep)","")
     $(error QiSpace QEEP SDK not found, please contact Quantropi to obtain!!!)
 endif
 
+
+
+CFLAGS +=  $(INCLUDE_FLAG)$(QEEPLIB_DIR)
 # Libraries
-LDFLAGS = -lcjson -lcurl
+LDFLAGS += -lcjson -lcurl
+
+
 
 # Sources and object files
-SEQUR_OBJ = sequr_util.o 
-SEQUR_LIB = libsequr_util.a
-HELP_OBJ = help_util.o
-JSON_OBJ = json_util.o
+UTIL_OBJS = help_util.$(OBJ_EXT)
+UTIL_OBJS += json_util.$(OBJ_EXT)
+UTIL_OBJS += sequr_util.$(OBJ_EXT)
 
-SRCS = help_util.c  json_util.c  demo_sequr_key_gen.c  demo_sequr_key_query.c  sequr_util.c
-OBJS:= ${SRCS:.c=.o}
+SEQUR_UTIL_LIB = $(LIB_PREFIX)sequr_util-$(LIBNAME_SUFFIX).$(LIB_EXT)
 
-all: $(OBJS) demo_sequr_key_gen demo_sequr_key_query
+
+all: $(SEQUR_UTIL_LIB) demo_sequr_key_gen demo_sequr_key_query
+
+install_depends:
+# Install curl
+ifeq ($(PLATFORM_AUTODETECT),linux)
+	sudo apt-get install libcjson-dev libcurl4-openssl-dev
+endif
+ifeq ($(PLATFORM_AUTODETECT),osx)
+	brew install curl
+	brew install cjson
+endif
+
+ifeq ($(PLATFORM_AUTODETECT),osx)
+LDFLAGS +="-L/usr/local/opt/curl/lib"
+CFLAGS +="-I/usr/local/opt/curl/include"
+endif
 
 # Create static library for sequr_util
-$(SEQUR_LIB): $(SEQUR_OBJ)
-	@ar rcs $@ $^
+$(SEQUR_UTIL_LIB): $(UTIL_OBJS)
+	@$(AR) $(ARFLAGS) $@ $^
 
 # Compile c code into object file
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.$(OBJ_EXT): ./%.c 
+	$(CC) $(CC_FLAG) $(CFLAGS) $(DEFINITIONS) $(OBJ_FLAG)$@ $<
 
-demo_sequr_key_gen: demo_sequr_key_gen.o $(SEQUR_LIB) $(HELP_OBJ) $(JSON_OBJ)
-	$(CC) demo_sequr_key_gen.o $(SEQUR_OBJ) $(HELP_OBJ) $(JSON_OBJ) -o $@ -L$(QEEPLIB_DIR) -L. -lsequr_util $(LDFLAGS) $(QEEPLIB)
+demo_sequr_key_gen: $(UTIL_OBJS) demo_sequr_key_gen.$(OBJ_EXT) 
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(QEEPLIB) $(LINK_GROUP_END) $(LDFLAGS)  
 
-demo_sequr_key_query: demo_sequr_key_query.o $(SEQUR_LIB) $(HELP_OBJ) $(JSON_OBJ)
-	$(CC) demo_sequr_key_query.o $(SEQUR_OBJ) $(HELP_OBJ) $(JSON_OBJ) -o $@ -L$(QEEPLIB_DIR) -L. -lsequr_util $(LDFLAGS) $(QEEPLIB)
-	
+
+demo_sequr_key_query: $(UTIL_OBJS) demo_sequr_key_query.$(OBJ_EXT) 
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(QEEPLIB) $(LINK_GROUP_END) $(LDFLAGS)  
+
+
 clean:
-	rm -f *.a *.o demo_sequr_key_gen demo_sequr_key_query 
+	rm -f $(SEQUR_UTIL_LIB) *.$(OBJ_EXT) demo_sequr_key_gen$(EXE_EXT) demo_sequr_key_query$(EXE_EXT)

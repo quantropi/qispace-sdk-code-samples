@@ -24,9 +24,10 @@
 
 #include "sequr_util.h"
 
-#define MAX_KEY_SIZE  3000
+#define MAX_KEY_BUF_SIZE  2048
 
-void print_usage() {
+
+void print_usage(void) {
     printf("Usage: ./demo_sequr_key_query [-h] [--qispace_meta QISPACE_META] [--key_id KEY_ID]\n");
     printf("\nOptions:\n");
     printf("  -h, --help         Show this help message and exit\n");
@@ -67,16 +68,17 @@ char *read_file_to_string(const char *path) {
 int main(int argc, char *argv[]) {
     char *qispace_meta_path = NULL;
     char *qispace_meta = NULL;
-    char *key_id = 0;
+    char *key_id = NULL;
+    uint8_t key[MAX_KEY_BUF_SIZE];
 
     if (argc < 2) {
-        print_usage(argv[0]);
+        print_usage();
         return 1;
     }
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-            print_usage(argv[0]);
+            print_usage();
             return 0;
         } else if (strcmp(argv[i], "--qispace_meta") == 0 && i + 1 < argc) {
             qispace_meta_path = argv[++i];
@@ -84,30 +86,38 @@ int main(int argc, char *argv[]) {
             key_id = argv[++i];
         } else {
             printf("Unknown option: %s\n", argv[i]);
-            print_usage(argv[0]);
+            print_usage();
             return 1;
         }
     }
 
-    if (!qispace_meta_path || key_id <= 0) {
-        printf("Error: Missing required arguments\n");
-        print_usage(argv[0]);
+    if (qispace_meta_path == NULL ) {
+        printf("Error: qispace_meta_path is missing \n");
+        print_usage();
+        return 1;
+    }
+    if ( key_id == NULL ) {
+        printf("Error: key_id is missing \n");
+        print_usage();
         return 1;
     }
 
     // read file 
     qispace_meta = read_file_to_string(qispace_meta_path);
-    if(qispace_meta == NULL) { return 1; }
+    if(qispace_meta == NULL) { 
+         printf("Error: reading qispace_meta fail \n");
+        return 1; }
 
     // init sequr_util
     sequr_handle *handle = sequr_util_init(qispace_meta);
+    free(qispace_meta);
     if(handle == NULL){
         printf("Error: failed to initialize sequr util\n");
         return 1;
     }
 
     // query key by key_id
-    uint8_t *key = (uint8_t*)malloc(MAX_KEY_SIZE);
+
     int key_size = sequr_util_query_key(handle, key_id, key);
     if(key_size <= 0) {
          printf("Error: failed to query key\n");
@@ -123,7 +133,7 @@ int main(int argc, char *argv[]) {
     for (int i = key_size - 5; i < key_size; i++) {
         printf("%02x ", key[i]);
     }
-    free(key);
+ 
     printf("\n------------------------\n");
 
 

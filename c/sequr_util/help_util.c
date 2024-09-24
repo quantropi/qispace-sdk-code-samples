@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "cJSON.h"  // Include the cJSON library header
+#include <cjson/cJSON.h> 
 #include <curl/curl.h>
 
 #include "help_util.h"
@@ -71,7 +71,7 @@ char* QiSpaceAPI_call(const char *method, char const *url, char const *token, ch
         res = curl_easy_perform(curl);
         /* Check for errors */
         if(res != CURLE_OK){
-        //   printf("curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+          printf("curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
           free(response);
           response = NULL;
         }

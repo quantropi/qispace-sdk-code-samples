@@ -28,6 +28,8 @@ extern "C" {
 #include <stdint.h>
 #include "qispace_qeep.h"
 
+
+
 /* QiSpace SEQUR QK APIs */
 typedef struct {
     char *url;   // QiSpace Enterprise URL
@@ -59,7 +61,7 @@ sequr_handle* sequr_util_init(char* q_meta);
 *       - key: pointer to the key buffer allocated before calling
 * Return keysize on success, -1 on failure
 */
-int sequr_util_key_gen(sequr_handle* sequr_handle, int32_t keysize, char* key_id, uint8_t *key);
+int sequr_util_key_gen(sequr_handle* sequr_handle, int32_t keysize_bytes, char* key_id, uint8_t *key);
 
 
 /*

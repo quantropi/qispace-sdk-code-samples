@@ -1,13 +1,26 @@
-# QiSpace C Demos
-
-## Sequr
+# QiSpace Sequr Util C Demos
+  The demos are tested on Ubuntu, MacOS Intel and M1, RaspberryPI. 
+  The required building tools are documented in Makefile.
 
 ### Setup
-  1. Please copy & paste the `lib` folder from QEEP SDK into `libqeep` under the current directory. If you do not have one, please contact Quantropi.
-  2. Install demo dependencies and libraries: `cjson` and `curl`
-  3. Have your qispace meta config `.json` file from Quantropi Inc. ready. If you do not have one, please contact Quantropi Inc..
+  1. Install demo dependencies: `cjson` and `curl`. 
+     Linux and RaspberryPI:  sudo apt-get install libcjson-dev libcurl4-openssl-dev
+     MacOS: 	brew install curl cjson 
+  2. Install QiSpace Qeep SDK. If you do not have one, please contact Quantropi.
+     Copy & paste the `lib` into `libqeep` under the current directory according required building environment. 
+  3. Have your qispace meta config `.json` file from Quantropi Inc.. If you do not have one, please contact Quantropi Inc..
 
-### Running the demo
+### Build demos
+  1. Ubuntu: "libqeep-gcc-x64.a" required
+      `make`
+  2. RaspberryPI: "libqeep-rpigcc64-aarch64.a" required
+      `make`
+  3. Mac Intel: "libqeep-clang-x64.a" required
+      `make`
+  4. Mac M1: "libqeep-clang-arm64mac.a" required
+       `make MAC_M1=1`
+
+### Run demos
 
   1. **Generate key demo:**
       - Execute the `demo_sequr_key_gen` with the below arguments:

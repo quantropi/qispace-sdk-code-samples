@@ -112,7 +112,12 @@ sequr_handle* sequr_util_init(char* q_meta) {
     return handle;
 }
 
-// Function to generate key
+
+/*
+Function to generate key
+  - keysize in bytes
+  - key_id and key are buffer, which should be allocated before calling this function
+*/
 int sequr_util_key_gen(sequr_handle* sequr_handle, int32_t keysize, char* key_id, uint8_t *key) {
     char const *label = "sequr";
     char body_data[1000];
@@ -124,7 +129,7 @@ int sequr_util_key_gen(sequr_handle* sequr_handle, int32_t keysize, char* key_id
     char *id = NULL;
     char *QK_b64 = NULL;
     QP_Handle qp_handle;
-    uint8_t iv[50];         
+    uint8_t iv[33];
     int32_t iv_len; 
     int encoded_QK_len=0;
     uint8_t *encoded_QK;
