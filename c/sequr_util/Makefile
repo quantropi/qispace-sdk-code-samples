@@ -1,4 +1,4 @@
-# Required building Patform: 
+# Required building Platform: 
 #        - Ubuntu or RaspberryPI: gcc 
 #        - MacOS:  clang
 # To build sequr_util library, demo_sequr_key_gen and demo_sequr_key_query, please follow below steps
