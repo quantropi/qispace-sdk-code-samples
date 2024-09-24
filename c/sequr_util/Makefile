@@ -14,8 +14,6 @@ include make.auto_platform
 QEEPLIB_DIR ?=./libqeep
 QEEPLIB ?= $(QEEPLIB_DIR)/$(LIB_PREFIX)qeep-$(LIBNAME_SUFFIX).$(LIB_EXT)
 
-#CC = gcc
-#CFLAGS = -Wall -I/usr/include/cjson -I/usr/include/curl -I$(QEEPLIB_DIR)
 
 ifeq ("$(wildcard ./libqeep)","")
     $(error QiSpace QEEP SDK not found, please contact Quantropi to obtain!!!)
@@ -38,16 +36,6 @@ SEQUR_UTIL_LIB = $(LIB_PREFIX)sequr_util-$(LIBNAME_SUFFIX).$(LIB_EXT)
 
 
 all: $(SEQUR_UTIL_LIB) demo_sequr_key_gen demo_sequr_key_query
-
-install_depends:
-# Install curl
-ifeq ($(PLATFORM_AUTODETECT),linux)
-	sudo apt-get install libcjson-dev libcurl4-openssl-dev
-endif
-ifeq ($(PLATFORM_AUTODETECT),osx)
-	brew install curl
-	brew install cjson
-endif
 
 ifeq ($(PLATFORM_AUTODETECT),osx)
 LDFLAGS +="-L/usr/local/opt/curl/lib"
