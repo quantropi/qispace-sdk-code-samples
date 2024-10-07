@@ -18,26 +18,37 @@
  *
  *****************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
+#include <cstdint>
+#include <cstddef>
+#include <curl/curl.h>
 #include "sequr_util.h"
+#include "help_util.h"
+#include "json_util.h"
 
-void print_usage(void) {
-    printf("Usage: ./demo_sequr_key_gen [-h] [--qispace_meta QISPACE_META] [--key_size_bits KEY_SIZ_BITS]\n");
-    printf("\nOptions:\n");
-    printf("  -h, --help        Show this help message and exit\n");
-    printf("  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n");
-    printf("  --key_size_bits   Key size to generate (in bits)\n");
+
+using namespace std;
+
+void print_usage() {
+    std::cout << "Usage: ./demo_sequr_key_gen [-h] [--qispace_meta QISPACE_META] [--key_size_bits KEY_SIZE_BITS]\n";
+    std::cout << "\nOptions:\n";
+    std::cout << "  -h, --help        Show this help message and exit\n";
+    std::cout << "  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n";
+    std::cout << "  --key_size_bits   Key size to generate (in bits)\n";
 }
 
+
 int main(int argc, char *argv[]) {
-    char *qispace_meta_path = NULL;
-    char *qispace_meta = NULL;
-    int   keysize_bits = 256;
-    char  key_id[256];
-    uint8_t *key;
+    const char *qispace_meta_path = nullptr;
+    std::string qispace_meta;
+    int keysize_bits = 256;
+    std::string key_id;
+    uint8_t *key = nullptr;
 
     if (argc < 2) {
         print_usage();
@@ -53,63 +64,65 @@ int main(int argc, char *argv[]) {
         } else if (strcmp(argv[i], "--key_size_bits") == 0 && i + 1 < argc) {
             keysize_bits = atoi(argv[++i]);
         } else {
-            printf("Unknown option: %s\n", argv[i]);
+            std::cerr << "Unknown option: " << argv[i] << "\n";
             print_usage();
             return 1;
         }
     }
 
-    if (!qispace_meta_path) {
-        printf("Error: qispace_meta_path is not provided.\n");
+    if (!qispace_meta_path ) {
+        std::cerr << "Error: qispace_meta_path is not provided.\n";
         print_usage();
         return 1;
     }
-    if (keysize_bits <=0 ) {
-        printf("Error: key_size_bits is invalid.\n");
+    if (keysize_bits <= 0 ) {
+        std::cerr << "Error: key_size_bits is invalid.\n";
         print_usage();
         return 1;
     }
     // read file 
     qispace_meta = read_file_to_string(qispace_meta_path);
-    if(qispace_meta == NULL) { 
-        printf("Error: reading qispace meta file failed.\n");
-        return 1; }
+    if(qispace_meta.empty()) { 
+        std::cerr << "Error: reading qispace meta file failed.\n";
+        return 1; 
+    }
 
     // init sequr_util
-    sequr_handle *handle = sequr_util_init(qispace_meta);
-    if(handle == NULL){
-        printf("Error: failed to initialize SEQUR Util.\n");
+    SequrHandle *handle = sequr_util_init(qispace_meta);
+    if(!handle){
+        std::cerr << "Error: failed to initialize SEQUR Util.\n";
         return 1;
     }
 
     // generate key 
-    key  = (uint8_t *) malloc(keysize_bits/8 + 1);
-    if (key == NULL) {
-        printf("Error: memory allocation for key failed.\n");
+    key  = (uint8_t *) malloc(keysize_bits/8);
+    if (!key) {
+        std::cerr << "Error: memory allocation for key failed.\n";
+        sequr_free(handle);
         return 1;
     }
 
     int key_size = sequr_util_key_gen(handle, keysize_bits/8, key_id, key);
     if(key_size <= 0) {
-        printf("Error: failed to generate key.\n");
+        std::cerr << "Error: failed to generate key.\n";
         free(key);
+        sequr_free(handle);
         return 1;
     }
-    printf("------------------------\n");
-    printf("Key generation successful.\n");
-    printf("Key ID: %s\n", key_id);
-    printf("Key: ");
-    for (int i = 0; i < 5; i++) {
-        printf("%02x ", key[i]);
+    std::cout << "------------------------\n";
+    std::cout << "Key generation successful.\n";
+    std::cout << "Key ID: " << key_id.c_str() << "\n";
+    std::cout << "Key: ";
+    for (int i = 0; i < key_size; i++) {
+        cout << std::hex << (int)key[i] << " ";
     }
-    printf("... ");
-    for (int i = key_size - 5; i < key_size; i++) {
-        printf("%02x ", key[i]);
-    }
-    printf("\n------------------------\n");
+    
+    std::cout << "\n------------------------\n";
+    
     free(key);
     // free sequr handle
     sequr_free(handle);
+    curl_global_cleanup();
 
     return 0;
 }

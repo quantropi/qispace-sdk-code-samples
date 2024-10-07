@@ -1,4 +1,4 @@
-# QiSpace Sequr Util C Demos
+# QiSpace Sequr Util C++ Demos
 
   The demos are tested on Ubuntu, MacOS Intel and M1, RaspberryPI.
   The required building tools are documented in Makefile.
@@ -13,7 +13,7 @@
 
   2. Install QiSpace Qeep SDK. If you do not have one, please contact Quantropi Inc.
 
-     Copy & paste the `lib` into `libqeep` under the current directory according ro your building environment.
+    Copy & paste the `lib` into `libqeep` under the current directory according to your building environment.
 
   3. Have your qispace meta config `.json` file from Quantropi Inc. If you do not have one, please contact Quantropi Inc.
 

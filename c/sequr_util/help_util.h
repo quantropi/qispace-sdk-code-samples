@@ -6,6 +6,8 @@ extern "C" {
 #endif
 typedef unsigned char BYTE;
 
+char *read_file_to_string(const char *path);
+
 char* QiSpaceAPI_call(const char *method, char const *url, char const *token, char const *body, long *response_code);
 
 int base64_decode(const char* encoded_string, int str_len, BYTE *out_buf);

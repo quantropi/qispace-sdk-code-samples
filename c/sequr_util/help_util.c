@@ -27,6 +27,36 @@
 
 #include "help_util.h"
 
+char *read_file_to_string(const char *path) {
+    FILE *file = fopen(path, "rb");
+    if (file == NULL) {
+        return NULL;
+    }
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    // Allocate memory to store the file contents + null terminator
+    char *file_content = (char *)malloc(file_size + 1);
+    if (file_content == NULL) {
+        fclose(file);
+        return NULL;
+    }
+
+    // Read the file into the buffer
+    size_t read_size = fread(file_content, 1, file_size, file);
+    if (read_size != file_size) {
+        free(file_content);
+        fclose(file);
+        return NULL;
+    }
+
+    file_content[file_size] = '\0';  // Null-terminate the string
+
+    fclose(file);
+    return file_content;
+}
+
 // Callback function to handle data received from the server
 size_t writefunc(void *contents, size_t size, size_t nmemb, void *userp) {
     size_t total_size = size * nmemb;
