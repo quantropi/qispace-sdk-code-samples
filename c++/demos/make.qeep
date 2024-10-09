@@ -1,0 +1,33 @@
+
+include make.auto_platform
+
+ROOT_DIR ?=.
+PQRND_DIR ?= $(ROOT_DIR)/libqeep
+
+UTIL_OBJS= base64.$(OBJ_EXT)
+
+ifeq ($(QISPACE_API_ON),1)
+ifeq ("$(wildcard ./json/include)","")
+    $(error RESTAPI depends not installed, please install nlohmann/json!!!)
+endif
+DEFINITIONS += $(DEF_FLAG)QISPACE_API_ON
+LDFLAGS += -lcurl
+UTIL_OBJS += RestApiUtil.$(OBJ_EXT)
+endif
+
+QEEP_LIB=$(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
+
+INCLUDES = $(INCLUDE_FLAG)$(PQRND_DIR)
+
+%.$(OBJ_EXT): ./src/%.cpp 
+	$(CPP) $(CC_FLAG) $(CFLAGS) $(CPPFLAGS) $(DEFINITIONS) $(INCLUDES) $(OBJ_FLAG)$@ $<
+
+all: demo_qeep
+
+demo_qeep: $(UTIL_OBJS) demo_qeep.$(OBJ_EXT) 
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(QEEP_LIB) $(LINK_GROUP_END) $(LDFLAGS)  
+	./$@$(EXE_EXT) 
+
+clean:
+	rm -f *.$(OBJ_EXT) demo_qeep$(EXE_EXT)
+	

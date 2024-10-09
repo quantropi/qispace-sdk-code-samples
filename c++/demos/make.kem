@@ -1,0 +1,68 @@
+# Specify KEM Algorithm: You can test Quantropi's HPPK and PQC kyber 
+# The available algorithm list:
+#    hppk, kyber
+# ALG name option is just a suffix of the library path in the package
+
+ALG ?= hppk
+
+# BigNum Library Option
+# BN: qtp or gmp
+BN ?= qtp
+
+include make.auto_platform
+
+ROOT_DIR ?=.
+PQRND_DIR ?= $(ROOT_DIR)/libqeep
+MASQ_KEM_DIR ?= $(ROOT_DIR)/libmasq/lib_$(ALG)
+
+BN_LIB = $(MASQ_KEM_DIR)/${LIB_PREFIX}masq_bn_util_$(BN)-$(LIBNAME_SUFFIX).$(LIB_EXT) 
+ifeq ($(BN),gmp)
+BN_LIB += $(MASQ_KEM_DIR)/${LIB_PREFIX}gmp-$(LIBNAME_SUFFIX).$(LIB_EXT) 
+endif
+
+#To use provided random generator, this needs to be 0
+USE_PQRND ?= 1
+
+#To use Kyber Default random generator, this needs to be 1
+USE_KYBER_RANDOM ?= 0
+
+ifeq ($(ALG), hppk)
+# When use HPPK, BigNum Library and QEEP PQRND libraries are required
+
+ifeq ($(USE_PQRND),1)
+DEFINITIONS += $(DEF_FLAG)USE_PQRND
+PQRND_LIB = $(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
+endif
+
+MASQ_KEM_LIB = $(MASQ_KEM_DIR)/${LIB_PREFIX}masq_kem-${LIBNAME_SUFFIX}.${LIB_EXT} $(BN_LIB) $(PQRND_LIB) 
+
+else 	######### ALG != HPPK ###########
+# When ALG is kyber QEEP PQRND libraries are required 
+
+ifeq ($(USE_PQRND),1)
+DEFINITIONS += $(DEF_FLAG)USE_PQRND
+PQRND_LIB = $(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
+else
+ifeq ($(USE_KYBER_RANDOM), 1)
+DEFINITIONS += $(DEF_FLAG)USE_KYBER_RANDOM
+endif
+endif
+
+MASQ_KEM_LIB = $(MASQ_KEM_DIR)/${LIB_PREFIX}masq_kem-${LIBNAME_SUFFIX}.${LIB_EXT} $(PQRND_LIB)
+
+endif
+
+INCLUDES = $(INCLUDE_FLAG)$(PQRND_DIR) $(INCLUDE_FLAG)$(MASQ_KEM_DIR)
+
+%.$(OBJ_EXT): ./src/%.cpp 
+	$(CPP) $(CC_FLAG) $(CFLAGS) $(CPPFLAGS) $(DEFINITIONS) $(INCLUDES) $(OBJ_FLAG)$@ $<
+
+all: demo_masq_kem
+
+demo_masq_kem: demo_masq_kem.$(OBJ_EXT)
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(MASQ_KEM_LIB) $(LINK_GROUP_END) $(LDFLAGS) 
+	./$@$(EXE_EXT) 
+
+clean:
+	rm -f *.$(OBJ_EXT) demo_masq_kem
+	

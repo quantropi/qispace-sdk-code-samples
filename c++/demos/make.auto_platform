@@ -1,0 +1,110 @@
+# Automatically detects the current platform and sets
+# PLATFORM_AUTODETECT to the value.  If the platform
+# could not be detected, PLATFORM_AUTODETECT will not
+# be defined.
+
+UNAME_OS := $(shell uname -a)
+
+ifneq ($(findstring CYGWIN_NT, $(UNAME_OS)),)
+   PLATFORM_AUTODETECT=win
+   LIBNAME_SUFFIX= msvc-x64
+   LIB_PREFIX = 
+   CC = cl.exe
+   CPP = cl.exe
+   LD = link.exe
+   AR = lib.exe
+   LIB_EXT = lib
+   OBJ_EXT = obj
+   EXE_EXT = .exe
+   DLL_EXT = dll
+   INCLUDE_FLAG = /I
+   OBJ_FLAG =  /Fo
+   EXE_FLAG = /Fe
+   LIBOUT_FLAG = /OUT:
+   DLLOUT_FLAG = /OUT:
+   LIBPATH_FLAG  = /LIBPATH:
+   EXEOUT_FLAG = /OUT:
+   CC_FLAG = /c
+   CFLAGS = /Gy /O2 /nologo /MT /W4 -std=c++11
+   ARFLAGS = /nologo 
+   LDFLAGS = /nologo 
+   #WINDLL_EXPORT = /EXPORT:qeep_init /EXPORT:qeep_close /EXPORT:qeep_encode /EXPORT:qeep_decode 
+   DLL_FLAGS = /DLL /DEF:$(WIN32_DLL_DEF_FILENAME)
+   DEF_FLAG= /D
+   DEFINITIONS = /D_CRT_SECURE_NO_WARNINGS
+endif
+
+ifneq ($(findstring Darwin Kernel Version, $(UNAME_OS)),)
+   PLATFORM_AUTODETECT=osx
+   LIBNAME_SUFFIX= clang-x64
+   LIB_PREFIX = lib
+   CC = clang
+   CPP = clang++
+   LD = clang++
+   AR = ar
+   LIB_EXT = a
+   OBJ_EXT = o
+   EXE_EXT =
+   DLL_EXT = dylib
+   INCLUDE_FLAG = -I
+   OBJ_FLAG =  -o 
+   EXE_FLAG = 
+   LIBOUT_FLAG = 
+   DLLOUT_FLAG= -o
+   LIBPATH_FLAG  = 
+   EXEOUT_FLAG = -o
+   CC_FLAG = -c
+   CFLAGS = -arch x86_64 -std=c++11
+   ARFLAGS = -rcsv
+   LDFLAGS = -arch x86_64 
+   DLL_FLAGS = -dynamiclib 
+   DEF_FLAG=-D
+   DEFINITIONS =
+endif
+
+ifneq ($(findstring Linux, $(UNAME_OS)),)
+   PLATFORM_AUTODETECT=linux
+   LIBNAME_SUFFIX= gcc-x64
+   LIB_PREFIX = lib
+   CC = gcc
+   CPP = g++
+   LD = g++
+   AR = ar 
+   LIB_EXT = a
+   OBJ_EXT = o
+   EXE_EXT =
+   DLL_EXT = so
+   INCLUDE_FLAG = -I
+   OBJ_FLAG =  -o
+   EXE_FLAG = 
+   LIBOUT_FLAG = 
+   DLLOUT_FLAG= -o
+   LIBPATH_FLAG  =  -L
+   EXEOUT_FLAG = -o
+   CC_FLAG = -c
+   CFLAGS = -Wall -O3 -fPIC -std=c++11
+   ARFLAGS = -rcsv
+   LDFLAGS = 
+   DLL_FLAGS = -shared -fPIC
+   DEF_FLAG= -D
+   DEFINITIONS =
+   LINK_GROUP_BEGIN= -Wl,--start-group
+   LINK_GROUP_END= -Wl,--end-group
+endif
+
+ifeq ($(PLATFORM_AUTODETECT),osx)
+ifeq ($(MAC_M1),1)
+LIBNAME_SUFFIX= clang-arm64mac
+CFLAGS = -target arm64-apple-macos11 -arch arm64
+LDFLAGS = -target arm64-apple-macos11 -arch arm64 
+endif
+endif
+
+
+#add extra for raspberrypi
+ifneq ($(findstring aarch64, $(UNAME_OS)),)
+   PLATFORM_AUTODETECT=raspberrypi
+   LIBNAME_SUFFIX= rpigcc64-aarch64
+   CFLAGS = -fstack-protector-all -Wl,-z,relro,-z,now -fPIC
+   CFLAGS += -march=armv8-a+fp+simd
+endif

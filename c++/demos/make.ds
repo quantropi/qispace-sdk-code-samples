@@ -1,0 +1,78 @@
+# Specify DS Algorithm: You can test Quantropi's GHPPK, HPPK and PQC dilithium 
+# The available algorithm list:
+#    ghppk hppk dilithium
+# ALG name option is just a suffix of the library path in the package
+
+ALG ?= ghppk
+
+# BigNum Library Option
+# BN: qtp or gmp
+BN ?= qtp
+
+include make.auto_platform
+
+ROOT_DIR ?=.
+PQRND_DIR ?= $(ROOT_DIR)/libqeep
+MASQ_DS_DIR ?= $(ROOT_DIR)/libmasq/lib_$(ALG)
+
+BN_LIB = $(MASQ_DS_DIR)/${LIB_PREFIX}masq_bn_util_$(BN)-$(LIBNAME_SUFFIX).$(LIB_EXT) 
+ifeq ($(BN),gmp)
+BN_LIB += $(MASQ_DS_DIR)/${LIB_PREFIX}gmp-$(LIBNAME_SUFFIX).$(LIB_EXT) 
+endif
+
+#To use provided random generator, this needs to be 0
+USE_PQRND ?= 1
+
+#To use Dilithium Default random generator, this needs to be 1
+USE_DILITHIUM_RANDOM ?= 0
+
+ifeq ($(ALG), ghppk)
+# When use GHPPK,  BigNum Library and QEEP PQRND libraries are required
+
+ifeq ($(USE_PQRND),1)
+DEFINITIONS += $(DEF_FLAG)USE_PQRND
+PQRND_LIB = $(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
+endif
+
+MASQ_DS_LIB = $(MASQ_DS_DIR)/${LIB_PREFIX}masq_ds-${LIBNAME_SUFFIX}.${LIB_EXT} $(BN_LIB) $(PQRND_LIB)
+
+else ifeq ($(ALG), hppk)
+# When use HPPK,  BigNum Library and QEEP PQRND libraries are required
+
+ifeq ($(USE_PQRND),1)
+DEFINITIONS += $(DEF_FLAG)USE_PQRND
+PQRND_LIB = $(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
+endif
+
+MASQ_DS_LIB = $(MASQ_DS_DIR)/${LIB_PREFIX}masq_ds-${LIBNAME_SUFFIX}.${LIB_EXT} $(BN_LIB) $(PQRND_LIB)
+
+else 	######### ALG != GHPPK ###########
+# When ALG is dilithium QEEP PQRND libraries are required 
+
+ifeq ($(USE_PQRND),1)
+DEFINITIONS += $(DEF_FLAG)USE_PQRND
+PQRND_LIB = $(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
+else
+ifeq ($(USE_DILITHIUM_RANDOM), 1)
+DEFINITIONS += $(DEF_FLAG)USE_DILITHIUM_RANDOM
+endif
+endif
+
+MASQ_DS_LIB = $(MASQ_DS_DIR)/${LIB_PREFIX}masq_ds-${LIBNAME_SUFFIX}.${LIB_EXT} $(PQRND_LIB)
+
+endif
+
+INCLUDES = $(INCLUDE_FLAG)$(PQRND_DIR) $(INCLUDE_FLAG)$(MASQ_DS_DIR)
+
+%.$(OBJ_EXT): ./src/%.cpp 
+	$(CPP) $(CC_FLAG) $(CFLAGS) $(CPPFLAGS) $(DEFINITIONS) $(INCLUDES) $(OBJ_FLAG)$@ $<
+
+all: demo_masq_ds
+
+demo_masq_ds:  demo_masq_ds.$(OBJ_EXT) 
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(MASQ_DS_LIB) $(LINK_GROUP_END) $(LDFLAGS)  
+	./$@$(EXE_EXT) 
+
+clean:
+	rm -f *.$(OBJ_EXT) demo_masq_ds
+	
