@@ -43,9 +43,9 @@ endif
 $(SEQUR_UTIL_LIB): $(UTIL_OBJS)
 	@$(AR) $(ARFLAGS) $@ $^
 
-# Compile c code into object file
+# Compile c++ code into object file
 %.$(OBJ_EXT): ./%.cpp 
-	$(CPP) $(CC_FLAG) $(CFLAGS) $(CPPFLAGS) $(DEFINITIONS) $(OBJ_FLAG)$@ $<
+	$(CPP) $(CPPFLAGS) $(DEFINITIONS) $(OBJ_FLAG)$@ $<
 
 demo_sequr_key_gen: $(UTIL_OBJS) demo_sequr_key_gen.$(OBJ_EXT) 
 	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(QEEPLIB) $(LINK_GROUP_END) $(LDFLAGS)  
