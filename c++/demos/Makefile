@@ -19,7 +19,7 @@ ifeq ("$(wildcard ./json/include)","")
 endif
 DEFINITIONS += $(DEF_FLAG)QISPACE_API_ON
 LDFLAGS += -lcurl
-CFLAGS += $(INCLUDE_FLAG)./json/include
+CPPFLAGS += $(INCLUDE_FLAG)./json/include
 UTIL_OBJS += RestApiUtil.$(OBJ_EXT) 
 endif
 
@@ -40,7 +40,7 @@ ifeq ($(PLATFORM_AUTODETECT),osx)
 endif
 
 %.$(OBJ_EXT): ./src/%.cpp
-	$(CPP) $(CC_FLAG) $(CFLAGS) $(CPPFLAGS) $(DEFINITIONS) $(OBJ_FLAG)$@ $<
+	$(CPP) $(CPPFLAGS) $(DEFINITIONS) $(OBJ_FLAG)$@ $<
 
 depends: $(UTIL_OBJS)
 

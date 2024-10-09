@@ -65,7 +65,7 @@ endif
 INCLUDES = $(INCLUDE_FLAG)$(PQRND_DIR) $(INCLUDE_FLAG)$(MASQ_DS_DIR)
 
 %.$(OBJ_EXT): ./src/%.cpp 
-	$(CPP) $(CC_FLAG) $(CFLAGS) $(CPPFLAGS) $(DEFINITIONS) $(INCLUDES) $(OBJ_FLAG)$@ $<
+	$(CPP) $(CPPFLAGS) $(DEFINITIONS) $(INCLUDES) $(OBJ_FLAG)$@ $<
 
 all: demo_masq_ds
 

@@ -24,8 +24,7 @@ ifneq ($(findstring CYGWIN_NT, $(UNAME_OS)),)
    DLLOUT_FLAG = /OUT:
    LIBPATH_FLAG  = /LIBPATH:
    EXEOUT_FLAG = /OUT:
-   CC_FLAG = /c
-   CFLAGS = /Gy /O2 /nologo /MT /W4 -std=c++11
+   CPPFLAGS = /c /Gy /O2 /nologo /MT /W4 -std=c++11
    ARFLAGS = /nologo 
    LDFLAGS = /nologo 
    #WINDLL_EXPORT = /EXPORT:qeep_init /EXPORT:qeep_close /EXPORT:qeep_encode /EXPORT:qeep_decode 
@@ -53,8 +52,7 @@ ifneq ($(findstring Darwin Kernel Version, $(UNAME_OS)),)
    DLLOUT_FLAG= -o
    LIBPATH_FLAG  = 
    EXEOUT_FLAG = -o
-   CC_FLAG = -c
-   CFLAGS = -arch x86_64 -std=c++11
+   CPPFLAGS = -c -arch x86_64 -std=c++11
    ARFLAGS = -rcsv
    LDFLAGS = -arch x86_64 
    DLL_FLAGS = -dynamiclib 
@@ -81,8 +79,7 @@ ifneq ($(findstring Linux, $(UNAME_OS)),)
    DLLOUT_FLAG= -o
    LIBPATH_FLAG  =  -L
    EXEOUT_FLAG = -o
-   CC_FLAG = -c
-   CFLAGS = -Wall -O3 -fPIC -std=c++11
+   CPPFLAGS = -c -Wall -O3 -fPIC -std=c++11
    ARFLAGS = -rcsv
    LDFLAGS = 
    DLL_FLAGS = -shared -fPIC
@@ -95,7 +92,7 @@ endif
 ifeq ($(PLATFORM_AUTODETECT),osx)
 ifeq ($(MAC_M1),1)
 LIBNAME_SUFFIX= clang-arm64mac
-CFLAGS = -target arm64-apple-macos11 -arch arm64
+CPPFLAGS = -target arm64-apple-macos11 -arch arm64
 LDFLAGS = -target arm64-apple-macos11 -arch arm64 
 endif
 endif
@@ -105,6 +102,6 @@ endif
 ifneq ($(findstring aarch64, $(UNAME_OS)),)
    PLATFORM_AUTODETECT=raspberrypi
    LIBNAME_SUFFIX= rpigcc64-aarch64
-   CFLAGS = -fstack-protector-all -Wl,-z,relro,-z,now -fPIC
-   CFLAGS += -march=armv8-a+fp+simd
+   CPPFLAGS = -fstack-protector-all -Wl,-z,relro,-z,now -fPIC
+   CPPFLAGS += -march=armv8-a+fp+simd
 endif
