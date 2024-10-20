@@ -32,7 +32,7 @@ UTIL_OBJS += sequr_util.$(OBJ_EXT)
 
 SEQUR_UTIL_LIB = $(LIB_PREFIX)sequr_util-$(LIBNAME_SUFFIX).$(LIB_EXT)
 
-all: clean $(SEQUR_UTIL_LIB) demo_sequr_key_gen demo_sequr_key_query 
+all: clean $(SEQUR_UTIL_LIB) demo_sequr_key_gen demo_sequr_key_query demo_qeep
 
 ifeq ($(PLATFORM_AUTODETECT),osx)
 LDFLAGS +="-L/usr/local/opt/curl/lib"
@@ -52,6 +52,9 @@ demo_sequr_key_gen: $(UTIL_OBJS) demo_sequr_key_gen.$(OBJ_EXT)
 
 
 demo_sequr_key_query: $(UTIL_OBJS) demo_sequr_key_query.$(OBJ_EXT) 
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(QEEPLIB) $(LINK_GROUP_END) $(LDFLAGS)  
+
+demo_qeep: demo_qeep.$(OBJ_EXT) 
 	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(QEEPLIB) $(LINK_GROUP_END) $(LDFLAGS)  
 
 clean:

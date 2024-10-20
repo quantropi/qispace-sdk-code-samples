@@ -114,10 +114,12 @@ SequrHandle* sequr_util_init(const std::string q_meta) {
 
 /*
 Function to generate key
-  - keysize in bytes
-  - key_id and key are buffer, which should be allocated before calling this function
+  - key_size: input parameter in bytes
+  - key_type: 0 for AES key, 1 for QEEP KEY
+  - key:   key buffer should be allocated before calling this function
+           key_buffer_size >= key_size + 22 if key_type is QEEP. 
 */
-int sequr_util_key_gen(SequrHandle* sequrHandle, int32_t keysize, std::string& key_id, uint8_t *key) {
+int sequr_util_key_gen(SequrHandle* sequr_handle, int32_t key_size, std::string& key_id, uint8_t *key, int key_type) {
     char const *label = "sequr";
     int ret = 0;
     long response_code = 0;
@@ -127,24 +129,24 @@ int sequr_util_key_gen(SequrHandle* sequrHandle, int32_t keysize, std::string& k
     std::string id;
     std::string QK_b64;
     QP_Handle qp_handle;
-    uint8_t iv[50]; 
+    uint8_t iv[17]; 
     int32_t iv_len; 
     int encoded_QK_len=0;
     uint8_t* encoded_QK;
     uint8_t* buf;
 
-    if(sequrHandle == nullptr || keysize <= 0 || key == nullptr) { return (-1);}
-    if(sequrHandle->q_meta == nullptr || sequrHandle->q_meta->url.empty() || sequrHandle->q_meta->token.empty()) { return (-1);}
+    if(sequr_handle == nullptr || key_size <= 0 || key == nullptr) { return (-1);}
+    if(sequr_handle->q_meta == nullptr || sequr_handle->q_meta->url.empty() || sequr_handle->q_meta->token.empty()) { return (-1);}
 
     // Perform HTTPS POST request to generate QK
     std::ostringstream post_body_stream;
-    post_body_stream << "{ \"key_length\" : " << keysize << ", \"label\": \"" << label << "\" }";
+    post_body_stream << "{ \"key_length\" : " << key_size << ", \"label\": \"" << label << "\" }";
 
     std::string body_data = post_body_stream.str();
     
-    full_url = std::string(sequrHandle->q_meta->url) + "/qk";
+    full_url = std::string(sequr_handle->q_meta->url) + "/qk";
     
-    res = QiSpaceAPI_call("POST", full_url, sequrHandle->q_meta->token, body_data, &response_code);
+    res = QiSpaceAPI_call("POST", full_url, sequr_handle->q_meta->token, body_data, &response_code);
     if (response_code != 200) {
         return -1;
     }
@@ -161,7 +163,7 @@ int sequr_util_key_gen(SequrHandle* sequrHandle, int32_t keysize, std::string& k
     key_id = id;
 
     // Create QEEP handle
-    qp_handle = sequrHandle->qp_handle;
+    qp_handle = sequr_handle->qp_handle;
     if (qp_handle == nullptr) { return (-1);}
 
     // decode iv from base64 format to byte array
@@ -170,7 +172,7 @@ int sequr_util_key_gen(SequrHandle* sequrHandle, int32_t keysize, std::string& k
     ret = QP_iv_set(qp_handle, iv, iv_len);
     if (ret != QEEP_OK) { return (-1); }
 
-    encoded_QK_len = keysize + QK_TAG_LENGTH + QK_HASH_LENGTH;
+    encoded_QK_len = key_size + QK_TAG_LENGTH + QK_HASH_LENGTH;
     encoded_QK = new uint8_t[encoded_QK_len];
 
     // decode QK from base64 format to byte array 
@@ -179,20 +181,36 @@ int sequr_util_key_gen(SequrHandle* sequrHandle, int32_t keysize, std::string& k
     // decode QK to plaintext byte array
     buf = new uint8_t[encoded_QK_len];
     ret = QP_decrypt(qp_handle, encoded_QK, encoded_QK_len, buf);  
-    if (ret != QEEP_OK) { return (-1);}
+    if (ret != QEEP_OK) { 
+        delete[] encoded_QK;
+        delete[] buf;
+        return (-1);
+        }
 
     // Copy the relevant part of buf (skipping the first QK_TAG_LENGTH and ignoring the last QK_HASH_LENGTH)
-    memcpy(key, buf + QK_TAG_LENGTH, keysize);
+    if (key_type ==1 ) {
+        memcpy(key, buf, encoded_QK_len);
+        ret = encoded_QK_len;
+    }
+     else  {
+        memcpy(key, buf + QK_TAG_LENGTH, key_size);
+        ret = key_size;
+     }
 
     // free data
     delete[] encoded_QK;
     delete[] buf;
     
-    return keysize;
+    return (ret);
 }
 
-// Function to get key by key_id
-int sequr_util_query_key(SequrHandle* sequrHandle, std::string& key_id, uint8_t *key) {
+/*
+ Function to get key by key_id
+  - key_type: 0 for AES KEY, 1 for QEEP KEY
+  - key:   key buffer should be allocated before calling this function
+           key_buffer_size >= key_size + 22 if key_type is QEEP. 
+           */
+int sequr_util_query_key(SequrHandle* sequr_handle, std::string& key_id, uint8_t *key, int key_type) {
     
     long response_code = 0;
     int ret = 0;
@@ -200,22 +218,22 @@ int sequr_util_query_key(SequrHandle* sequrHandle, std::string& key_id, uint8_t 
     std::string res;
     std::string iv_b64;
     std::string QK_b64;
-    uint8_t iv[50];
+    uint8_t iv[17];
     int32_t iv_len;
     QP_Handle qp_handle;
     int b64_QK_len = 0;
     int encoded_QK_len = 0;
-    int keysize;
+    int key_size;
     uint8_t *encoded_QK;
     uint8_t *buf;
 
-    if(sequrHandle == nullptr || key == nullptr) { return (-1); }
-    if(sequrHandle->q_meta == nullptr || sequrHandle->q_meta->url.empty() || sequrHandle->q_meta->token.empty()) { return (-1);}
+    if(sequr_handle == nullptr || key == nullptr) { return (-1); }
+    if(sequr_handle->q_meta == nullptr || sequr_handle->q_meta->url.empty() || sequr_handle->q_meta->token.empty()) { return (-1);}
 
     // Perform HTTPS GET request to get QK
-    full_url = sequrHandle->q_meta->url + "/qk/" + key_id.c_str();
+    full_url = sequr_handle->q_meta->url + "/qk/" + key_id.c_str();
 
-    res = QiSpaceAPI_call("GET", full_url, sequrHandle->q_meta->token, "", &response_code);
+    res = QiSpaceAPI_call("GET", full_url, sequr_handle->q_meta->token, "", &response_code);
     if (response_code != 200) {
         return -1;
     }
@@ -226,7 +244,7 @@ int sequr_util_query_key(SequrHandle* sequrHandle, std::string& key_id, uint8_t 
     if (ret != 0) { return (-1);}
    
     // Create QEEP handle
-    qp_handle = sequrHandle->qp_handle;
+    qp_handle = sequr_handle->qp_handle;
     if (qp_handle == nullptr) { return (-1);}
     
     // decode iv from base64 format to byte array
@@ -250,15 +268,21 @@ int sequr_util_query_key(SequrHandle* sequrHandle, std::string& key_id, uint8_t 
     }
     
     // Copy the relevant part of buf (skipping the first QK_TAG_LENGTH and ignoring the last QK_HASH_LENGTH)
-    keysize = encoded_QK_len - QK_TAG_LENGTH - QK_HASH_LENGTH;
-    memcpy(key, buf + QK_TAG_LENGTH, keysize);
-
+    if (key_type ==1 ) {
+        key_size = encoded_QK_len;
+        memcpy(key, buf, key_size);
+    }
+     else  {
+        key_size = encoded_QK_len - QK_TAG_LENGTH - QK_HASH_LENGTH;
+        memcpy(key, buf + QK_TAG_LENGTH, key_size);
+     }
     // free data
     delete[] encoded_QK;
     delete[] buf;
 
-    return keysize;
+    return key_size;
 }
+
 
 
 // Free SequrHandle

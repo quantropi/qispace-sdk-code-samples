@@ -40,6 +40,7 @@ void print_usage() {
     std::cout << "  -h, --help        Show this help message and exit\n";
     std::cout << "  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n";
     std::cout << "  --key_size_bits   Key size to generate (in bits)\n";
+    std::cout << "  --key_type        0: AES key, 1: QEEP Key, defaut: AES Key\n";
 }
 
 
@@ -47,6 +48,7 @@ int main(int argc, char *argv[]) {
     const char *qispace_meta_path = nullptr;
     std::string qispace_meta;
     int keysize_bits = 256;
+    int key_type = 0;
     std::string key_id;
     uint8_t *key = nullptr;
 
@@ -63,6 +65,8 @@ int main(int argc, char *argv[]) {
             qispace_meta_path = argv[++i];
         } else if (strcmp(argv[i], "--key_size_bits") == 0 && i + 1 < argc) {
             keysize_bits = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--key_type") == 0 && i + 1 < argc) {
+            key_type = atoi(argv[++i]);
         } else {
             std::cerr << "Unknown option: " << argv[i] << "\n";
             print_usage();
@@ -95,14 +99,14 @@ int main(int argc, char *argv[]) {
     }
 
     // generate key 
-    key  = (uint8_t *) malloc(keysize_bits/8);
+    key  = (uint8_t *) malloc(keysize_bits/8 + 22);
     if (!key) {
         std::cerr << "Error: memory allocation for key failed.\n";
         sequr_free(handle);
         return 1;
     }
 
-    int key_size = sequr_util_key_gen(handle, keysize_bits/8, key_id, key);
+    int key_size = sequr_util_key_gen(handle, keysize_bits/8, key_id, key, key_type);
     if(key_size <= 0) {
         std::cerr << "Error: failed to generate key.\n";
         free(key);
@@ -113,8 +117,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Key generation successful.\n";
     std::cout << "Key ID: " << key_id.c_str() << "\n";
     std::cout << "Key: ";
+    std::cout << setfill('0');
     for (int i = 0; i < key_size; i++) {
-        cout << std::hex << (int)key[i] << " ";
+        cout << std::hex <<setw(2)<< (int)key[i] ;
     }
     
     std::cout << "\n------------------------\n";

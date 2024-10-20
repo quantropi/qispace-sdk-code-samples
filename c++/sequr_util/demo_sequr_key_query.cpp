@@ -42,12 +42,14 @@ void print_usage() {
     std::cout << "  -h, --help        Show this help message and exit\n";
     std::cout << "  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n";
     std::cout << "  --key_id           Key ID to query\n";
+    std::cout << "  --key_type        0: AES key, 1: QEEP Key, defaut: AES Key\n";
 }
 
 int main(int argc, char *argv[]) {
     const char *qispace_meta_path = nullptr;
     std::string qispace_meta;
     std::string key_id;
+    int key_type = 0;
     uint8_t key[MAX_KEY_BUF_SIZE];
 
     if (argc < 2) {
@@ -63,6 +65,8 @@ int main(int argc, char *argv[]) {
             qispace_meta_path = argv[++i];
         } else if (strcmp(argv[i], "--key_id") == 0 && i + 1 < argc) {
             key_id = argv[++i];
+        } else if (strcmp(argv[i], "--key_type") == 0 && i + 1 < argc) {
+            key_type = atoi(argv[++i]);
         } else {
             std::cerr << "Unknown option: " << argv[i] << "\n";
             print_usage();
@@ -95,7 +99,7 @@ int main(int argc, char *argv[]) {
     }
 
     // query key by key_id
-    int key_size = sequr_util_query_key(handle, key_id, key);
+    int key_size = sequr_util_query_key(handle, key_id, key, key_type);
     if(key_size <= 0) {
         std::cerr << "Error: failed to query key.\n";
         delete handle;
@@ -105,8 +109,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Key query successful.\n";
     std::cout << "Key ID: " << key_id.c_str() << "\n";
     std::cout << "Key: ";
+    std::cout << setfill('0');
     for (int i = 0; i < key_size; i++) {
-        cout << std::hex << (int)key[i] << " ";
+        cout << std::hex <<setw(2) << (int)key[i];
     }
  
     std::cout << "\n------------------------\n";

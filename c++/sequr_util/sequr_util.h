@@ -47,30 +47,35 @@ SequrHandle* sequr_util_init(const std::string q_meta);
 
 
 /*
-* Generate QK on QiSpace Enterprise with provided key length
+* Generate a key (ex. for AES or QEEP) on QiSpace Enterprise with provided key length
 * Input parameters:
-*       - SequrHandle: SequrHandle pointer
-*       - keysize: keysize in bytes
+*       - sequr_handle: SequrHandle pointer
+*       - key_size: keysize in bytes
+*       - key_type: 0 for AES Key, 1 for QEEP Key
 * Output parameters:
 *       - key_id: pointer to key_id string
 *       - key: pointer to the key buffer, which should be allocated before calling this function
+               key_buffer_size >= key_size + 22 if key_type is QEEP. 
 * Return:
-*       - keysize on success, -1 on failure
+*       - key size on success, -1 on failure
 */
-int sequr_util_key_gen(SequrHandle* sequrHandle, int32_t keysize, std::string& key_id, uint8_t *key);
+int sequr_util_key_gen(SequrHandle* sequr_handle, int32_t key_size, std::string& key_id, uint8_t *key, int key_type);
 
 
 /*
-* Get QK from QiSpace Enterprise with provided key id
+* Get key (geneated by sequr_util_key_gen) from QiSpace Enterprise with provided key id
 * Input parameters:
-*       - SequrHandle: sequrHandle pointer
+*       - sequr_handle: SequrHandle pointer
 *       - key_id: key_id string
+*       - key_type: 0 for AES Key, 1 for QEEP Key
 * Output parameters:
 *       - key: pointer to the key buffer, which should be allocated before calling this function
+            key_buffer_size >= key_size + 22 if key_type is QEEP. 
 * Return:
-*       - keysize on success, -1 on failure
+*       - key size on success, -1 on failure
 */
-int sequr_util_query_key(SequrHandle* sequrHandle, std::string& key_id, uint8_t *key);
+int sequr_util_query_key(SequrHandle* sequr_handle, std::string& key_id, uint8_t *key, int key_type);
+
 
 /*
 * Free SEQUR Handle
