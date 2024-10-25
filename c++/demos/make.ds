@@ -11,7 +11,7 @@ BN ?= qtp
 
 include make.auto_platform
 
-ROOT_DIR ?=.
+ROOT_DIR ?=../..
 PQRND_DIR ?= $(ROOT_DIR)/libqeep
 MASQ_DS_DIR ?= $(ROOT_DIR)/libmasq/lib_$(ALG)
 

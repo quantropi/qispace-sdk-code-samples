@@ -108,7 +108,7 @@ int ds_demo(void)
     }
 
     ret0 = MASQ_ds_seed(ds_handle, seed_src, SEED_LEN);
-    if(ret0 != MASQ_SUCCESS) {
+    if(ret0 != 0) {
         goto bail;
     }
 
@@ -122,7 +122,7 @@ int ds_demo(void)
     sign_msg = malloc((size_t)len_sign*4);
 
     ret1 = MASQ_DS_keypair(ds_handle, pk, sk);
-    if(ret1 != MASQ_SUCCESS) {
+    if(ret1 != 0) {
         PRINTF("MASQ DS Unit Test: Keypairs not generated\n\r");
         goto bail;
     }
@@ -137,7 +137,7 @@ int ds_demo(void)
     PRINTF("\n\rLength of message: %d ", MSG_LEN);
     ret2 = MASQ_DS_sign(ds_handle, sk, msg, MSG_LEN, sign_msg, &len_sign);
     PRINTF("sign time: %d - %d = %d(ms) \r\n", tickend, tickstart, tickend-tickstart);
-    if(ret2 != MASQ_SUCCESS) {
+    if(ret2 != 0) {
         PRINTF("MASQ DS Unit Test: Signature not generated\n\r");
         goto bail;
     }
@@ -151,7 +151,7 @@ int ds_demo(void)
     dump_hex(sign_msg, len_sign);
 
     ret3 = MASQ_DS_verify(ds_handle, pk, msg, MSG_LEN, sign_msg, len_sign);
-    if(ret3 == MASQ_SUCCESS) {
+    if(ret3 == 0) {
         PRINTF("MASQ DS Unit Test: Passed Signature Verification\n\r\n\r");
         goto bail;
     }
@@ -165,7 +165,7 @@ bail:
     if (sk != NULL) free(sk);
     if (sign_msg != NULL) free(sign_msg);
 
-    if (ret0==MASQ_SUCCESS && ret1==MASQ_SUCCESS && ret2==MASQ_SUCCESS && ret3==MASQ_SUCCESS) {
+    if (ret0==0 && ret1==0 && ret2==0 && ret3==0) {
         return 0;
     } else {
         return 1;

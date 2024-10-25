@@ -151,7 +151,7 @@ int main(int argc, const char * argv[]) {
     
     if(ds_handle_bob == NULL) {
         printf("\nMASQ DS Handle init failed for Bob.\n");    
-        return MASQ_ERR_MEM_ALLOC;    
+        return -1;    
     }
 
 #ifndef USE_PQRND
@@ -169,7 +169,7 @@ int main(int argc, const char * argv[]) {
     
     if(ds_handle_alice == NULL) {
         printf("\nMASQ DS Handle init failed for Alice.\n");    
-        return MASQ_ERR_MEM_ALLOC;
+        return -1;
     }
     printf("\nSuccess!\n");
 
