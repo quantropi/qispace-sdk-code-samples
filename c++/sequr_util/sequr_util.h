@@ -84,4 +84,17 @@ int sequr_util_query_key(SequrHandle* sequr_handle, std::string& key_id, uint8_t
 */
 void sequr_free(SequrHandle* sequr_handle);
 
+
+/*
+* Get Quantum Entropy(QE) from QiSpace Enterprise
+* Input parameters:
+*       - sequr_handle: SequrHandle pointer
+*       - QE: pointer to the QE buffer of len bytes, which should be allocated before calling this function
+*       - len: required length of QE 
+* Return:
+*       - length of QE bytes on success, -1 on failure
+*/
+int sequr_util_get_qe(SequrHandle* sequr_handle, uint8_t *QE, int len);
+
+
 #endif  /*_SEQUR_UTIL_H */

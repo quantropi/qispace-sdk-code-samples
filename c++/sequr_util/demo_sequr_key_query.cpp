@@ -26,23 +26,21 @@
 #include <cstdio>
 #include <cstdint>
 #include <cstddef>
-#include <curl/curl.h>
+#include <iomanip>
 #include "sequr_util.h"
 #include "help_util.h"
-#include "json_util.h"
-
 
 using namespace std;
 
 #define MAX_KEY_BUF_SIZE  2048
 
 void print_usage() {
-    std::cout << "Usage: ./demo_sequr_key_query [-h] [--qispace_meta QISPACE_META] [--key_id KEY_ID]\n";
+    std::cout << "Usage: ./demo_sequr_key_query [-h] [--qispace_meta QISPACE_META] [--key_id KEY_ID] [--key_type KEY_TYPE]\n";
     std::cout << "\nOptions:\n";
     std::cout << "  -h, --help        Show this help message and exit\n";
     std::cout << "  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n";
-    std::cout << "  --key_id           Key ID to query\n";
-    std::cout << "  --key_type        0: AES key, 1: QEEP Key, defaut: AES Key\n";
+    std::cout << "  --key_id          Key ID to query\n";
+    std::cout << "  --key_type        0: AES key, 1: QEEP Key, default: AES Key\n";
 }
 
 int main(int argc, char *argv[]) {
@@ -118,7 +116,6 @@ int main(int argc, char *argv[]) {
 
     // free sequr handle
     sequr_free(handle);
-    curl_global_cleanup();
 
     return 0;
 }

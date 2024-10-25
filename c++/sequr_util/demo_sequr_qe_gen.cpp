@@ -32,23 +32,22 @@
 
 using namespace std;
 
+#define MAX_KEY_BUF_SIZE  2048
+
 void print_usage() {
-    std::cout << "Usage: ./demo_sequr_key_gen [-h] [--qispace_meta QISPACE_META] [--key_size_bits KEY_SIZE_BITS] [--key_type KEY_TYPE]\n";
+    std::cout << "Usage: ./demo_sequr_qe_gen [-h] [--qispace_meta QISPACE_META] [--length len] \n";
     std::cout << "\nOptions:\n";
     std::cout << "  -h, --help        Show this help message and exit\n";
     std::cout << "  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n";
-    std::cout << "  --key_size_bits   Key size to generate (in bits)\n";
-    std::cout << "  --key_type        0: AES key, 1: QEEP Key, default: AES Key\n";
+    std::cout << "  --length          Length of required QE in byte\n";
 }
 
-
 int main(int argc, char *argv[]) {
+
     const char *qispace_meta_path = nullptr;
     std::string qispace_meta;
-    int keysize_bits = 256;
-    int key_type = 0;
-    std::string key_id;
-    uint8_t *key = nullptr;
+    uint8_t *QE = NULL;
+    int ret, len = 10;
 
     if (argc < 2) {
         print_usage();
@@ -61,10 +60,8 @@ int main(int argc, char *argv[]) {
             return 0;
         } else if (strcmp(argv[i], "--qispace_meta") == 0 && i + 1 < argc) {
             qispace_meta_path = argv[++i];
-        } else if (strcmp(argv[i], "--key_size_bits") == 0 && i + 1 < argc) {
-            keysize_bits = atoi(argv[++i]);
-        } else if (strcmp(argv[i], "--key_type") == 0 && i + 1 < argc) {
-            key_type = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--length") == 0 && i + 1 < argc) {
+            len = atoi(argv[++i]);
         } else {
             std::cerr << "Unknown option: " << argv[i] << "\n";
             print_usage();
@@ -72,60 +69,48 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if (!qispace_meta_path) {
+    if (qispace_meta_path == nullptr) {
         std::cerr << "Error: qispace_meta_path is not provided.\n";
         print_usage();
         return 1;
     }
-    if (keysize_bits <= 0) {
-        std::cerr << "Error: key_size_bits is invalid.\n";
-        print_usage();
-        return 1;
-    }
+
     // read file 
     qispace_meta = read_file_to_string(qispace_meta_path);
     if(qispace_meta.empty()) { 
-        std::cerr << "Error: reading qispace meta file failed.\n";
+        std::cerr << "Error: reading qispace_meta file.\n";
         return 1; 
     }
 
     // init sequr_util
     SequrHandle *handle = sequr_util_init(qispace_meta);
     if(!handle){
-        std::cerr << "Error: failed to initialize SEQUR Util.\n";
+        std::cerr << "Error: failed to Initialize SEQUR Util.\n";
         return 1;
     }
 
-    // generate key 
-    key  = (uint8_t *) malloc(keysize_bits/8 + 22);
-    if (!key) {
-        std::cerr << "Error: memory allocation for key failed.\n";
-        sequr_free(handle);
-        return 1;
-    }
+    QE = new uint8_t[len];
 
-    int key_size = sequr_util_key_gen(handle, keysize_bits/8, key_id, key, key_type);
-    if(key_size <= 0) {
-        std::cerr << "Error: failed to generate key.\n";
-        free(key);
+    // query qe 
+    ret = sequr_util_get_qe(handle, QE, len);
+    if(ret != len) {
+        std::cerr << "Error: failed to query qe.\n";
         sequr_free(handle);
         return 1;
+    } else {
+        std::cout << "------------------------\n";
+        std::cout << "QE query successful.\n";
+        std::cout << "QE: ";
+        std::cout << setfill('0');
+        for (int i = 0; i < len; i++) {
+            cout << std::hex <<setw(2) << (int)QE[i];
+        }
     }
-    std::cout << "------------------------\n";
-    std::cout << "Key generation successful.\n";
-    std::cout << "Key ID: " << key_id.c_str() << "\n";
-    std::cout << "Key: ";
-    std::cout << setfill('0');
-    for (int i = 0; i < key_size; i++) {
-        cout << std::hex <<setw(2)<< (int)key[i] ;
-    }
-    
     std::cout << "\n------------------------\n";
-    
-    free(key);
+
     // free sequr handle
     sequr_free(handle);
-    
+    delete[] QE;
+
     return 0;
 }
-
