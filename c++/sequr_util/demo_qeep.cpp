@@ -223,7 +223,7 @@ int main(int argc, char **argv)
  */
         std::cout << "Compare message and decrypted message...\n" ;
         if(!memcmp(message, decrypted_message, message_len)) {
-                std::cout << "Match: decrypted_message = message: \n" ;
+                std::cout << "Match: decrypted_message = message.\n" ;
         } else {
                 std::cout << "No match: decrypted_message != message. ret: " << ret << "\n";
         }

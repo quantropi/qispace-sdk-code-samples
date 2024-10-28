@@ -1,22 +1,8 @@
-# QiSpace Sequr Util C++ Demos
+# QiSpace Sequr Util Demo for C++ Application
 
   A functionality demo based in C++ to demonstrate the usage of the QEEP, SEQUR, and PQRND APIs as well as QiSpace RESTful API.
 
-  The demos are tested on Ubuntu, MacOS Intel and M1, RaspberryPI. The required building tools are documented in Makefile.
-
-## **Setup**
-
-1. Install demo dependencies: `cjson` and `curl`.
-  
-    - Ubuntu 22.04 and RaspberryPI:  `sudo apt-get install libcjson-dev libcurl4-openssl-dev`
-    - Ubuntu 24.04: `sudo apt-get install libcjson-dev libcurl4-gnutls-dev`
-    - MacOS:  `brew install curl cjson`
-
-2. Install QiSpace QEEP SDK. If you do not have one, please contact Quantropi Inc.
-
-    Copy & paste the `lib` into `libqeep` at the top of this repository according to your building environment.
-
-3. Have your qispace meta config `.json` file from Quantropi Inc. If you do not have one, please contact Quantropi Inc.
+  The demos are tested on Ubuntu, MacOS Intel and M1, RaspberryPI.
 
 ## **Overview**
 
@@ -24,22 +10,55 @@
 - **QEEP**: Demonstrates use of **QEEP API for encryption/decryption** 
 - **PQRND**: Demonstrates use of **PQRND API for generating Pseudo Quantum Random Data** with either pre-loaded Quantum Entropy (QE) or QiSpace-REST-API-retrieved QE.
 
-## **Build Demos**
+## **Setup**
 
-1. Ubuntu: "libqeep-gcc-x64.a" required
-    `make`
-2. RaspberryPI: "libqeep-rpigcc64-aarch64.a" required
-    `make`
-3. Mac Intel: "libqeep-clang-x64.a" required
-    `make`
-4. Mac M1: "libqeep-clang-arm64mac.a" required
-    `make MAC_M1=1`
+1. Install demo dependencies: `cjson` and `curl`.
+  
+    - Ubuntu 22.04 and RaspberryPI:  `sudo apt-get install libcjson-dev libcurl4-openssl-dev`
+    - Ubuntu 24.04: `sudo apt-get install libcjson-dev libcurl4-gnutls-dev`
+    - MacOS Intel and M1:  `brew install curl cjson`
 
-## **Run Demos**
+2. Contact Quantropi to get the latest QiSpace QEEP SDK libraries.
 
-1. **Generate key demo:**
+    Copy & paste all the contents from `lib` folder into `libqeep` at the top of this repository according to the building platform.
 
-    `key`: Variable length keys for both classical symmetric ciphers and quantum-safe ciphers such as AES and QEEP.
+3. Get the `qispace_meta.json` config file from Quantropi Inc. If you do not have one, please contact Quantropi Inc.
+
+## **Build Demo**
+
+To build the demo based on the building environment which library you will need is mentioned below and the run command.
+
+1. Ubuntu: 
+    
+    Library: `libqeep-gcc-x64.a` 
+
+    Run Command: `make`
+
+2. RaspberryPI: 
+    
+    Library: `libqeep-rpigcc64-aarch64.a`
+
+    Run Command: `make`
+
+3. Mac Intel: 
+
+    Library:`libqeep-clang-x64.a`
+
+    Run Command: `make`
+
+4. Mac M1: 
+    
+    Library: `libqeep-clang-arm64mac.a`
+
+    Run Command: `make MAC_M1=1`
+
+## **Run Demo**
+
+We have four different demos showing the functionality of QiSpace SDK available.
+
+1. **Generate key demo**
+
+    We support variable length key generation for both classical symmetric ciphers and quantum-safe ciphers such as AES and QEEP.
 
     - Execute the `demo_sequr_key_gen` with the below arguments:
 
@@ -53,7 +72,7 @@
         --key_type        0: AES key, 1: QEEP Key, default: AES Key
       ```
 
-    - You might get an output as below:
+    - You will get an output as below:
 
       ```
       ------------------------
@@ -63,7 +82,7 @@
       ------------------------
       ```
 
-2. **Query key demo:**
+2. **Query key demo**
 
     - Execute the `demo_sequr_key_query` with the below arguments:
 
@@ -77,7 +96,7 @@
         --key_type           0: AES key, 1: QEEP Key, default: AES Key
       ```
 
-    - You might get an output as below:
+    - You will get an output as below:
 
       ```
       ------------------------
@@ -87,13 +106,13 @@
       ------------------------
       ```
 
-    - Compare results:
+    - Compare the outputs between Generate key and Query key demo
 
-      Note that for the same `key_id`, we were able to retrieve the same key content in both AES key and Qeep key format.
+      For the same `key_id`, we were able to retrieve the same key content in both AES key and QEEP key format.
 
-3. **Generate QE demo:**
+3. **Generate QE demo**
 
-    `QE` is the Quantum Entropy from QiSpace hosted quantum random source.
+    QE is the Quantum Entropy from QiSpace hosted quantum random source.
   
     - Execute the `demo_sequr_qe_gen` with the below arguments:
 
@@ -106,7 +125,7 @@
         --length             Length of required QE in byte
       ```
 
-    - You might get an output as below:
+    - You will get an output as below:
 
       ```
       ------------------------
@@ -115,9 +134,9 @@
       ------------------------
       ```
 
-4. **Qeep demo:**
+4. **Qeep demo**
 
-    `Qeep demo` provides the example code to use Qeep cipher APIs and Qeep Key.
+    Qeep demo provides the example code to use QEEP cipher APIs and QEEP Key.
 
     - Execute the `demo_qeep` with the below arguments:
 
@@ -130,7 +149,7 @@
         -m                message string to encrypt\n";
       ```
 
-    - You might get an output as below:
+    - You will get an output as below:
 
       ```
       ------------------------
@@ -157,7 +176,7 @@
       Demo QiSpace QEEP Decode operation done.
 
       Compare message and decrypted message...
-      Match: decrypted_message = message: 
+      Match: decrypted_message = message 
       Input message: 
         68656c6f6f6f6f6f
       Encrypted message: 
@@ -169,7 +188,7 @@
 
 5. **PQRND demo:**
 
-    `PQRND demo` provides example code to use PQRND APIs with `QE` to generate quantum random string.
+    PQRND demo provides example code to use PQRND APIs with QE to generate quantum random string.
 
     - Execute the `demo_pqrnd` with the below arguments:
 
@@ -182,15 +201,12 @@
         --length             Required length of pseudo quantum random string to generate in bytes
       ```
 
-    - You might get an output as below:
+    - You will get an output as below:
 
       ```
       ------------------------
       Demo SEQUR PQRND operations...
       Initializing PQRND handle...
-      Success!
-      Query QE using QiSpace API to use as seed...
-      Decoding QE to use as seed...
       Success!
       Loading PQRND seed...
       Success!

@@ -216,7 +216,7 @@ int main(int argc, char **argv)
  */
         printf("Compare message and decrypted message...\n");
         if(!memcmp(message, decrypted_message, message_len)) {
-            printf("-Match: decrypted_message = message\n");
+            printf("-Match: decrypted_message = message.\n");
         } else {
             printf("-No match: decrypted_message != message.\n");
         }
