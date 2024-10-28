@@ -18,15 +18,13 @@
     - Ubuntu 24.04: `sudo apt-get install libcjson-dev libcurl4-gnutls-dev`
     - MacOS Intel and M1:  `brew install curl cjson`
 
-2. Contact Quantropi to get the latest QiSpace QEEP SDK libraries.
-
-    Copy & paste all the contents from `lib` folder into `libqeep` at the top of this repository according to the building platform.
+2. Once the latest QiSpace QEEP SDK libraries has been obtained, `copy & paste` all the contents from `lib` folder into `libqeep` at the top of this repository according to the building platform.
 
 3. Get the `qispace_meta.json` config file from Quantropi Inc. If you do not have one, please contact Quantropi Inc.
 
 ## **Build Demo**
 
-To build the demo based on the building environment which library you will need is mentioned below and the run command.
+The demo can be build as per below run command corresponds for each host platform.
 
 1. Ubuntu: 
     
@@ -54,9 +52,9 @@ To build the demo based on the building environment which library you will need 
 
 ## **Run Demo**
 
-We have four different demos showing the functionality of QiSpace SDK available.
+We have four different demos showing the functionality of QiSpace SDK.
 
-1. **Generate key demo**
+1. **Generate Key demo**
 
     We support variable length key generation for both classical symmetric ciphers and quantum-safe ciphers such as AES and QEEP.
 
@@ -82,7 +80,7 @@ We have four different demos showing the functionality of QiSpace SDK available.
       ------------------------
       ```
 
-2. **Query key demo**
+2. **Query Key demo**
 
     - Execute the `demo_sequr_key_query` with the below arguments:
 

@@ -7,7 +7,9 @@ A functionality demo based in C to demonstrate the usage of the MASQ APIs. For t
 
 ## **Installation and Preparation**
 1. Download or checkout the `qispace-sdk-code-sample` git repository to the local machine.
+
 2. Contact Quantropi to get the latest QiSpace MASQ SDK libraries.
+
 3. Create the `libmasq` folder containing MASQ libraries depending on the platform at the top of this repository. The `libmasq` should contain all the contents from `ds` and `kem` from QiSpace MASQ SDK. The `ds` and `kem` contain the needed Big Number libraries.
 
 ## **Core Functionalities**
@@ -29,7 +31,7 @@ The supported Big Number libraries are `BN = qtp gmp`
   1) QiSpace NGen random callback functions from QiSpace QEEP SDK, or
   2) User-provided random callback functions
 
-    The Defaults used for the demo are `ALG=hppk` for NIST Security level 3, using `BN=qtp` and QiSpace NGen as the Initialization API to generate random numbers.
+    The Defaults used for this demo are `ALG=hppk` for NIST Security level 3, using `BN=qtp` and QiSpace NGen as the Initialization API to generate random numbers.
 
 - Generate Keypair using the MASQ KEM API
 - Encrypt & Decrypt the message using MASQ KEM APIs
@@ -52,7 +54,7 @@ The supported Big Number libraries are `BN = qtp gmp`
   1) QiSpace NGen random callback functions from QiSpace QEEP SDK, or 
   2) User-provided random callback functions
 
-    The Defaults used for the demo are `ALG=ghppk` for NIST Security level 5, using `BN=qtp` and QiSpace NGen as the Initialization API to generate random numbers.
+    The Defaults used for this demo are `ALG=ghppk` for NIST Security level 5, using `BN=qtp` and QiSpace NGen as the Initialization API to generate random numbers.
 
 - Generate Keypair to sign the message
 - Sign the message
