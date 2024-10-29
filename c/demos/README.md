@@ -6,12 +6,14 @@ A functionality demo based in C to demonstrate the usage of the MASQ APIs. For t
 - **MASQ** provides **Asymmetric Encryption** functionality. The two main functions of MASQ are **Key Exchange** and **Digital Signature** using a pair of public and private keys.
 
 ## **Installation and Preparation**
-1. Download or checkout the `qispace-sdk-code-sample` git repository to the local machine.
+1. Download or checkout `qispace-sdk-code-sample` git repository to the local machine.
 
 2. Contact Quantropi to get the latest QiSpace MASQ SDK libraries.
 
-3. Create the `libmasq` folder containing MASQ libraries depending on the platform at the top of this repository. The `libmasq` should contain all the contents from `ds` and `kem` from QiSpace MASQ SDK. The `ds` and `kem` contain the needed Big Number libraries.
+3. Create the `libmasq` folder at the top of this repository.
 
+4. Once the latest QiSpace MASQ SDK libraries has been obtained, `copy & paste` all the contents of `ds` and `kem` from QiSpace MASQ SDK according to the building platform. The `ds` and `kem` contain the needed Big Number libraries.
+  
 ## **Core Functionalities**
 
 ### MASQ KEM:

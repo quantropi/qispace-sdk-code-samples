@@ -10,21 +10,26 @@
 - **QEEP**: Demonstrates use of **QEEP API for encryption/decryption** 
 - **PQRND**: Demonstrates use of **PQRND API for generating Pseudo Quantum Random Data** with either pre-loaded Quantum Entropy (QE) or QiSpace-REST-API-retrieved QE.
 
-## **Setup**
+## **Installation and Preparation**
+1. Download or checkout `qispace-sdk-code-sample` git repository to the local machine.
 
-1. Install demo dependencies: `cjson` and `curl`.
+2. Install demo dependencies: `cjson` and `curl`.
   
     - Ubuntu 22.04 and RaspberryPI:  `sudo apt-get install libcjson-dev libcurl4-openssl-dev`
     - Ubuntu 24.04: `sudo apt-get install libcjson-dev libcurl4-gnutls-dev`
     - MacOS Intel and M1:  `brew install curl cjson`
 
-2. Once the latest QiSpace QEEP SDK libraries has been obtained, `copy & paste` all the contents from `lib` folder into `libqeep` at the top of this repository according to the building platform.
+3. Contact Quantropi to get the latest QiSpace QEEP SDK libraries.
 
-3. Get the `qispace_meta.json` config file from Quantropi Inc. If you do not have one, please contact Quantropi Inc.
+4. Create the `libqeep` folder at the top of this repository.
+
+5. Once the latest QiSpace QEEP SDK libraries has been obtained, `copy & paste` all the contents from `lib` folder into `libqeep` according to the building platform.
+
+6. Get the `qispace_meta.json` config file from Quantropi Inc. If you do not have one, please contact Quantropi Inc.
 
 ## **Build Demo**
 
-The demo can be build as per below run command corresponds for each host platform.
+The demo can be build as per below run command corresponding to each host platform.
 
 1. Ubuntu: 
     
