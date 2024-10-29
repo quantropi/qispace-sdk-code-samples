@@ -21,26 +21,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "help_util.h"
 #include "sequr_util.h"
+#include "help_util.h"
 
-void print_usage(void) {
-    printf("Usage: ./demo_sequr_key_gen [-h] [--qispace_meta QISPACE_META] [--key_size_bits KEY_SIZ_BITS] [--key_type KEY_TYPE]\n");
-    printf("\nOptions:\n");
-    printf("  -h, --help        Show this help message and exit\n");
-    printf("  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n");
-    printf("  --key_size_bits   Key size to generate (in bits)\n");
-    printf("  --key_type        0: AES key, 1: QEEP Key, default: AES Key\n");
+
+#define MAX_KEY_BUF_SIZE  2048
+#define IV_SIZE           16
+
+void print_usage() {
+    printf( "Usage: ./demo_sequr_qe_gen [-h] [--qispace_meta QISPACE_META] [--length len] \n");
+    printf( "\nOptions:\n");
+    printf( "  -h, --help        Show this help message and exit\n");
+    printf( "  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n");
+    printf( "  --length          Length of required QE in byte\n");
 }
 
-
 int main(int argc, char *argv[]) {
+
     char *qispace_meta_path = NULL;
     char *qispace_meta = NULL;
-    int   keysize_bits = 256;
-    int   key_type = 0;
-    char  key_id[256];
-    uint8_t *key;
+    uint8_t *QE = NULL;
+    int ret, qe_len = 10;
 
     if (argc < 2) {
         print_usage();
@@ -53,68 +54,62 @@ int main(int argc, char *argv[]) {
             return 0;
         } else if (strcmp(argv[i], "--qispace_meta") == 0 && i + 1 < argc) {
             qispace_meta_path = argv[++i];
-        } else if (strcmp(argv[i], "--key_size_bits") == 0 && i + 1 < argc) {
-            keysize_bits = atoi(argv[++i]);
-        } else if (strcmp(argv[i], "--key_type") == 0 && i + 1 < argc) {
-            key_type = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--length") == 0 && i + 1 < argc) {
+            qe_len = atoi(argv[++i]);
         } else {
-            printf("Unknown option: %s\n", argv[i]);
+            printf( "Unknown option: %s\n", argv[i]);
             print_usage();
             return 1;
         }
     }
 
-    if (!qispace_meta_path) {
-        printf("Error: qispace_meta_path is not provided.\n");
+    if (qispace_meta_path == NULL) {
+        printf( "Error: qispace_meta_path is not provided.\n");
         print_usage();
         return 1;
     }
-    if (keysize_bits <=0) {
-        printf("Error: key_size_bits is invalid.\n");
-        print_usage();
-        return 1;
-    }
+
     // read file 
     qispace_meta = read_file_to_string(qispace_meta_path);
     if(qispace_meta == NULL) { 
-        printf("Error: reading qispace meta file failed.\n");
-        return 1; }
+        printf( "Error: reading qispace_meta file.\n");
+        return 1; 
+    }
 
     // init sequr_util
     sequr_handle *handle = sequr_util_init(qispace_meta);
-    if(handle == NULL){
-        printf("Error: failed to initialize SEQUR Util.\n");
+    if(!handle){
+        printf( "Error: failed to Initialize SEQUR Util.\n");
         return 1;
     }
 
-    // generate key 
-    key  = (uint8_t *) malloc(keysize_bits/8 + 23);
-    if (key == NULL) {
-        printf("Error: memory allocation for key failed.\n");
+    QE = malloc(qe_len);
+    if (QE == NULL) {
+        printf("Error: memory allocation for QE failed.\n");
         sequr_free(handle);
         return 1;
     }
 
-    int key_size = sequr_util_key_gen(handle, keysize_bits/8, key_id, key, key_type);
-    if(key_size <= 0) {
-        printf("Error: failed to generate key.\n");
+    // query qe 
+    ret = sequr_util_get_qe(handle, QE, qe_len);
+    if(ret != qe_len) {
+        printf( "Error: failed to query qe.\n");
         sequr_free(handle);
-        free(key);
         return 1;
+    } else {
+        printf( "------------------------\n");
+        printf( "QE query successful.\n");
+        printf( "QE: ");
+        for (int i = 0; i < qe_len; i++) {
+            printf("%02x", QE[i]);
+        }
     }
-    printf("------------------------\n");
-    printf("Key generation successful.\n");
-    printf("Key ID: %s\n", key_id);
-    printf("Key: ");
-    for (int i = 0; i < key_size; i++) {
-        printf("%02x", key[i]);
-    }
-    printf("\n------------------------\n");
-    free(key);
+    printf( "\n------------------------\n");
+    
     free(qispace_meta);
+    free(QE);
     // free sequr handle
     sequr_free(handle);
 
     return 0;
 }
-

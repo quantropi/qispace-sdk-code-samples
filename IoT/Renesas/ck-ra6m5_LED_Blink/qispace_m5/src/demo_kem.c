@@ -108,7 +108,7 @@ int kem_demo(void)
     }
 
     ret0 = MASQ_KEM_seed(kem_handle, seed_orig, SEED_LEN);
-    if(ret0 != MASQ_SUCCESS) {
+    if(ret0 != 0) {
         goto bail;
     }
 
@@ -126,7 +126,7 @@ int kem_demo(void)
     ss_b = malloc((size_t)len4);
 
     ret1 = MASQ_KEM_keypair(kem_handle, pk, sk);
-    if(ret1 != MASQ_SUCCESS) {
+    if(ret1 != 0) {
         PRINTF("MASQ KEM Keypair generation failed with error %d\n\r", ret1);
         goto bail;
     } else {
@@ -137,7 +137,7 @@ int kem_demo(void)
     PRINTF_buf_hex("sk", sk, len2);
 
     ret2 = MASQ_KEM_encaps(kem_handle, pk, ss_a, ct);
-    if(ret2 != MASQ_SUCCESS) {
+    if(ret2 != 0) {
         PRINTF("MASQ KEM Encapsulation failed with error %d\n\r", ret2);
         goto bail;
     } else {
@@ -148,7 +148,7 @@ int kem_demo(void)
     PRINTF_buf_hex("ss_a", ss_a, len4);
 
     ret3 = MASQ_KEM_decaps(kem_handle, sk, ct, ss_b);
-    if(ret3 != MASQ_SUCCESS) {
+    if(ret3 != 0) {
         PRINTF("MASQ KEM Decapsulation failed with error %d\n\r", ret3);
     }
 
@@ -171,7 +171,7 @@ bail:
     if (ss_a != NULL) free(ss_a);
     if (ss_b != NULL) free(ss_b);
 
-    if (ret0 == MASQ_SUCCESS && ret1==MASQ_SUCCESS && ret2==MASQ_SUCCESS && ret3==MASQ_SUCCESS && ret4 == 0) {
+    if (ret0 == 0 && ret1==0 && ret2==0 && ret3==0 && ret4 == 0) {
         return 0;
     } else {
         return 1;

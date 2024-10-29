@@ -28,11 +28,10 @@
 #include <cstdio>
 #include <cstdint>
 #include <cstddef>
-#include <cjson/cJSON.h> 
-#include <curl/curl.h>
 #include "sequr_util.h"
 #include "help_util.h"
 #include "json_util.h"
+#include "qispace_qeep.h"
 
 using namespace std;
 
@@ -284,7 +283,6 @@ int sequr_util_query_key(SequrHandle* sequr_handle, std::string& key_id, uint8_t
 }
 
 
-
 // Free SequrHandle
 void sequr_free(SequrHandle* sequr_handle) {
     if (!sequr_handle) {
@@ -304,4 +302,67 @@ void sequr_free(SequrHandle* sequr_handle) {
 
    // Finally free the sequr_handle
     sequr_handle = nullptr;
+}
+
+
+/*
+ Function to query Quantum Entropy (QE)
+  - QE: pointer to the QE buffer, which should be allocated before calling this function
+  - len: required length of QE
+*/
+int sequr_util_get_qe(SequrHandle* sequr_handle, uint8_t *QE, int len){
+    
+    long response_code = 0;
+    int ret = 0;
+    std::string full_url;
+    std::string res;
+    std::string iv_b64;
+    std::string QE_b64;
+    char qe_len[10];
+    uint8_t iv[17]; 
+    int32_t iv_len; 
+    QP_Handle qp_handle;
+    int encoded_QE_len = 0;
+    uint8_t *encoded_QE;
+    
+    if(sequr_handle == nullptr || QE == nullptr) { return (-1); }
+    if(sequr_handle->qp_handle == nullptr || sequr_handle->q_meta == nullptr || sequr_handle->q_meta->url.empty() || sequr_handle->q_meta->token.empty()) { return (-1);}
+
+    // Perform HTTPS GET request to get QE
+    full_url = sequr_handle->q_meta->url + "/qe/";
+    sprintf(qe_len, "%d", len);
+    full_url = full_url + qe_len;
+
+    res = QiSpaceAPI_call("GET", full_url, sequr_handle->q_meta->token, "", &response_code);
+    if (response_code != 200) {
+        return -1;
+    }
+    
+    ret = json_get_values(res, "iv", iv_b64);
+    if (ret != 0) { return (-1);}
+    ret = json_get_values(res, "payload", QE_b64); 
+    if (ret != 0) { return (-1);}
+    
+    // Create QEEP handle
+    qp_handle = sequr_handle->qp_handle;
+    if (qp_handle == nullptr) { return (-1);}
+
+    // decode iv from base64 format to byte array
+    iv_len = base64_decode(iv_b64, iv_b64.length(), iv);
+    // load iv
+    ret = QP_iv_set(qp_handle, iv, iv_len);
+    if (ret != QEEP_OK) { return (-1); }
+
+    encoded_QE = new uint8_t[QE_b64.length()];
+    
+    // decode QE from base64 format to byte array 
+    encoded_QE_len = base64_decode(QE_b64, QE_b64.length(), encoded_QE);
+    // decode QE to plaintext byte array
+    ret = QP_decrypt(qp_handle, encoded_QE, encoded_QE_len, QE);    
+    if (ret != QEEP_OK) { 
+        delete[] encoded_QE;
+        return -1;
+    }
+    delete[] encoded_QE;
+    return len;
 }

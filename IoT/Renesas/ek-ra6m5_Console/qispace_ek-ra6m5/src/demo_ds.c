@@ -155,7 +155,7 @@ void ds_demo(void)
 
     // Call ds_rand_seed_cf() with random seed passed in
     ret = MASQ_ds_seed(ds_handle, seed_src, DS_SEED_LEN);
-    if(ret != MASQ_SUCCESS) {
+    if(ret != 0) {
         goto err;
     }
 
@@ -171,7 +171,7 @@ void ds_demo(void)
 
     // generate your key pair and release your public key to public
     ret = MASQ_DS_keypair(ds_handle, pk, sk);
-    if(ret != MASQ_SUCCESS) {
+    if(ret != 0) {
         PRINTF("MASQ DS Unit Test: Keypairs not generated\n\r");
         goto err;
     }
@@ -186,7 +186,7 @@ void ds_demo(void)
     PRINTF("\n\rLength of message: %d ", MSG_LEN);
     // Sign the message with your private key and get the signature in the sign_msg
     ret = MASQ_DS_sign(ds_handle, sk, msg, MSG_LEN, sign_msg, &len_sign);
-    if(ret != MASQ_SUCCESS) {
+    if(ret != 0) {
         PRINTF("MASQ DS Unit Test: Signature not generated\n\r");
         goto err;
     }
@@ -201,7 +201,7 @@ void ds_demo(void)
 
     // People can use your public key to verify the signature to make sure it's signed by you
     ret = MASQ_DS_verify(ds_handle, pk, msg, MSG_LEN, sign_msg, len_sign);
-    if(ret == MASQ_SUCCESS) {
+    if(ret == 0) {
         PRINTF("MASQ DS Unit Test: Passed Signature Verification\n\r\n\r");
         goto err;
     }

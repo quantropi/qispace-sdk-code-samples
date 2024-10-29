@@ -27,20 +27,18 @@
 #include <cstdint>
 #include <cstddef>
 #include <ctime>
+#include <iomanip>
 #include "qispace_qeep.h"
-
-
 
 /*
  * This demo demonstrates an example of QEEP API's encrypt and decrypt functionality
  * applied on a message string if "-m" is provided with a pseudo-random IV.
- * The Quantum Key loaded into QEEP API if provided via "-k".
+ * The Quantum Key is loaded into QEEP API if provided via "-k".
  * The default pre-loaded in hex string is used if "-k" not provided.
  * 
 */
 
 using namespace std;
-
 
 #define DEMO_IV_SIZE                      16
 #define DEMO_MESSAGE_SIZE                 32
@@ -60,7 +58,6 @@ int main(int argc, char **argv)
 
         QP_Handle qp_handle_enc;
         QP_Handle qp_handle_dec;
-
   
         uint8_t iv[DEMO_IV_SIZE]; 
 
@@ -77,20 +74,20 @@ int main(int argc, char **argv)
 
         for (i = 1; i < argc; i++) {
                 if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-                print_usage(argv[0]);
-                return 0;
+                        print_usage(argv[0]);
+                        return 0;
                 } else if (strcmp(argv[i], "-k") == 0 && i + 1 < argc) {
-                QK_str_hex = argv[++i];
+                        QK_str_hex = argv[++i];
                 } else if (strcmp(argv[i], "-m") == 0 && i + 1 < argc) {
-                M_str = argv[++i];
+                        M_str = argv[++i];
                 } else {
-                std::cerr << "Unknown option: " << argv[i] << "\n";
-                print_usage(argv[0]);
-                return 1;
+                        std::cerr << "Unknown option: " << argv[i] << "\n";
+                        print_usage(argv[0]);
+                        return 1;
                 }
         }
 
-        if (QK_str_hex.length()==0 || QK_str_hex.length()/2 * 2 != QK_str_hex.length()) {
+        if (QK_str_hex.length() == 0 || QK_str_hex.length()/2 * 2 != QK_str_hex.length()) {
                 std::cerr << "Error: Qeep Key Hex String is invalid.\n";
                 print_usage(argv[0]);
                 return 1;
@@ -101,29 +98,30 @@ int main(int argc, char **argv)
         /* convert qeep key from hex string to byte array */
         QK_len = QK_str_hex.length()/2;
         QK = new uint8_t[QK_len];
-        for(i = 0; i < QK_len; i++) 
+        for(i = 0; i < QK_len; i++){ 
                 sscanf(QK_str_hex.c_str() + 2*i, "%02hhx", &QK[i]);
-        
+        }
 
         /* generate random test IV per message - must be 16 Bytes */
-        for(i = 0; i < DEMO_IV_SIZE; i++)
+        for(i = 0; i < DEMO_IV_SIZE; i++){
                 iv[i] = rand()&0xff;
+        }
 
         /* create random message for test purpose */
         if (M_str.length() > 0) {
-           message_len = M_str.length();
-           message = new uint8_t[message_len];
-           M_str.copy((char*)message,message_len, 0 );
+                message_len = M_str.length();
+                message = new uint8_t[message_len];
+                M_str.copy((char*)message,message_len, 0 );
         } else {
-          //random generate default message
-          message = new uint8_t[message_len];
-          for(i = 0; i< message_len; i++)
-                message[i] = rand()&0xff;
+                //random generate default message
+                message = new uint8_t[message_len];
+                for(i = 0; i< message_len; i++){
+                        message[i] = rand()&0xff;
+                }
         }
 
         encrypted_message = new uint8_t[message_len];
         decrypted_message = new uint8_t[message_len];
-
 
 /** 
  * ##################################################################
@@ -131,15 +129,14 @@ int main(int argc, char **argv)
 *  ##################################################################
 */
 
-
-        std::cout << "Demo QiSpace QEEP operation...\n" ;
+        std::cout << "Demo QiSpace QEEP Encode operation...\n" ;
 /**
 *    Step 1: Create QEEP handle
 */
         std::cout << "Creating QEEP handle...\n" ;
         ret = QP_init(&qp_handle_enc);
-        if (ret != QEEP_OK) { std::cout << "-QP_init fail: " << ret ; goto DEMO_END;}
-        std::cout << " -Success!\n" ;
+        if (ret != QEEP_OK) { std::cout << "QP_init fail: " << ret ; goto DEMO_END;}
+        std::cout << " Success!\n" ;
 
 /**
  *    Step 2: Load QEEP key. 
@@ -148,31 +145,31 @@ int main(int argc, char **argv)
         /* load the qeep key for eventual QEEP encryption/decryption */
         std::cout << "Loading QEEP key...\n" ;
         ret = QP_qeep_key_load(qp_handle_enc, QK, QK_len);
-        if (ret != QEEP_OK) { std::cout << "-QP_qeep_key_load fail: " << ret << "\n"; goto DEMO_END;}
-        std::cout << "-Success!\n" ;
+        if (ret != QEEP_OK) { std::cout << "QP_qeep_key_load fail: " << ret << "\n"; goto DEMO_END;}
+        std::cout << "Success!\n" ;
 
 /**
  *    Step 3: Load message IV 
  */
         std::cout << "Loading message IV...\n" ;
         ret = QP_iv_set(qp_handle_enc, iv, DEMO_IV_SIZE);
-        if (ret != QEEP_OK) { std::cout << "-QP_iv_set fail:  " << ret ; goto DEMO_END;}
-        std::cout << "-Success!\n" ;
+        if (ret != QEEP_OK) { std::cout << "QP_iv_set fail:  " << ret ; goto DEMO_END;}
+        std::cout << "Success!\n" ;
 
 /**
  *    Step 4: Encrypt message 
  */
-        std::cout << "Encrypting message...\n" ;
+        std::cout << "Encrypting the message...\n" ;
         ret = QP_encrypt(qp_handle_enc, message,  message_len, encrypted_message);
-        if (ret != QEEP_OK) { std::cout << "-QP_encode fail: " << ret ; goto DEMO_END;}
+        if (ret != QEEP_OK) { std::cout << "QP_encode fail: " << ret ; goto DEMO_END;}
         encrypted_message_len = message_len;
-        std::cout << "-Success!\n" ;
+        std::cout << "Success!\n" ;
 
 /**
 *    Step 5: Free encoding QEEP handle
 */
         ret = QP_close(qp_handle_enc);
-        std::cout << "Done \n\n" ;
+        std::cout << "Demo QiSpace QEEP Encode operation done.\n\n" ;
 
 
 /** 
@@ -181,44 +178,44 @@ int main(int argc, char **argv)
 *  ##################################################################
 */
 
-        std::cout << "Demo QEEP decode operation...\n" ;
+        std::cout << "Demo QiSpace QEEP decode operation...\n" ;
 /**
 *    Step 1: Create QEEP handle
 */
         std::cout << "Creating QEEP handle...\n" ;
         ret = QP_init(&qp_handle_dec);
-        if (ret != QEEP_OK) { std::cout << "-QP_init fail: " << ret << "\n"; goto DEMO_END;}
-        std::cout << "-Success!\n" ;
+        if (ret != QEEP_OK) { std::cout << "QP_init fail: " << ret << "\n"; goto DEMO_END;}
+        std::cout << "Success!\n" ;
 
 /**
  *    Step 2: Load QEEP key
  */
         std::cout << "Loading QEEP key...\n" ;
         ret = QP_qeep_key_load(qp_handle_dec, QK, QK_len);
-        if (ret != QEEP_OK) { std::cout << "-QP_qeep_key_load fail: " << ret << "\n"; goto DEMO_END;}
-        std::cout << "-Success!\n" ;
+        if (ret != QEEP_OK) { std::cout << "QP_qeep_key_load fail: " << ret << "\n"; goto DEMO_END;}
+        std::cout << "Success!\n" ;
 
 /**
  *    Step 3: Load IV 
  */
         std::cout << "Loading message IV...\n" ;
         ret = QP_iv_set(qp_handle_dec, iv, DEMO_IV_SIZE);
-        if (ret != QEEP_OK) { std::cout << "-QP_iv_set fail: " << ret << "\n"; goto DEMO_END;}
-        std::cout << "-Success!\n" ;
+        if (ret != QEEP_OK) { std::cout << "QP_iv_set fail: " << ret << "\n"; goto DEMO_END;}
+        std::cout << "Success!\n" ;
 
 /**
  *    Step 4: Decrypt operation 
  */
-        std::cout << "Decrypting encrypted message...\n" ;
+        std::cout << "Decrypting the encrypted message...\n" ;
         ret = QP_decrypt(qp_handle_dec, encrypted_message,  encrypted_message_len, decrypted_message);
-        if (ret != QEEP_OK) { std::cout << "-QP_decrypt fail: " << ret << "\n"; goto DEMO_END;}
-        std::cout << "-Success!\n" ;
+        if (ret != QEEP_OK) { std::cout << "QP_decrypt fail: " << ret << "\n"; goto DEMO_END;}
+        std::cout << "Success!\n" ;
 
 /**
 *    Step 5: Free QEEP handle
 */
         ret = QP_close(qp_handle_dec);
-        std::cout << "Done. \n\n" ;
+        std::cout << "Demo QiSpace QEEP Decode operation done.\n\n" ;
 
 
 /**
@@ -226,21 +223,21 @@ int main(int argc, char **argv)
  */
         std::cout << "Compare message and decrypted message...\n" ;
         if(!memcmp(message, decrypted_message, message_len)) {
-                std::cout << "-Match: decrypted_message = message: \n" ;
+                std::cout << "Match: decrypted_message = message.\n" ;
         } else {
-                std::cout << "-No match: decrypted_message != message . ret: " << ret << "\n";
+                std::cout << "No match: decrypted_message != message. ret: " << ret << "\n";
         }
-        std::cout << "-Input message: \n  ";
+        std::cout << "Input message: \n  ";
         std::cout << setfill('0');
         for (int i = 0; i < message_len; i++) {
                 cout << std::hex <<setw(2) << (int)message[i];
         }
-        std::cout << "\n-Encrypted message: \n  ";
+        std::cout << "\nEncrypted message: \n  ";
         std::cout << setfill('0');
         for (int i = 0; i < message_len; i++) {
                 cout << std::hex <<setw(2) << (int)encrypted_message[i];
         }
-        std::cout << "\n-Decrypted message: \n  ";
+        std::cout << "\nDecrypted message: \n  ";
         std::cout << setfill('0');
         for (int i = 0; i < message_len; i++) {
                 cout << std::hex <<setw(2) << (int)decrypted_message[i];

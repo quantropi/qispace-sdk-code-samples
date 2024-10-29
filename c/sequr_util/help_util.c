@@ -22,9 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <cjson/cJSON.h> 
 #include <curl/curl.h>
-
 #include "help_util.h"
 
 char *read_file_to_string(const char *path) {

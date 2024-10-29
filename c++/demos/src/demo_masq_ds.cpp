@@ -131,7 +131,7 @@ int main(int argc, const char * argv[]) {
 #endif    
     if(ds_handle_bob == NULL) {
         std::cout << "MASQ DS Handle init failed.\n";    
-        return MASQ_ERR_MEM_ALLOC;    
+        return -1;    
     }
 
 #ifndef USE_PQRND
@@ -148,7 +148,7 @@ int main(int argc, const char * argv[]) {
 #endif
     if(ds_handle_alice == NULL) {
         std::cout << "MASQ DS Handle init failed.\n";    
-        return MASQ_ERR_MEM_ALLOC;    
+        return -1;    
     }
     std::cout << "Success!\n";
 

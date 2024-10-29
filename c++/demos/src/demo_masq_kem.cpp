@@ -108,7 +108,7 @@ int main(int argc, const char * argv[]) {
 
     if(kem_handle_alice == nullptr) {
         std::cout << "MASQ KEM Handle init failed.\n";    
-        return MASQ_ERR_MEM_ALLOC;    
+        return -1;    
     }
 
 #ifndef USE_PQRND
@@ -126,7 +126,7 @@ int main(int argc, const char * argv[]) {
 
     if(kem_handle_bob == NULL) {
         std::cout << "MASQ KEM Handle init failed.\n";    
-        return MASQ_ERR_MEM_ALLOC;    
+        return -1;    
     }
     std::cout << "Success!\n";
 

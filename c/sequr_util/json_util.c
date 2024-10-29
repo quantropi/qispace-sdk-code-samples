@@ -21,7 +21,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <cjson/cJSON.h> 
+#include "cjson/cJSON.h"  // Include the cJSON library header
+
+int extract_string_value(cJSON *json, const char *key, char **output) {
+    if (output != NULL) {
+        cJSON *item = cJSON_GetObjectItemCaseSensitive(json, key);
+        if (cJSON_IsString(item) && item->valuestring != NULL) {
+            *output = strdup(item->valuestring);
+            if (*output == NULL) {
+                return -1;  // Memory allocation failed
+            }
+        }
+    }
+    return 0;  // Success or no action taken
+}
 
 int json_get_values(char* json_str, char** url, char** token, char** subkey, char** iv, char** id, char** qk) {
     // Parse the JSON string
@@ -30,76 +43,15 @@ int json_get_values(char* json_str, char** url, char** token, char** subkey, cha
         return -1; 
     }
 
-    // Extract "url" if requested
-    if (url != NULL) {
-        cJSON *url_item = cJSON_GetObjectItemCaseSensitive(json, "url");
-        if (cJSON_IsString(url_item) && url_item->valuestring != NULL) {
-            *url = strdup(url_item->valuestring);
-            if (*url == NULL) {
-                cJSON_Delete(json);
-                return -1;  // Memory allocation failed
-            }
-        }
-    }
-
-    // Extract "token" if requested
-    if (token != NULL) {
-        cJSON *token_item = cJSON_GetObjectItemCaseSensitive(json, "token");
-        if (cJSON_IsString(token_item) && token_item->valuestring != NULL) {
-            *token = strdup(token_item->valuestring);
-            if (*token == NULL) {
-                cJSON_Delete(json);
-                return -1;  // Memory allocation failed
-            }
-        }
-    }
-
-    // Extract "sub_key" if requested
-    if (subkey != NULL) {
-        cJSON *subkey_item = cJSON_GetObjectItemCaseSensitive(json, "sub_key");
-        if (cJSON_IsString(subkey_item) && subkey_item->valuestring != NULL) {
-            *subkey = strdup(subkey_item->valuestring);
-            if (*subkey == NULL) {
-                cJSON_Delete(json);
-                return -1;  // Memory allocation failed
-            }
-        }
-    }
-
-    // Extract "payload" (qk) if requested
-    if (qk != NULL) {
-        cJSON *qk_item = cJSON_GetObjectItemCaseSensitive(json, "payload");
-        if (cJSON_IsString(qk_item) && qk_item->valuestring != NULL) {
-            *qk = strdup(qk_item->valuestring);
-            if (*qk == NULL) {
-                cJSON_Delete(json);
-                return -1;  // Memory allocation failed
-            }
-        }
-    }
-
-    // Extract "iv" if requested
-    if (iv != NULL) {
-        cJSON *iv_item = cJSON_GetObjectItemCaseSensitive(json, "iv");
-        if (cJSON_IsString(iv_item) && iv_item->valuestring != NULL) {
-            *iv = strdup(iv_item->valuestring);
-            if (*iv == NULL) {
-                cJSON_Delete(json);
-                return -1;  // Memory allocation failed
-            }
-        }
-    }
-
-    // Extract "id" if requested
-    if (id != NULL) {
-        cJSON *id_item = cJSON_GetObjectItemCaseSensitive(json, "id");
-        if (cJSON_IsString(id_item) && id_item->valuestring != NULL) {
-            *id = strdup(id_item->valuestring);
-            if (*id == NULL) {
-                cJSON_Delete(json);
-                return -1;  // Memory allocation failed
-            }
-        }
+    // Use helper function to extract values
+    if (extract_string_value(json, "url", url) < 0 ||
+        extract_string_value(json, "token", token) < 0 ||
+        extract_string_value(json, "sub_key", subkey) < 0 ||
+        extract_string_value(json, "payload", qk) < 0 ||
+        extract_string_value(json, "iv", iv) < 0 ||
+        extract_string_value(json, "id", id) < 0) {
+        cJSON_Delete(json);
+        return -1;  // Memory allocation failed
     }
 
     // Clean up and return success
