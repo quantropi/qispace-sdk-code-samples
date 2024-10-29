@@ -6,9 +6,9 @@
 
 ## **Overview**
 
-- **SEQUR**: Demonstrates the use of **SEQUR API to decode arbitrary QiSpace Enterprise payloads** using either a pre-loaded or QiSpace-REST-API-retrieved subscriber key (subkey).
-- **QEEP**: Demonstrates use of **QEEP API for encryption/decryption** 
-- **PQRND**: Demonstrates use of **PQRND API for generating Pseudo Quantum Random Data** with either pre-loaded Quantum Entropy (QE) or QiSpace-REST-API-retrieved QE.
+- **SEQUR**: Demonstrates the use of **SEQUR API to decode arbitrary QiSpace Enterprise payloads** using either a pre-loaded or QiSpace REST API retrieved subscriber key (subkey).
+- **QEEP**: Demonstrates the use of **QEEP API for encryption/decryption**. 
+- **PQRND**: Demonstrates the use of **PQRND API for generating Pseudo Quantum Random Data** with either pre-loaded Quantum Entropy (QE) or QiSpace REST API retrieved QE.
 
 ## **Installation and Preparation**
 1. Download or checkout `qispace-sdk-code-sample` git repository to the local machine.

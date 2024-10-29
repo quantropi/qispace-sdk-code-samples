@@ -1,4 +1,4 @@
-# Qeep SDK Demo for C++ Application
+# QiSpace SDK Demo for C++ Application
 
 A functionality demo based in C++ to demonstrate the usage of the MASQ APIs. For the best running experience, run the demo on Ubuntu platform.
 
