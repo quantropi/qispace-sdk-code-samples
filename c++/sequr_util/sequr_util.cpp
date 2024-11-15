@@ -116,7 +116,7 @@ Function to generate key
   - key_size: input parameter in bytes
   - key_type: 0 for AES key, 1 for QEEP KEY
   - key:   key buffer should be allocated before calling this function
-           key_buffer_size >= key_size + 22 if key_type is QEEP. 
+           key_buffer_size >= key_size + key_type_header_size if key_type is QEEP. 
 */
 int sequr_util_key_gen(SequrHandle* sequr_handle, int32_t key_size, std::string& key_id, uint8_t *key, int key_type) {
     char const *label = "sequr";
@@ -187,14 +187,23 @@ int sequr_util_key_gen(SequrHandle* sequr_handle, int32_t key_size, std::string&
         }
 
     // Copy the relevant part of buf (skipping the first QK_TAG_LENGTH and ignoring the last QK_HASH_LENGTH)
-    if (key_type ==1 ) {
-        memcpy(key, buf, encoded_QK_len);
+    if (key_type == (int)QEEP_KEY) {
+        //QEEP_KEY
         ret = encoded_QK_len;
+        memcpy(key, buf, encoded_QK_len);
+    } else if (key_type == (int)QEEP_PASS) {
+        //QEEP_PASS
+        key[0] = 2;
+        key[1] = (encoded_QK_len/256) & 0xff;
+        key[2] = (encoded_QK_len) & 0xff;
+        ret = encoded_QK_len + 2;
+        memcpy(&key[3], &buf[1], encoded_QK_len -1);
     }
-     else  {
+    else {
+        //AES_KEY
         memcpy(key, buf + QK_TAG_LENGTH, key_size);
         ret = key_size;
-     }
+    }
 
     // free data
     delete[] encoded_QK;
@@ -205,9 +214,9 @@ int sequr_util_key_gen(SequrHandle* sequr_handle, int32_t key_size, std::string&
 
 /*
  Function to get key by key_id
-  - key_type: 0 for AES KEY, 1 for QEEP KEY
+  - key_type: 0 for AES KEY, 1 for QEEP KEY, 2 for QEEP PASS
   - key:   key buffer should be allocated before calling this function
-           key_buffer_size >= key_size + 22 if key_type is QEEP. 
+           key_buffer_size >= key_size + key_type_header_size if key_type is QEEP. 
            */
 int sequr_util_query_key(SequrHandle* sequr_handle, std::string& key_id, uint8_t *key, int key_type) {
     
@@ -267,14 +276,24 @@ int sequr_util_query_key(SequrHandle* sequr_handle, std::string& key_id, uint8_t
     }
     
     // Copy the relevant part of buf (skipping the first QK_TAG_LENGTH and ignoring the last QK_HASH_LENGTH)
-    if (key_type ==1 ) {
+
+    if (key_type == (int)QEEP_KEY) {
+        //QEEP_KEY
         key_size = encoded_QK_len;
         memcpy(key, buf, key_size);
+    } else if (key_type == (int)QEEP_PASS) {
+        //QEEP_PASS
+        key[0] = 2;
+        key[1] = (encoded_QK_len/256) & 0xff;
+        key[2] = (encoded_QK_len) & 0xff;
+        key_size = encoded_QK_len + 2;
+        memcpy(&key[3], &buf[1], encoded_QK_len -1);
     }
-     else  {
+    else {
+        //AES_KEY
         key_size = encoded_QK_len - QK_TAG_LENGTH - QK_HASH_LENGTH;
         memcpy(key, buf + QK_TAG_LENGTH, key_size);
-     }
+    }
     // free data
     delete[] encoded_QK;
     delete[] buf;
@@ -330,7 +349,7 @@ int sequr_util_get_qe(SequrHandle* sequr_handle, uint8_t *QE, int len){
 
     // Perform HTTPS GET request to get QE
     full_url = sequr_handle->q_meta->url + "/qe/";
-    sprintf(qe_len, "%d", len);
+    snprintf(qe_len, 10, "%d", len);
     full_url = full_url + qe_len;
 
     res = QiSpaceAPI_call("GET", full_url, sequr_handle->q_meta->token, "", &response_code);
@@ -365,4 +384,25 @@ int sequr_util_get_qe(SequrHandle* sequr_handle, uint8_t *QE, int len){
     }
     delete[] encoded_QE;
     return len;
+}
+
+
+/**
+  Return the buffer size required by giving key_size in byte and key_type
+ */
+int32_t sequr_util_key_buff_size(int32_t key_size,  sequr_key_type key_type ) {
+    int32_t buff_size = 0;
+    switch (key_type) {
+        AES_KEY:
+            buff_size = key_size + AES_KEY_HEADER_SIZE;
+            break;
+        QEEP_KEY:
+            buff_size = key_size + QEEP_KEY_HEADER_SIZE;
+            break;
+        QEEP_PASS:
+        default:
+            buff_size = key_size + QEEP_PASS_HEADER_SIZE;
+            break;
+    }
+    return (buff_size);
 }

@@ -38,7 +38,7 @@ void print_usage() {
     std::cout << "  -h, --help        Show this help message and exit\n";
     std::cout << "  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n";
     std::cout << "  --key_size_bits   Key size to generate (in bits)\n";
-    std::cout << "  --key_type        0: AES key, 1: QEEP Key, default: AES Key\n";
+    std::cout << "  --key_type        0: AES key, 1: QEEP Key, 2: QEEP Pass, default: AES Key\n";
 }
 
 
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
     }
 
     // generate key 
-    key  = (uint8_t *) malloc(keysize_bits/8 + 22);
+    key  = (uint8_t *) malloc(sequr_util_key_buff_size(keysize_bits/8, (sequr_key_type) key_type));
     if (!key) {
         std::cerr << "Error: memory allocation for key failed.\n";
         sequr_free(handle);
@@ -115,6 +115,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Key generation successful.\n";
     std::cout << "Key ID: " << key_id.c_str() << "\n";
     std::cout << "Key: ";
+    if (key_type == (int)QEEP_PASS) {
+        std::cout <<"QISPACE:QK:";
+    }
     std::cout << setfill('0');
     for (int i = 0; i < key_size; i++) {
         cout << std::hex <<setw(2)<< (int)key[i] ;

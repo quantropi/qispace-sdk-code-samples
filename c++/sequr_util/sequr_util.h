@@ -23,6 +23,16 @@
 
 #include "qispace_qeep.h"
 
+#define AES_KEY_HEADER_SIZE  0
+#define QEEP_KEY_HEADER_SIZE  22
+#define QEEP_PASS_HEADER_SIZE 24
+
+ typedef enum _sequr_key_type {
+    AES_KEY = 0,
+    QEEP_KEY = 1,
+    QEEP_PASS =2,
+} sequr_key_type;
+
 /* QiSpace SEQUR QK APIs */
 typedef struct {
     std::string url;   // QiSpace Enterprise URL
@@ -51,11 +61,11 @@ SequrHandle* sequr_util_init(const std::string q_meta);
 * Input parameters:
 *       - sequr_handle: SequrHandle pointer
 *       - key_size: keysize in bytes
-*       - key_type: 0 for AES Key, 1 for QEEP Key
+*       - key_type: 0 for AES Key, 1 for QEEP Key, 2 for QEEP PASS
 * Output parameters:
 *       - key_id: pointer to key_id string
 *       - key: pointer to the key buffer, which should be allocated before calling this function
-               key_buffer_size >= key_size + 22 if key_type is QEEP. 
+               key_buffer_size >= key_size + Key_type_header_size if key_type is QEEP. 
 * Return:
 *       - key size on success, -1 on failure
 */
@@ -67,10 +77,10 @@ int sequr_util_key_gen(SequrHandle* sequr_handle, int32_t key_size, std::string&
 * Input parameters:
 *       - sequr_handle: SequrHandle pointer
 *       - key_id: key_id string
-*       - key_type: 0 for AES Key, 1 for QEEP Key
+*       - key_type: 0 for AES Key, 1 for QEEP Key, 2 for QEEP PASS
 * Output parameters:
 *       - key: pointer to the key buffer, which should be allocated before calling this function
-            key_buffer_size >= key_size + 22 if key_type is QEEP. 
+            key_buffer_size >= key_size + Key_type_header_size if key_type is QEEP. 
 * Return:
 *       - key size on success, -1 on failure
 */
@@ -96,5 +106,9 @@ void sequr_free(SequrHandle* sequr_handle);
 */
 int sequr_util_get_qe(SequrHandle* sequr_handle, uint8_t *QE, int len);
 
+/**
+  Return the buffer size required by giving key_size in byte and key_type
+ */
+int32_t sequr_util_key_buff_size(int32_t key_size,  sequr_key_type key_type );
 
 #endif  /*_SEQUR_UTIL_H */

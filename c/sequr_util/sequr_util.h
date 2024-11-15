@@ -28,6 +28,17 @@ extern "C" {
 #include <stdint.h>
 #include "qispace_qeep.h"
 
+#define AES_KEY_HEADER_SIZE  0
+#define QEEP_KEY_HEADER_SIZE  22
+#define QEEP_PASS_HEADER_SIZE 24
+
+ typedef enum _sequr_key_type {
+    AES_KEY = 0,
+    QEEP_KEY = 1,
+    QEEP_PASS =2,
+} sequr_key_type;
+
+
 /* QiSpace SEQUR QK APIs */
 typedef struct {
     char *url;   // QiSpace Enterprise URL
@@ -54,11 +65,11 @@ sequr_handle* sequr_util_init(char* q_meta);
 * Input parameters:
 *       - sequr_handle: sequr_handle pointer
 *       - key_size: keysize in bytes
-*       - key_type: 0 for AES Key, 1 for QEEP Key
+*       - key_type: 0 for AES Key, 1 for QEEP Key, 2 for QEEP PASS
 * Output parameters:
 *       - key_id: pointer to key_id string
 *       - key: pointer to the key buffer, which should be allocated before calling this function
-               key_buffer_size >= key_size + 22 if key_type is QEEP. 
+               key_buffer_size >= key_size + Key_type_header_size (key_type) if key_type is QEEP. 
 * Return key size on success, -1 on failure
 */
 int sequr_util_key_gen(sequr_handle* sequr_handle, int32_t key_size, char* key_id, uint8_t *key, int key_type);
@@ -69,10 +80,10 @@ int sequr_util_key_gen(sequr_handle* sequr_handle, int32_t key_size, char* key_i
 * Input parameters:
 *       - sequr_handle: sequr_handle pointer
 *       - key_id: key_id string
-*       - key_type: 0 for AES Key, 1 for QEEP Key
+*       - key_type: 0 for AES Key, 1 for QEEP Key, 2 for QEEP PASS
 * Output parameters:
 *       - key: pointer to the key buffer , which should be allocated before calling this function
-            key_buffer_size >= key_size + 22 if key_type is QEEP. 
+            key_buffer_size >= key_size + Key_type_header_size (key_type) if key_type is QEEP. 
 * Return key size on success, -1 on failure
 */
 int sequr_util_query_key(sequr_handle* sequr_handle, char* key_id, uint8_t *key, int key_type);
@@ -94,6 +105,11 @@ void sequr_free(sequr_handle* sequr_handle);
 *       - length of QE bytes on success, -1 on failure
 */
 int sequr_util_get_qe(sequr_handle* sequr_handle, uint8_t* QE, int len);
+
+/**
+  Return the buffer size required by giving key_size in byte and key_type
+ */
+int32_t sequr_util_key_buff_size(int32_t key_size,  sequr_key_type key_type );
 
 # ifdef  __cplusplus
 }

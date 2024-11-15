@@ -40,7 +40,7 @@ void print_usage() {
     std::cout << "  -h, --help        Show this help message and exit\n";
     std::cout << "  --qispace_meta    Path to qispace meta .json file, provided by Quantropi Inc.\n";
     std::cout << "  --key_id          Key ID to query\n";
-    std::cout << "  --key_type        0: AES key, 1: QEEP Key, default: AES Key\n";
+    std::cout << "  --key_type        0: AES key, 1: QEEP Key,2: QEEP PASS, default: AES Key\n";
 }
 
 int main(int argc, char *argv[]) {
@@ -107,6 +107,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Key query successful.\n";
     std::cout << "Key ID: " << key_id.c_str() << "\n";
     std::cout << "Key: ";
+    if (key_type == (int)QEEP_PASS) {
+        std::cout <<"QISPACE:QK:";
+    }
     std::cout << setfill('0');
     for (int i = 0; i < key_size; i++) {
         cout << std::hex <<setw(2) << (int)key[i];

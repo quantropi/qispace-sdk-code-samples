@@ -33,7 +33,7 @@ void print_usage(void) {
     printf("  -h, --help         Show this help message and exit\n");
     printf("  --qispace_meta     Path to qispace meta .json file, provided by Quantropi Inc.\n");
     printf("  --key_id           Key ID to query\n");
-    printf("  --key_type        0: AES key, 1: QEEP Key, default: AES Key\n");
+    printf("  --key_type        0: AES key, 1: QEEP Key, 2: QEEP PASS, default: AES Key\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -102,6 +102,9 @@ int main(int argc, char *argv[]) {
     printf("Key query successful.\n");
     printf("Key ID: %s\n", key_id);
     printf("Key: ");
+    if (key_type == (int)QEEP_PASS) {
+        printf("QISPACE:QK:");
+    }
     for (int i = 0; i < key_size; i++) {
         printf("%02x", key[i]);
     }
