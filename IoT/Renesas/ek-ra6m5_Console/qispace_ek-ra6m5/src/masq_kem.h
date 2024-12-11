@@ -36,9 +36,9 @@ typedef struct MASQ_RAND_HANDLE_   *MASQ_RAND_handle;
 /** MASQ_KEM_algs: Key Exchange algorithms' security levels */
 typedef enum 
 {
-    LEVEL1,
-    LEVEL3,
-    LEVEL5
+    KEM_LEVEL1,
+    KEM_LEVEL3,
+    KEM_LEVEL5
 } MASQ_KEM_LEVEL;
 
 

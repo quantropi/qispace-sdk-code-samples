@@ -140,7 +140,7 @@ void kem_demo(void)
     // The RAND_HANDLE and rand_handle will be used to pass information from rand_seed_cf to rand_cf
     // If rand_handle is NULL, you may pass the random seed by using global variable kem_rseed
     // Using rand_handle may give user a chance to generate random number with more possibility
-    kem_handle = MASQ_KEM_init(LEVEL5,  (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&rand_handle);
+    kem_handle = MASQ_KEM_init(KEM_LEVEL5,  (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&rand_handle);
     if (kem_handle == NULL) {
         goto err;
     }

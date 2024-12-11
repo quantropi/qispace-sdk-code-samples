@@ -102,7 +102,7 @@ int ds_demo(void)
 
     RAND_HANDLE randds_handle = {0, {0}};
 
-    ds_handle = MASQ_DS_init(LEVEL5, randds_cf, randds_seed_cf, (struct MASQ_RAND_HANDLE_ *)&randds_handle);
+    ds_handle = MASQ_DS_init(DS_LEVEL5, randds_cf, randds_seed_cf, (struct MASQ_RAND_HANDLE_ *)&randds_handle);
     if (ds_handle == NULL) {
         goto bail;
     }
