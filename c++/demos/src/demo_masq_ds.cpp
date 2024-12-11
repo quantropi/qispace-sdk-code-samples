@@ -120,14 +120,14 @@ int main(int argc, const char * argv[]) {
 #ifndef USE_PQRND
 #ifdef USE_DILITHIUM_RANDOM
     /* Uses Dilithium Default Random Generator */
-    ds_handle_bob = MASQ_DS_init(LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
+    ds_handle_bob = MASQ_DS_init(DS_LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    ds_handle_bob = MASQ_DS_init(LEVEL5, rand_cf, rand_seed_cf, NULL);
+    ds_handle_bob = MASQ_DS_init(DS_LEVEL5, rand_cf, rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen) */
-    ds_handle_bob = MASQ_DS_qeep_init(LEVEL5);
+    ds_handle_bob = MASQ_DS_qeep_init(DS_LEVEL5);
 #endif    
     if(ds_handle_bob == NULL) {
         std::cout << "MASQ DS Handle init failed.\n";    
@@ -137,14 +137,14 @@ int main(int argc, const char * argv[]) {
 #ifndef USE_PQRND
 #ifdef USE_DILITHIUM_RANDOM
     /* Uses Dilithium Default Random Generator */
-    ds_handle_alice = MASQ_DS_init(LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
+    ds_handle_alice = MASQ_DS_init(DS_LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    ds_handle_alice = MASQ_DS_init(LEVEL5, rand_cf, rand_seed_cf, NULL);
+    ds_handle_alice = MASQ_DS_init(DS_LEVEL5, rand_cf, rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen) */
-    ds_handle_alice = MASQ_DS_qeep_init(LEVEL5);
+    ds_handle_alice = MASQ_DS_qeep_init(DS_LEVEL5);
 #endif
     if(ds_handle_alice == NULL) {
         std::cout << "MASQ DS Handle init failed.\n";    

@@ -148,7 +148,7 @@ void ds_demo(void)
     // The DS_RAND_HANDLE and ds_rand_handle will be used to pass information from ds_rand_seed_cf to ds_rand_cf
     // If ds_rand_handle is NULL, there is no good way to pass information
     // Using ds_rand_handle may give user a chance to generate random number with more possibility
-    ds_handle = MASQ_DS_init(LEVEL5, (MASQ_rand_callback_t)ds_rand_cf, (MASQ_rand_seed_callback_t)ds_rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&ds_rand_handle);
+    ds_handle = MASQ_DS_init(DS_LEVEL5, (MASQ_rand_callback_t)ds_rand_cf, (MASQ_rand_seed_callback_t)ds_rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&ds_rand_handle);
     if (ds_handle == NULL) {
         goto err;
     }
