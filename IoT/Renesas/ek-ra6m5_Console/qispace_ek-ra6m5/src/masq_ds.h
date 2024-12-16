@@ -31,9 +31,9 @@ extern "C" {
 /** MASQ_DS_algs: Digital Signature algorithms' security levels */
 typedef enum 
 {
-    LEVEL1,
-    LEVEL3,
-    LEVEL5
+    DS_LEVEL1,
+    DS_LEVEL3,
+    DS_LEVEL5
 } MASQ_DS_LEVEL;
 
 

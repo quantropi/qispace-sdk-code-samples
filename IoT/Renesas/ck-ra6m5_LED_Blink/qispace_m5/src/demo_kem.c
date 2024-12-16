@@ -102,7 +102,7 @@ int kem_demo(void)
 
     RAND_HANDLE rand_handle;
 
-    kem_handle = MASQ_KEM_init(LEVEL5, rand_cf, rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&rand_handle);
+    kem_handle = MASQ_KEM_init(KEM_LEVEL5, rand_cf, rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&rand_handle);
     if (kem_handle == NULL) {
         goto bail;
     }
