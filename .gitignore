@@ -16,6 +16,3 @@ go/.env
 python/lib/*
 */**/__pycache__
 Python/*.json
-
-libqeep
-libmasq
