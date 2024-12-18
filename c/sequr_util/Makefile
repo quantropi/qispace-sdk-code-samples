@@ -60,6 +60,9 @@ demo_qeep: demo_qeep.$(OBJ_EXT)
 demo_pqrnd: demo_pqrnd.$(OBJ_EXT) 
 	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(QEEPLIB) $(SEQUR_UTIL_LIB) $(LINK_GROUP_END) $(LDFLAGS)  
 
+qeep_file: qeep_file.$(OBJ_EXT) 
+	$(LD) $(EXEOUT_FLAG)$@$(EXE_EXT) $(LINK_GROUP_BEGIN) $^ $(QEEPLIB) $(SEQUR_UTIL_LIB) $(LINK_GROUP_END) $(LDFLAGS)  
+
 clean:
 	rm -f $(SEQUR_UTIL_LIB) *.$(OBJ_EXT) demo_sequr_key_gen$(EXE_EXT) demo_sequr_key_query$(EXE_EXT) \
 	demo_qeep$(EXE_EXT) demo_sequr_qe_gen$(EXE_EXT) demo_pqrnd$(EXE_EXT) 

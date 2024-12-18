@@ -60,19 +60,19 @@ int main(int argc, char **argv)
         int32_t encrypted_message_len = 0;
 
         char QK_str_hex[]="01e8e86830efc1c6559d315fd635bd7e59eaa5a0a95100c5d0a2431972ee7f8c0869d47df216794ecf49374b40823071e7836c8f2622";
-
+        char *pQKstr = QK_str_hex;
         uint8_t *QK;
         int32_t QK_len = 0;
-        char M_str[DEMO_MESSAGE_SIZE];
+        char *M_str = NULL;
 
         for (i = 1; i < argc; i++) {
             if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
                 print_usage(argv[0]);
                 return 0;
             } else if (strcmp(argv[i], "-k") == 0 && i + 1 < argc) {
-                strcpy(QK_str_hex, argv[++i]);
+                pQKstr = (argv[++i]);
             } else if (strcmp(argv[i], "-m") == 0 && i + 1 < argc) {
-                strcpy(M_str, argv[++i]);
+                M_str = argv[++i];
             } else {
                 printf("Unknown option: %s\n", argv[i]);
                 print_usage(argv[0]);
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
             }
         }
 
-        if (strlen(QK_str_hex) == 0 || strlen(QK_str_hex)/2 * 2 != strlen(QK_str_hex)) {  
+        if (strlen(pQKstr) == 0 || strlen(pQKstr)/2 * 2 != strlen(pQKstr)) {  
                 printf("Error: Qeep Key Hex String is invalid.\n");
                 print_usage(argv[0]);
                 return 1;
@@ -98,17 +98,17 @@ int main(int argc, char **argv)
         /* generate random test IV per message - must be 16 Bytes */
         for(i = 0; i < DEMO_IV_SIZE; i++)
             iv[i] = rand()&0xff;
-
-        /* create random message for test purpose */
-        if (strlen(M_str) > 0) {
-            message_len = strlen(M_str);
-            message = malloc(message_len);
-            memcpy(message, M_str, message_len);
-        } else {
-            //random generate default message
+        
+        if (M_str == NULL) {
+            //random generate
+            message_len = DEMO_MESSAGE_SIZE;
             message = malloc(message_len);
             for(i = 0; i< message_len; i++)
                 message[i] = rand()&0xff;
+        } else {
+            message_len = strlen(M_str);
+            message = malloc(message_len);
+            memcpy(message, M_str, message_len);
         }
 
         encrypted_message = malloc(message_len);
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
 */
         printf("Creating QEEP handle...\n");
         ret = QP_init(&qp_handle_enc);
-        if (ret != QEEP_OK) { printf("QP_init fail ret =%d\n", ret); return (-1); goto DEMO_END;}
+        if (ret != QEEP_OK) { printf("QP_init fail ret =%d\n", ret);  goto DEMO_END;}
         printf("Success!\n");
 
 /**
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
         /* load the qeep key for eventual QEEP encryption/decryption */
         printf("Loading QEEP key...\n");
         ret = QP_qeep_key_load(qp_handle_enc, QK, QK_len);
-        if (ret != QEEP_OK) { printf("QP_qeep_key_load fail ret = %d\n", ret); return (-1); goto DEMO_END;}
+        if (ret != QEEP_OK) { printf("QP_qeep_key_load fail ret = %d\n", ret);  goto DEMO_END;}
         printf("Success!\n");
 
 /**
@@ -146,7 +146,7 @@ int main(int argc, char **argv)
  */
         printf("Loading message IV...\n");
         ret = QP_iv_set(qp_handle_enc, iv, DEMO_IV_SIZE);
-        if (ret != QEEP_OK) { printf("QP_iv_set fail ret =%d\n", ret); return (-1); goto DEMO_END;}
+        if (ret != QEEP_OK) { printf("QP_iv_set fail ret =%d\n", ret);  goto DEMO_END;}
         printf("Success!\n");
 
 /**
@@ -154,7 +154,7 @@ int main(int argc, char **argv)
  */
         printf("Encoding message...\n");
         ret = QP_encrypt(qp_handle_enc, message,  message_len, encrypted_message);
-        if (ret != QEEP_OK) { printf("QP_encode fail ret =%d\n", ret); return (-1); goto DEMO_END;}
+        if (ret != QEEP_OK) { printf("QP_encode fail ret =%d\n", ret);  goto DEMO_END;}
         encrypted_message_len = message_len;
         printf("Success!\n");
 
@@ -177,7 +177,7 @@ int main(int argc, char **argv)
 */
         printf("Creating QEEP handle...\n");
         ret = QP_init(&qp_handle_dec);
-        if (ret != QEEP_OK) { printf("QP_init fail ret =%d\n", ret); return (-1); goto DEMO_END;}
+        if (ret != QEEP_OK) { printf("QP_init fail ret =%d\n", ret);  goto DEMO_END;}
         printf("Success!\n");
 
 /**
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
  */
         printf("Loading QEEP key...\n");
         ret = QP_qeep_key_load(qp_handle_dec, QK, QK_len);
-        if (ret != QEEP_OK) { printf("QP_qeep_key_load fail ret = %d\n", ret); return (-1); goto DEMO_END;}
+        if (ret != QEEP_OK) { printf("QP_qeep_key_load fail ret = %d\n", ret);  goto DEMO_END;}
         printf("Success!\n");
 
 /**
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
  */
         printf("Loading message IV...\n");
         ret = QP_iv_set(qp_handle_dec, iv, DEMO_IV_SIZE);
-        if (ret != QEEP_OK) { printf("QP_iv_set fail ret =%d\n", ret); return (-1); goto DEMO_END;}
+        if (ret != QEEP_OK) { printf("QP_iv_set fail ret =%d\n", ret);  goto DEMO_END;}
         printf("Success!\n");
 
 /**
@@ -201,7 +201,7 @@ int main(int argc, char **argv)
  */
         printf("Decoding the encoded message...\n");
         ret = QP_decrypt(qp_handle_dec, encrypted_message,  encrypted_message_len, decrypted_message);
-        if (ret != QEEP_OK) { printf("QP_decrypt fail ret = %d\n", ret); return (-1); goto DEMO_END;}
+        if (ret != QEEP_OK) { printf("QP_decrypt fail ret = %d\n", ret);  goto DEMO_END;}
         printf("Success!\n");
 
 /**
@@ -220,17 +220,17 @@ int main(int argc, char **argv)
         } else {
             printf("-No match: decrypted_message != message.\n");
         }
-        printf("-Input message: \n ");
+        printf("-Input message[%d]: \n ", message_len);
         for (int i = 0; i < message_len; i++) {
-            printf(" %02X ", message[i]);
+            printf("%02X", message[i]);
         }
         printf("\n-Encrypted message: \n");
         for (int i = 0; i < message_len; i++) {
-            printf(" %02X ", encrypted_message[i]);
+            printf("%02X", encrypted_message[i]);
         }
         printf("\n-Decrypted message: \n");
         for (int i = 0; i < message_len; i++) {
-            printf(" %02X ", decrypted_message[i]);
+            printf("%02X", decrypted_message[i]);
         }
         printf("\n--------------------------------------------------------\n\n");
 DEMO_END:
