@@ -26,6 +26,12 @@ using namespace std;
 unsigned char seed_orig[1024];
 const int32_t seed_len = 32; 
 
+typedef enum 
+{
+    DEMO_KEM_LEVEL1,
+    DEMO_KEM_LEVEL3,
+    DEMO_KEM_LEVEL5
+} MASQ_KEM_DEMO_LEVEL;
 
 /* 
 * Initialize/set seed for any random number generator used
@@ -96,14 +102,14 @@ int main(int argc, const char * argv[]) {
 #ifndef USE_PQRND
 #ifdef USE_KYBER_RANDOM
     /* Uses Kyber default random generator */
-    kem_handle_alice = MASQ_KEM_init(KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    kem_handle_alice = MASQ_KEM_init(KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
+    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
-    kem_handle_alice = MASQ_KEM_qeep_init(KEM_LEVEL3); 
+    kem_handle_alice = MASQ_KEM_qeep_init(DEMO_KEM_LEVEL3); 
 #endif
 
     if(kem_handle_alice == nullptr) {
@@ -114,14 +120,14 @@ int main(int argc, const char * argv[]) {
 #ifndef USE_PQRND
 #ifdef USE_KYBER_RANDOM
     /* Uses Kyber default random generator */
-    kem_handle_bob = MASQ_KEM_init(KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    kem_handle_bob = MASQ_KEM_init(KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
+    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
-    kem_handle_bob = MASQ_KEM_qeep_init(KEM_LEVEL3);
+    kem_handle_bob = MASQ_KEM_qeep_init(DEMO_KEM_LEVEL3);
 #endif
 
     if(kem_handle_bob == NULL) {

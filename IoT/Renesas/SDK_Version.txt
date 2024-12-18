@@ -1,0 +1,1 @@
+These Sample projects are tested with QiSpace SDK Release 1.9.3.
