@@ -2,8 +2,6 @@
 
 This README explains how to run the QiSpace Demo on two Renesas boards: `CK-RA6M5` and `EK-RA6M5`
 
-To confirm the QiSpace SDK Release version please check [SDK_Version.txt](SDK_Version.txt).
-
 # CK-RA6M5
 The `qispace_ck_ra6m5` project under the `CK-RA6M5` folder will be used to demo how to use QiSpace Products: MASQ DS, MASQ KEM
 
@@ -18,7 +16,8 @@ e2studio (Version: 2024-01.1, 24.1.1, FSP: 5.2 ) on Windows.
 ## Build
 1. Launch e2studio with FSP 5.2.
 2. Import `qispace_ck_ra6m5` to the workspace.
-3. Check the libraries from latest release are available under `qispace-SDK-lib` folder under `qispace_ck_ra6m5` folder.
+3. Import QiSpace SDK libraries. Make sure the supported version of QiSpace SDK libraries are available under `qispace-SDK-lib` folder. The supported version of QiSpace SDK is listed at [SDK_Version.txt](SDK_Version.txt).
+The default libraries only include QiSpace SDK Base package (i.e. Dilithium and Kyber), Please contact Quantropi for QiSpace SDK Premium package.
 4. Build the project and then download the binary on the board using Run/Debug.
 
 ## Feature
@@ -57,6 +56,6 @@ e2studio (Version: 2024-01.1, 24.1.1, FSP: 5.2 ) on Windows.
 ## Build and Run
 1. Launch e2studio with FSP 5.2.
 2. Import `qispace_ek_ra6m5_ds` and `qispace_ek_ra6m5_kem` to the workspace.
-3. Check the libraries from latest release are available under `qispace-SDK-lib` folder under `qispace_ek_ra6m5_ds` and `qispace_ek_ra6m5_kem` folder.
+3. Import QiSpace SDK libraries. Make sure the supported version of QiSpace SDK libraries are available under `qispace-SDK-lib` folder. The supported version of QiSpace SDK is listed at [SDK_Version.txt](SDK_Version.txt). The default libraries only include QiSpace SDK Base package (i.e. Dilithium and Kyber), Please contact Quantropi for QiSpace SDK Premium package.
 4. Build each of the project separately and download only one binary at a time on the board using Run/Debug.
 5. Use a serial terminal application like `Tera Term` on Windows to do the communication over USB. After the binary is launched to the board, the `Tera Term` console will be active, press `return` button to run any demo.

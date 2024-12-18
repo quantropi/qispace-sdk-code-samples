@@ -35,6 +35,13 @@ unsigned char seed_src[32] =
 #define MSG_LEN 1024
 #define SEED_LEN 32
 
+typedef enum 
+{
+    DEMO_DS_LEVEL1,
+    DEMO_DS_LEVEL3,
+    DEMO_DS_LEVEL5
+} MASQ_DS_DEMO_LEVEL;
+
 typedef struct _randds_handle {
     int seed_length;
     uint8_t seed[SEED_LEN];
@@ -102,7 +109,7 @@ int ds_demo(void)
 
     RAND_HANDLE randds_handle = {0, {0}};
 
-    ds_handle = MASQ_DS_init(DS_LEVEL5, randds_cf, randds_seed_cf, (struct MASQ_RAND_HANDLE_ *)&randds_handle);
+    ds_handle = MASQ_DS_init(DEMO_DS_LEVEL5, randds_cf, randds_seed_cf, (struct MASQ_RAND_HANDLE_ *)&randds_handle);
     if (ds_handle == NULL) {
         goto bail;
     }

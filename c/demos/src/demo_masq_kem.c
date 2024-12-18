@@ -40,6 +40,13 @@
  * both Alice and Bob arrive at the same shared secret.
  */
 
+typedef enum 
+{
+    DEMO_KEM_LEVEL1,
+    DEMO_KEM_LEVEL3,
+    DEMO_KEM_LEVEL5
+} MASQ_KEM_DEMO_LEVEL;
+
 
 /* Customize the random callback function below according to your specific needs. 
  * Below is template only.
@@ -121,14 +128,14 @@ int main(int argc, const char * argv[]) {
 #ifndef USE_PQRND
 #ifdef USE_KYBER_RANDOM
     /* Uses Kyber default random generator */
-    kem_handle_alice = MASQ_KEM_init(KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    kem_handle_alice = MASQ_KEM_init(KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
+    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
-    kem_handle_alice = MASQ_KEM_qeep_init(KEM_LEVEL3); 
+    kem_handle_alice = MASQ_KEM_qeep_init(DEMO_KEM_LEVEL3); 
 #endif
     
     if(kem_handle_alice == NULL) {
@@ -139,14 +146,14 @@ int main(int argc, const char * argv[]) {
 #ifndef USE_PQRND
 #ifdef USE_KYBER_RANDOM
     /* Uses Kyber default random generator */
-    kem_handle_bob = MASQ_KEM_init(KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    kem_handle_bob = MASQ_KEM_init(KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
+    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
-    kem_handle_bob = MASQ_KEM_qeep_init(KEM_LEVEL3);
+    kem_handle_bob = MASQ_KEM_qeep_init(DEMO_KEM_LEVEL3);
 #endif
     
     if(kem_handle_bob == NULL) {
