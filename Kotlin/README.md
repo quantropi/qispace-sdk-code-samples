@@ -13,9 +13,42 @@ On the landing page, a user can access additional demo pages that illustrate the
 
 ## **Installation and Preparation**
 1. Download this git repository to a local machine.
-2. Copy the `QiSpace_Info.kt`class into `app/src/main/kotlin/com/example/demoqispaceapp/`.
+2. Copy the `QiSpace_Info.kt`class into `app/src/main/kotlin/com/example/demoqispaceapp/`. A sample class may look like so:
+    ```kotlin
+    package com.example.demoqispaceapp
+
+    class QiSpace_Info {
+        companion object {
+            val QISPACE_ENTERPRISE_BASE_URL = "http://your.kds/kds"
+            val QISPACE_ENTERPRISE_ACCESS_TOKEN = "your_device_token"
+        }
+    }
+    ```
 3. Place the `prebuilt` folder containing the QEEP and SEQUR libraries into `QiSpace_SDK_Lib` folder.
-    * Note: If the libraries given to you are not in a `prebuilt` folder, create one under `/QiSpace_SDK_Lib` (i.e: `home/QiSpace_SDK_Lib/prebuilt`) and place the contents into the newly created `prebuilt` folder. 
+    * Note: If the libraries given to you are not in a `prebuilt` folder, create one under `/QiSpace_SDK_Lib` (i.e: `home/QiSpace_SDK_Lib/prebuilt`) and place the contents into the newly created `prebuilt` folder. The resulting directory should contain:
+    ```
+    qispace-sdk-code-samples/Kotlin/QiSpace_SDK_Lib
+    ├── TODO.md
+    └── prebuilt
+        ├── arm64-v8a
+        │   ├── libqeep-android.a
+        │   └── libqeep-android.so
+        ├── armeabi-v7a
+        │   ├── libqeep-android.a
+        │   └── libqeep-android.so
+        ├── error.h
+        ├── qispace_pqrnd.h
+        ├── qispace_qeep.h
+        ├── qispace_sequr.h
+        ├── x86
+        │   ├── libqeep-android.a
+        │   └── libqeep-android.so
+        └── x86_64
+            ├── libqeep-android.a
+            └── libqeep-android.so
+
+    6 directories, 13 files
+    ```
 4. Open and set up Android Studio with Android API 32 SDK and Pixel 2 API 31 as a device.
     * Note: If any of the files or folders mentioned above are not available, please contact the Quantropi support team.
 
