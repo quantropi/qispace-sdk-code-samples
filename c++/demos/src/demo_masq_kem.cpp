@@ -9,14 +9,19 @@
 #include <cstddef>
 #include <ctime>
 #include "masq_kem.h"
-#ifdef USE_KYBER_RANDOM
-#include "kyber_randombytes.h"
+// ML-KEM random generator is only available for ML-KEM algorithm on Windows, Mac and Linux platforms.
+#ifdef USE_MLKEM_RANDOM
+#include "mlkem_randombytes.h"
 #endif
+
+/* 
+* Using this demo you can demo the KEM API using either HPPK or ML-KEM, not both of them.
+*/
 
 using namespace std;
 
 /* 
- * This demo displays one example of the MASQ KEM API, specifically HPPK level 3, to establish a shared secret between two parties (Alice and Bob)
+ * This demo displays one example of the MASQ KEM API, specifically level 3, to establish a shared secret between two parties (Alice and Bob).
  *
  * In this case, Alice, who holds a shared secret, desires to let Bob know her shared secret. So, Bob begins by generating a public-private keypair and
  * sends Alice the public key. Alice then uses the public key to encapsulate her shared secret, and sends this encapsulated data back to Bob.
@@ -24,19 +29,12 @@ using namespace std;
  */
 
 unsigned char seed_orig[1024];
-const int32_t seed_len = 32; 
-
-typedef enum 
-{
-    DEMO_KEM_LEVEL1,
-    DEMO_KEM_LEVEL3,
-    DEMO_KEM_LEVEL5
-} MASQ_KEM_DEMO_LEVEL;
+const int32_t seed_len = 32;
 
 /* 
 * Initialize/set seed for any random number generator used
-* We recommend to call QiSpace API (i.e. QE) to get seed 
-* if no good quantum safe level entropy source
+* We recommend to call QiSpace API (i.e. QE) to get seed,
+* if no good quantum safe level entropy source.
 */
 int32_t seed_init()
 {
@@ -48,11 +46,11 @@ int32_t seed_init()
     return 1;
 }
 
-/** 
- * ##################################################################
-*   Only used for Demo
-*  ##################################################################
-*/ 
+/*
+* ##################################################################
+* Only used for Demo
+* ##################################################################
+*/
 int32_t rand_cf(MASQ_RAND_handle rand_handle, int32_t rand_length,  uint8_t *rand_num){
     
     if (rand_num == nullptr) return 0;
@@ -100,39 +98,43 @@ int main(int argc, const char * argv[]) {
     std::cout << "Initialize MASQ KEM handles for Bob and Alice...\n";
 
 #ifndef USE_PQRND
-#ifdef USE_KYBER_RANDOM
-    /* Uses Kyber default random generator */
-    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+#ifdef USE_MLKEM_RANDOM
+    /* Uses mlkem default random generator */
+    std::cout <<"with random function inside ml-kem library\n";
+    kem_handle_alice = MASQ_KEM_init(KEM_LEVEL3, (MASQ_rand_callback_t)mlkem_rand_cf, (MASQ_rand_seed_callback_t)mlkem_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
+    std::cout <<"with demo provided random function\n";
+    kem_handle_alice = MASQ_KEM_init(KEM_LEVEL3, (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
-    kem_handle_alice = MASQ_KEM_qeep_init(DEMO_KEM_LEVEL3); 
+    std::cout <<"with random function from QiSpace QEEP library. Not available with base version.\n";
+    kem_handle_alice = MASQ_KEM_qeep_init(KEM_LEVEL3); 
 #endif
-
     if(kem_handle_alice == nullptr) {
-        std::cout << "MASQ KEM Handle init failed.\n";    
-        return -1;    
+        std::cout << "MASQ KEM Handle init failed.\n";
+        return -1;
     }
 
 #ifndef USE_PQRND
-#ifdef USE_KYBER_RANDOM
-    /* Uses Kyber default random generator */
-    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+#ifdef USE_MLKEM_RANDOM
+    /* Uses mlkem default random generator */
+    std::cout <<"with random function inside ml-kem library\n";
+    kem_handle_bob = MASQ_KEM_init(KEM_LEVEL3, (MASQ_rand_callback_t)mlkem_rand_cf, (MASQ_rand_seed_callback_t)mlkem_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
+    std::cout <<"with demo provided random function\n";
+    kem_handle_bob = MASQ_KEM_init(KEM_LEVEL3, (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
-    kem_handle_bob = MASQ_KEM_qeep_init(DEMO_KEM_LEVEL3);
+    std::cout <<"with random function from QiSpace QEEP library. Not available with base version.\n";
+    kem_handle_bob = MASQ_KEM_qeep_init(KEM_LEVEL3);
 #endif
-
     if(kem_handle_bob == NULL) {
-        std::cout << "MASQ KEM Handle init failed.\n";    
-        return -1;    
+        std::cout << "MASQ KEM Handle init failed.\n";
+        return -1;
     }
     std::cout << "Success!\n";
 

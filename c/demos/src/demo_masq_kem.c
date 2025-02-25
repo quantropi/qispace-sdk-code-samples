@@ -24,19 +24,24 @@
 #include <time.h>
 #include <string.h>
 #include "masq_kem.h"
-#ifdef USE_KYBER_RANDOM
-#include "kyber_randombytes.h"
+// ML-KEM random generator is only available for ML-KEM algorithm on Windows, Mac and Linux platforms.
+#ifdef USE_MLKEM_RANDOM
+#include "mlkem_randombytes.h"
 #endif
 
 /* 
- * This demo displays one example of the MASQ KEM API, specifically HPPK level 3, 
- * to establish a shared secret between two parties (Alice and Bob)
+* Using this demo you can demo the KEM API using either HPPK or ML-KEM, not both of them.
+*/
+
+/* 
+ * This demo displays one example of the MASQ KEM API, specifically level 3,
+ * to establish a shared secret between two parties (Alice and Bob).
  *
- * In this case, Alice, who holds a shared secret, desires to let Bob know her shared secret. 
- * So, Bob begins by generating a public-private keypair and sends Alice the public key. 
+ * In this case, Alice, who holds a shared secret, desires to let Bob know her shared secret.
+ * So, Bob begins by generating a public-private keypair and sends Alice the public key.
  * Alice then uses the public key to encapsulate her shared secret,
  * and sends this encapsulated data back to Bob.
- * With his previously generated private key, Bob proceeds to decapsulate this data and thus, 
+ * With his previously generated private key, Bob proceeds to decapsulate this data and thus,
  * both Alice and Bob arrive at the same shared secret.
  */
 
@@ -48,7 +53,7 @@ typedef enum
 } MASQ_KEM_DEMO_LEVEL;
 
 
-/* Customize the random callback function below according to your specific needs. 
+/* Customize the random callback function below according to your specific needs.
  * Below is template only.
  * rand_handle is NULL for this callback functions. You can add your own structure handle to pass.
  */
@@ -63,7 +68,7 @@ int32_t rand_cf(MASQ_RAND_handle rand_handle, int32_t rand_length,  uint8_t *ran
     return 1;
 }
 
-/* Customize the seed callback function below according to your specific needs. 
+/* Customize the seed callback function below according to your specific needs.
  * Below is template only.
  * rand_handle is NULL for this callback function. You can add your own structure handle to pass.
  */
@@ -126,47 +131,51 @@ int main(int argc, const char * argv[]) {
     printf("\nInitialize MASQ KEM handles for Bob and Alice...\n");
     
 #ifndef USE_PQRND
-#ifdef USE_KYBER_RANDOM
-    /* Uses Kyber default random generator */
-    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+#ifdef USE_MLKEM_RANDOM
+    /* Uses mlkem default random generator */
+    printf("with random function inside ml-kem library.\n");
+    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)mlkem_rand_cf, (MASQ_rand_seed_callback_t)mlkem_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
+    printf("with demo provided random function.\n");
+    kem_handle_alice = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
+    printf("with random function from QiSpace QEEP library. Not available with base version.\n");
     kem_handle_alice = MASQ_KEM_qeep_init(DEMO_KEM_LEVEL3); 
 #endif
-    
     if(kem_handle_alice == NULL) {
-        printf("\nMASQ KEM Handle init failed for Alice.\n");    
-        return -1;    
+        printf("\nMASQ KEM Handle init failed for Alice.\n");
+        return -1;
     }
 
 #ifndef USE_PQRND
-#ifdef USE_KYBER_RANDOM
-    /* Uses Kyber default random generator */
-    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)kyber_rand_cf, (MASQ_rand_seed_callback_t)kyber_rand_seed_cf, NULL);
+#ifdef USE_MLKEM_RANDOM
+    /* Uses mlkem default random generator */
+    printf("with random function inside ml-kem library.\n");
+    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)mlkem_rand_cf, (MASQ_rand_seed_callback_t)mlkem_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, rand_cf, rand_seed_cf, NULL);
+    printf("with demo provided random function.\n");
+    kem_handle_bob = MASQ_KEM_init(DEMO_KEM_LEVEL3, (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen)     */
+    printf("with random function from QiSpace QEEP library. Not available with base version.\n");
     kem_handle_bob = MASQ_KEM_qeep_init(DEMO_KEM_LEVEL3);
 #endif
-    
     if(kem_handle_bob == NULL) {
-        printf("\nMASQ KEM Handle init failed for Bob.\n");    
-        return -1;    
+        printf("\nMASQ KEM Handle init failed for Bob.\n");
+        return -1;
     }
     printf("\nSuccess!\n");
 
 
-    /* Set the seed for random number generator for Alice */
+    /* Set the seed for random number generator for Alice. */
     gen_rand_seed_alice(alice_seed, seed_len);
     MASQ_KEM_seed(kem_handle_alice, alice_seed, seed_len);
-    /** Set the Seed for random number generator for Bob*/
+    /* Set the Seed for random number generator for Bob. */
     gen_rand_seed_bob(bob_seed, seed_len);
     MASQ_KEM_seed(kem_handle_bob, bob_seed, seed_len);
 
@@ -240,6 +249,6 @@ int main(int argc, const char * argv[]) {
     free(ss_bob);
 
     printf("\n--------------------------------------------------------\n\n");
-    
+
     return 0;
 }

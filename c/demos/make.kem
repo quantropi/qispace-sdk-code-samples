@@ -1,9 +1,9 @@
-# Specify KEM Algorithm: You can test Quantropi's HPPK and PQC kyber 
+# Specify KEM Algorithm: You can test Quantropi's HPPK and NIST PQC Standard ML-KEM 
 # The available algorithm list:
-#    hppk, kyber2, kyber2aes, kyber3, kyber3aes, kyber4, kyber4aes
+#    hppk(Premium version), mlkem (Base version)
 # ALG name option is just a suffix of the library path in the package
 
-ALG ?= hppk
+ALG ?= mlkem
 
 # BigNum Library Option
 # BN: qtp or gmp
@@ -15,16 +15,16 @@ ROOT_DIR ?=../..
 PQRND_DIR ?= $(ROOT_DIR)/libqeep
 MASQ_KEM_DIR ?= $(ROOT_DIR)/libmasq/lib_$(ALG)
 
-BN_LIB = $(MASQ_KEM_DIR)/${LIB_PREFIX}masq_bn_util_$(BN)-$(LIBNAME_SUFFIX).$(LIB_EXT) 
-ifeq ($(BN),gmp)
-BN_LIB += $(MASQ_KEM_DIR)/${LIB_PREFIX}gmp-$(LIBNAME_SUFFIX).$(LIB_EXT) 
-endif
-
 #To use provided random generator, this needs to be 0
 USE_PQRND ?= 1
 
-#To use Kyber Default random generator, this needs to be 1
-USE_KYBER_RANDOM ?= 0
+#To use ML-KEM Default random generator, this needs to be 1
+USE_MLKEM_RANDOM ?= 0
+
+ifeq ($(ALG),mlkem)
+USE_MLKEM_RANDOM = 1
+USE_PQRND = 0
+endif
 
 ifeq ($(ALG), hppk)
 # When use HPPK, BigNum Library and QEEP PQRND libraries are required
@@ -34,23 +34,27 @@ DEFINITIONS += $(DEF_FLAG)USE_PQRND
 PQRND_LIB = $(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
 endif
 
-MASQ_KEM_LIB = $(MASQ_KEM_DIR)/${LIB_PREFIX}masq_kem-${LIBNAME_SUFFIX}.${LIB_EXT} $(BN_LIB) $(PQRND_LIB) 
+BN_LIB = $(MASQ_KEM_DIR)/${LIB_PREFIX}masq_bn_util_$(BN)-$(LIBNAME_SUFFIX).$(LIB_EXT) 
+ifeq ($(BN),gmp)
+BN_LIB += $(MASQ_KEM_DIR)/${LIB_PREFIX}gmp-$(LIBNAME_SUFFIX).$(LIB_EXT) 
+endif
 
-else 	######### ALG != HPPK ###########
-# When ALG is kyber QEEP PQRND libraries are required 
+else 	# mlkem
 
-ifeq ($(USE_PQRND),1)
-DEFINITIONS += $(DEF_FLAG)USE_PQRND
-PQRND_LIB = $(PQRND_DIR)/${LIB_PREFIX}qeep-${LIBNAME_SUFFIX}.${LIB_EXT}
-else
-ifeq ($(USE_KYBER_RANDOM), 1)
-DEFINITIONS += $(DEF_FLAG)USE_KYBER_RANDOM
+ifeq ($(USE_MLKEM_RANDOM), 1)
+DEFINITIONS += $(DEF_FLAG)USE_MLKEM_RANDOM
+ifeq ($(PLATFORM_AUTODETECT),win)
+LDFLAGS += Advapi32.lib
 endif
 endif
 
-MASQ_KEM_LIB = $(MASQ_KEM_DIR)/${LIB_PREFIX}masq_kem-${LIBNAME_SUFFIX}.${LIB_EXT} $(PQRND_LIB)
-
 endif
+
+# To pass KEM algorithm definition in masq_kem.h, needs to define which algorithm APIs to be called
+DEFINITIONS += $(DEF_FLAG)MASQ_KEM_$(ALG)
+
+MASQ_KEM_LIB = $(MASQ_KEM_DIR)/${LIB_PREFIX}masq_kem_$(ALG)-${LIBNAME_SUFFIX}.${LIB_EXT} \
+			$(BN_LIB) $(PQRND_LIB) 
 
 INCLUDES = $(INCLUDE_FLAG)$(PQRND_DIR) $(INCLUDE_FLAG)$(MASQ_KEM_DIR)
 

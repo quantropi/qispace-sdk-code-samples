@@ -24,19 +24,24 @@
 #include <time.h>
 #include <string.h>
 #include "masq_ds.h"
-#ifdef USE_DILITHIUM_RANDOM
-#include "dilithium_randombytes.h"
+// ML-DSA random generator is only available for ML-DSA algorithm on Windows, Mac and Linux platforms.
+#ifdef USE_MLDSA_RANDOM
+#include "mldsa_randombytes.h"
 #endif
 
-/* 
+/*
+* Using this demo you can demo the Digital Signature API using either GHPPK or ML-DSA, not both of them.
+*/
+
+/*
  * This demo displays one example of the Digital Signature API, specifically level 5,
- * to sign a message between two parties(Alice & Bob) 
+ * to sign a message between two parties (Alice & Bob). 
  *
- * In this case, Alice wants to send a secret message to Bob. 
+ * In this case, Alice wants to send a secret message to Bob.
  * So, Alice begins by generating a public-private keypair.
- * Alice uses its own private key and generate the signature. 
- * Alice sends Bob, the public key and the signature. 
- * Bob then uses Alice's public key to verify the message and signature. 
+ * Alice uses its own private key and generate the signature.
+ * Alice sends Bob, the public key and the signature.
+ * Bob then uses Alice's public key to verify the message and signature.
  * Thus, both Alice and Bob arrive at the same message.
  */
 
@@ -47,22 +52,25 @@ typedef enum
     DEMO_DS_LEVEL5
 } MASQ_DS_DEMO_LEVEL;
 
-/* Customize the random callback function below according to your specific needs. 
+/* Customize the random callback function below according to your specific needs.
  * Below is template only.
  * rand_handle is NULL for this callback functions. You can add your own structure handle to pass.
  */
 int32_t rand_cf(MASQ_RAND_handle rand_handle, int32_t rand_length,  uint8_t *rand_num){
-    
+
     if (rand_num == NULL) return 0;
-    
-    for (int i = 0; i < rand_length; i++)
+
+    if (rand_handle == NULL) 
     {
-        rand_num[i] = rand() & 0xff;
+        for (int i = 0; i < rand_length; i++)
+        {
+            rand_num[i] = rand() & 0xff;
+        }
     }
     return 1;
 }
 
-/* Customize the seed callback function below according to your specific needs. 
+/* Customize the seed callback function below according to your specific needs.
  * Below is template only.
  * rand_handle is NULL for this callback function. You can add your own structure handle to pass.
  */
@@ -95,8 +103,9 @@ static unsigned char *rand_string(unsigned char *str, size_t size)
 }
 
 /* Initialize/set seed for any random number generator used by Alice and Bob
-* We recommend to call QiSpace API (i.e. QE) to get seed 
-* if no good quantum safe level entropy source */
+* We recommend to call QiSpace API (i.e. QE) to get seed,
+* if no good quantum safe level entropy source.
+*/
 
 int32_t gen_rand_seed_bob(uint8_t *seed, int32_t seed_length)
 {
@@ -120,7 +129,7 @@ int32_t gen_rand_seed_alice(uint8_t *seed, int32_t seed_length)
 
 
 void sendPubKey(){
-    printf("\n*Alice sends Bob her public key and signature..*\n");
+    printf("\n*Alice sends Bob her public key and signature...*\n");
 }
 
 int main(int argc, const char * argv[]) {
@@ -138,52 +147,55 @@ int main(int argc, const char * argv[]) {
         rand_string(msg, len_msg);
     }
 
-
     /* Init: Initialize MASQ DS handles for Alice and Bob */ 
     printf("\nInitialize MASQ DS handle for Alice and Bob...\n");
 
 #ifndef USE_PQRND
-#ifdef USE_DILITHIUM_RANDOM
-    /* Uses Dilithium Default Random Generator */
-    ds_handle_bob = MASQ_DS_init(DEMO_DS_LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
+#ifdef USE_MLDSA_RANDOM
+    /* Uses ML-DSA Default Random Generator */
+    printf("with random function inside ml-dsa library.\n");
+    ds_handle_bob = MASQ_DS_init(DEMO_DS_LEVEL5, (MASQ_rand_callback_t)mldsa_rand_cf, (MASQ_rand_seed_callback_t)mldsa_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    ds_handle_bob = MASQ_DS_init(DEMO_DS_LEVEL5, rand_cf, rand_seed_cf, NULL);
+    printf("with demo provided random function.\n");
+    ds_handle_bob = MASQ_DS_init(DEMO_DS_LEVEL5, (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen) */
+    printf("with random function from QiSpace QEEP library. Not available with base version.\n");
     ds_handle_bob = MASQ_DS_qeep_init(DEMO_DS_LEVEL5);
 #endif 
-    
     if(ds_handle_bob == NULL) {
-        printf("\nMASQ DS Handle init failed for Bob.\n");    
-        return -1;    
+        printf("\nMASQ DS Handle init failed for Bob.\n");
+        return -1;
     }
 
 #ifndef USE_PQRND
-#ifdef USE_DILITHIUM_RANDOM
-    /* Uses Dilithium Default Random Generator */
-    ds_handle_alice = MASQ_DS_init(DEMO_DS_LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
+#ifdef USE_MLDSA_RANDOM
+    /* Uses ML-DSA Default Random Generator */
+    printf("with random function inside ml-dsa library.\n");
+    ds_handle_alice = MASQ_DS_init(DEMO_DS_LEVEL5, (MASQ_rand_callback_t)mldsa_rand_cf, (MASQ_rand_seed_callback_t)mldsa_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    ds_handle_alice = MASQ_DS_init(DEMO_DS_LEVEL5, rand_cf, rand_seed_cf, NULL);
+    printf("with demo provided random function.\n");
+    ds_handle_alice = MASQ_DS_init(DEMO_DS_LEVEL5, (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen) */
+    printf("with random function from QiSpace QEEP library. Not available with base version.\n");
     ds_handle_alice = MASQ_DS_qeep_init(DEMO_DS_LEVEL5);
 #endif
-    
     if(ds_handle_alice == NULL) {
-        printf("\nMASQ DS Handle init failed for Alice.\n");    
+        printf("\nMASQ DS Handle init failed for Alice.\n");
         return -1;
     }
     printf("\nSuccess!\n");
 
-
-    /** Set the Seed for random number generator for Bob*/
+    /* Set the Seed for random number generator for Bob. */
     gen_rand_seed_bob(bob_seed, seed_len);
     MASQ_DS_seed(ds_handle_bob, bob_seed, seed_len);
-    /** Set the Seed for random number generator for Alice*/
+
+    /* Set the Seed for random number generator for Alice. */
     gen_rand_seed_alice(alice_seed, seed_len);
     MASQ_DS_seed(ds_handle_alice, alice_seed, seed_len);
 
@@ -200,13 +212,12 @@ int main(int argc, const char * argv[]) {
     signature = malloc(len_signature);
    
     /* Generate key pair*/
-    MASQ_DS_keypair(ds_handle_alice, pk_alice, sk_alice);  
+    MASQ_DS_keypair(ds_handle_alice, pk_alice, sk_alice);
     printf("\nSuccess!\n");
-
 
     /* Alice: Uses own private key to sign the message */
     printf("\nAlice uses own private key to sign the message...\n");
-    MASQ_DS_sign(ds_handle_alice, sk_alice, msg, len_msg, signature, &len_signature);
+    MASQ_DS_sign(ds_handle_alice, sk_alice, msg, len_msg, signature, &len_signature, NULL, 0);
     printf("\nSuccess!\n");
 
     /** Send Alice's public key and signature to Bob **/
@@ -214,7 +225,7 @@ int main(int argc, const char * argv[]) {
 
     /* Bob: Uses Alice's public key and verifies message and signature */
     printf("\nBob uses Alice's public key to verify the message and signature...\n");
-    if(MASQ_DS_verify(ds_handle_bob, pk_alice, msg, len_msg, signature, len_signature) == 0)
+    if(MASQ_DS_verify(ds_handle_bob, pk_alice, msg, len_msg, signature, len_signature, NULL, 0) == 0)
     {
         printf("\nSuccess: Signature Verification Passed.\n");
     }
@@ -223,7 +234,7 @@ int main(int argc, const char * argv[]) {
     }
     printf("\nThe secret message Bob received from Alice: \n\n[%s]\n", msg);
  
-    /** Free MASQ DS Handle */
+    /* Free MASQ DS Handle */
 #ifndef USE_PQRND
     MASQ_DS_free(ds_handle_alice);
     MASQ_DS_free(ds_handle_bob);
@@ -237,6 +248,6 @@ int main(int argc, const char * argv[]) {
     free(msg);
 
     printf("\n--------------------------------------------------------\n\n");
-    
+
     return 0;
 }

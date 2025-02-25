@@ -110,7 +110,7 @@ sequr_handle* sequr_util_init(char* q_meta) {
 
     // Assign the initialized qp_handle to the sequr_handle
     handle->qp_handle = qp_handle;
-
+    free(subkey);
     return handle;
 }
 
@@ -211,6 +211,9 @@ int sequr_util_key_gen(sequr_handle* sequr_handle, int32_t key_size, char* key_i
     // free data
     free(encoded_QK);
     free(buf);
+    free(iv_b64);
+    free(id);
+    free(QK_b64);
 
     return (ret);
 }
@@ -306,6 +309,8 @@ int sequr_util_query_key(sequr_handle* sequr_handle, char* key_id, uint8_t *key,
     // free data
     free(encoded_QK);
     free(buf);
+    free(iv_b64);
+    free(QK_b64);
 
     return key_size;
 }
@@ -400,6 +405,8 @@ int sequr_util_get_qe(sequr_handle* sequr_handle, uint8_t* QE, int len) {
     }
 
     free(encoded_QE);
+    free(iv_b64);
+    free(QE_b64);
     return len;
 }
 
