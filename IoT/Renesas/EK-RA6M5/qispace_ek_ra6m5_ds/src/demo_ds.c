@@ -39,13 +39,6 @@ unsigned char seed_src[DS_SEED_LEN] = {
 
 #define MSG_LEN 100
 
-typedef enum 
-{
-    DEMO_DS_LEVEL1,
-    DEMO_DS_LEVEL3,
-    DEMO_DS_LEVEL5
-} MASQ_DS_DEMO_LEVEL;
-
 typedef struct _ds_rand_handle {
     int DS_SEED_LENgth;
     uint8_t seed[DS_SEED_LEN];
@@ -155,7 +148,7 @@ void ds_demo(void)
     // The DS_RAND_HANDLE and ds_rand_handle will be used to pass information from ds_rand_seed_cf to ds_rand_cf
     // If ds_rand_handle is NULL, there is no good way to pass information
     // Using ds_rand_handle may give user a chance to generate random number with more possibility
-    ds_handle = MASQ_DS_init(DEMO_DS_LEVEL5, (MASQ_rand_callback_t)ds_rand_cf, (MASQ_rand_seed_callback_t)ds_rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&ds_rand_handle);
+    ds_handle = MASQ_DS_init(DS_LEVEL5, (MASQ_rand_callback_t)ds_rand_cf, (MASQ_rand_seed_callback_t)ds_rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&ds_rand_handle);
     if (ds_handle == NULL) {
         goto err;
     }
@@ -192,7 +185,7 @@ void ds_demo(void)
 
     PRINTF("\n\rLength of message: %d \n\r", MSG_LEN);
     // Sign the message with your private key and get the signature in the sign_msg
-    ret = MASQ_DS_sign(ds_handle, sk, msg, MSG_LEN, sign_msg, &len_sign);
+    ret = MASQ_DS_sign(ds_handle, sk, msg, MSG_LEN, sign_msg, &len_sign, NULL, 0);
     if(ret != 0) {
         PRINTF("\nMASQ DS Demo: Signature not generated.\n\r");
         goto err;
@@ -207,7 +200,7 @@ void ds_demo(void)
     dump_hex(sign_msg, len_sign);
 
     // People can use your public key to verify the signature to make sure it's signed by you
-    ret = MASQ_DS_verify(ds_handle, pk, msg, MSG_LEN, sign_msg, len_sign);
+    ret = MASQ_DS_verify(ds_handle, pk, msg, MSG_LEN, sign_msg, len_sign, NULL, 0);
     if(ret == 0) {
         PRINTF("MASQ DS Demo: Passed Signature Verification.\n\r\n\r");
         goto err;

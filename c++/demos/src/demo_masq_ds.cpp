@@ -9,38 +9,36 @@
 #include <cstddef>
 #include <ctime>
 #include "masq_ds.h"
-#ifdef USE_DILITHIUM_RANDOM
-#include "dilithium_randombytes.h"
+// ML-DSA random generator is only available for ML-DSA algorithm on Windows, Mac and Linux platforms.
+#ifdef USE_MLDSA_RANDOM
+#include "mldsa_randombytes.h"
 #endif
+
+/*
+* Using this demo you can demo the Digital Signature API using either GHPPK or ML-DSA, not both of them.
+*/
 
 using namespace std;
 
 /* 
  * This demo displays one example of the Digital Signature API, 
- * specifically level 5,  to sign a message between two parties(Alice & Bob) 
+ * specifically level 5,  to sign a message between two parties (Alice & Bob).
  *
- * In this case, Alice wants to send a secret message to Bob. 
+ * In this case, Alice wants to send a secret message to Bob.
  * So, Alice begins by generating a public-private keypair.
- * Alice uses its own private key and generate the signature. 
- * Alice sends Bob, the public key and the signature. 
- * Bob then uses Alice's public key to verify the message and signature. 
+ * Alice uses its own private key and generate the signature.
+ * Alice sends Bob, the public key and the signature.
+ * Bob then uses Alice's public key to verify the message and signature.
  * Thus, both Alice and Bob arrive at the same message.
  */
 
 unsigned char seed_orig[1024];
-int32_t seed_len = 32;  
-
-typedef enum 
-{
-    DEMO_DS_LEVEL1,
-    DEMO_DS_LEVEL3,
-    DEMO_DS_LEVEL5
-} MASQ_DS_DEMO_LEVEL;
+int32_t seed_len = 32;
 
 /* 
 * Initialize/set seed for any random number generator used
-* We recommend to call QiSpace API (i.e. QE) to get seed 
-* if no good quantum safe level entropy source
+* We recommend to call QiSpace API (i.e. QE) to get seed,
+* if no good quantum safe level entropy source.
 */
 int32_t seed_init()
 {
@@ -52,11 +50,11 @@ int32_t seed_init()
     return 1;
 }
 
-/** 
- * ##################################################################
-*   Only used for Demo
-*  ##################################################################
-*/ 
+/*
+* ##################################################################
+* Only used for Demo
+* ##################################################################
+*/
 int32_t rand_cf(MASQ_RAND_handle rand_handle, int32_t rand_length,  uint8_t *rand_num){
     
     if(rand_num == nullptr) return 0;
@@ -112,56 +110,62 @@ int main(int argc, const char * argv[]) {
         rand_string(msg, len_msg);
     }
 
-/** 
-*   Initialize random seed
-*/ 
+    /*
+    * Initialize random seed
+    */
     seed_init();
 
-/** 
-*  Init: Initialize MASQ DS handles for Alice and Bob
-*/ 
+    /*
+    * Init: Initialize MASQ DS handles for Alice and Bob
+    */
 
     std::cout << "Initialize MASQ DS handle for Alice and Bob...\n";
 
 #ifndef USE_PQRND
-#ifdef USE_DILITHIUM_RANDOM
-    /* Uses Dilithium Default Random Generator */
-    ds_handle_bob = MASQ_DS_init(DEMO_DS_LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
+#ifdef USE_MLDSA_RANDOM
+    /* Uses mldsa Default Random Generator */
+    std::cout <<"with random function inside ml-dsa library\n";
+    ds_handle_bob = MASQ_DS_init(DS_LEVEL5, (MASQ_rand_callback_t)mldsa_rand_cf, (MASQ_rand_seed_callback_t)mldsa_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    ds_handle_bob = MASQ_DS_init(DEMO_DS_LEVEL5, rand_cf, rand_seed_cf, NULL);
+    std::cout <<"with demo provided random function.\n";
+    ds_handle_bob = MASQ_DS_init(DS_LEVEL5, (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen) */
-    ds_handle_bob = MASQ_DS_qeep_init(DEMO_DS_LEVEL5);
-#endif    
+    std::cout <<"with random function from QiSpace QEEP library. Not available with base version.\n";
+    ds_handle_bob = MASQ_DS_qeep_init(DS_LEVEL5);
+#endif
     if(ds_handle_bob == NULL) {
-        std::cout << "MASQ DS Handle init failed.\n";    
-        return -1;    
+        std::cout << "MASQ DS Handle init failed.\n";
+        return -1;
     }
 
 #ifndef USE_PQRND
-#ifdef USE_DILITHIUM_RANDOM
-    /* Uses Dilithium Default Random Generator */
-    ds_handle_alice = MASQ_DS_init(DEMO_DS_LEVEL5, dilithium_rand_cf, dilithium_rand_seed_cf, NULL);
+#ifdef USE_MLDSA_RANDOM
+    /* Uses mldsa Default Random Generator */
+    std::cout <<"with random function inside ml-dsa library\n";
+    ds_handle_alice = MASQ_DS_init(DS_LEVEL5, (MASQ_rand_callback_t)mldsa_rand_cf, (MASQ_rand_seed_callback_t)mldsa_rand_seed_cf, NULL);
 #else
     /* Uses Demo Provided Random Generator */
-    ds_handle_alice = MASQ_DS_init(DEMO_DS_LEVEL5, rand_cf, rand_seed_cf, NULL);
+    std::cout <<"with demo provided random function.\n";
+    ds_handle_alice = MASQ_DS_init(DS_LEVEL5, (MASQ_rand_callback_t)rand_cf, (MASQ_rand_seed_callback_t)rand_seed_cf, NULL);
 #endif
 #else
     /* Uses Quantropi default random generator (i.e. SEQUR NGen) */
-    ds_handle_alice = MASQ_DS_qeep_init(DEMO_DS_LEVEL5);
+    std::cout <<"with random function from QiSpace QEEP library. Not available with base version.\n";
+    ds_handle_alice = MASQ_DS_qeep_init(DS_LEVEL5);
 #endif
     if(ds_handle_alice == NULL) {
-        std::cout << "MASQ DS Handle init failed.\n";    
-        return -1;    
+        std::cout << "MASQ DS Handle init failed.\n";
+        return -1;
     }
     std::cout << "Success!\n";
 
 
-/** 
-*   Set the Seed for random number generator
-*/
+    /*
+    * Set the Seed for random number generator
+    */
     MASQ_DS_seed(ds_handle_bob, seed_orig, seed_len);
     MASQ_DS_seed(ds_handle_alice, seed_orig, seed_len);
 
@@ -177,32 +181,32 @@ int main(int argc, const char * argv[]) {
 
     signature = new uint8_t[len_signature];
    
-/* Generate key pair*/
-    MASQ_DS_keypair(ds_handle_alice, pk_alice, sk_alice);  
+    /* Generate key pair*/
+    MASQ_DS_keypair(ds_handle_alice, pk_alice, sk_alice);
     std::cout << "Success!\n";
 
 
-/* Alice: Uses own private key to sign the message */
+    /* Alice: Uses own private key to sign the message */
     std::cout << "Alice uses own private key to sign the message...\n";
-    MASQ_DS_sign(ds_handle_alice, sk_alice, msg, len_msg, signature, &len_signature);
+    MASQ_DS_sign(ds_handle_alice, sk_alice, msg, len_msg, signature, &len_signature, NULL, 0);
     std::cout << "Success!\n";
 
- /** Send Alice's public key and signature to Bob **/
+    /* Send Alice's public key and signature to Bob. */
     sendPubKey();
 
-/* Bob: Uses Alice's public key and verifies message and signature */
+    /* Bob: Uses Alice's public key and verifies message and signature. */
     std::cout << "Bob uses Alice's public key to verify the message and signature...\n";
-    if(MASQ_DS_verify(ds_handle_bob, pk_alice, msg, len_msg, signature, len_signature) == 0)
+    if(MASQ_DS_verify(ds_handle_bob, pk_alice, msg, len_msg, signature, len_signature, NULL, 0) == 0)
     {
         std::cout << "Signature Verification Passed.\n";
     }
     else {
         std::cout << "Signature not Verified.\n";
     }
- 
-/** 
-*   Free MASQ DS Handle
-*/
+
+    /*
+    * Free MASQ DS Handle
+    */
 #ifndef USE_PQRND
     MASQ_DS_free(ds_handle_alice);
     MASQ_DS_free(ds_handle_bob);

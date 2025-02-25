@@ -35,13 +35,6 @@ unsigned char seed_src[32] =
 #define MSG_LEN 1024
 #define SEED_LEN 32
 
-typedef enum 
-{
-    DEMO_DS_LEVEL1,
-    DEMO_DS_LEVEL3,
-    DEMO_DS_LEVEL5
-} MASQ_DS_DEMO_LEVEL;
-
 typedef struct _randds_handle {
     int seed_length;
     uint8_t seed[SEED_LEN];
@@ -109,7 +102,7 @@ int ds_demo(void)
 
     RAND_HANDLE randds_handle = {0, {0}};
 
-    ds_handle = MASQ_DS_init(DEMO_DS_LEVEL5, randds_cf, randds_seed_cf, (struct MASQ_RAND_HANDLE_ *)&randds_handle);
+    ds_handle = MASQ_DS_init(DS_LEVEL5, randds_cf, randds_seed_cf, (struct MASQ_RAND_HANDLE_ *)&randds_handle);
     if (ds_handle == NULL) {
         goto bail;
     }
@@ -142,7 +135,7 @@ int ds_demo(void)
     dump_hex(sk, len_sk);
 
     PRINTF("\n\rLength of message: %d ", MSG_LEN);
-    ret2 = MASQ_DS_sign(ds_handle, sk, msg, MSG_LEN, sign_msg, &len_sign);
+    ret2 = MASQ_DS_sign(ds_handle, sk, msg, MSG_LEN, sign_msg, &len_sign, NULL, 0);
     PRINTF("sign time: %d - %d = %d(ms) \r\n", tickend, tickstart, tickend-tickstart);
     if(ret2 != 0) {
         PRINTF("\nMASQ DS Demo: Signature not generated.\n\r");
@@ -157,7 +150,7 @@ int ds_demo(void)
     PRINTF("Signature (len_sign %d): ", len_sign);
     dump_hex(sign_msg, len_sign);
 
-    ret3 = MASQ_DS_verify(ds_handle, pk, msg, MSG_LEN, sign_msg, len_sign);
+    ret3 = MASQ_DS_verify(ds_handle, pk, msg, MSG_LEN, sign_msg, len_sign, NULL, 0);
     if(ret3 == 0) {
         PRINTF("\nMASQ DS Demo: Passed Signature Verification.\n\r\n\r");
         goto bail;

@@ -311,7 +311,7 @@ void sequr_free(SequrHandle* sequr_handle) {
     if (sequr_handle->q_meta) {
         sequr_handle->q_meta->url.clear();
         sequr_handle->q_meta->token.clear();
-        sequr_handle->q_meta = nullptr;
+        delete sequr_handle->q_meta;
     }
 
     if (sequr_handle->qp_handle) {
@@ -320,7 +320,7 @@ void sequr_free(SequrHandle* sequr_handle) {
     }
 
    // Finally free the sequr_handle
-    sequr_handle = nullptr;
+    delete sequr_handle;
 }
 
 

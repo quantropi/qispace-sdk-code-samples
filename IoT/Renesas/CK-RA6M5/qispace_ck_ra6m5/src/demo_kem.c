@@ -30,13 +30,6 @@
 
 #define SEED_LEN 32
 
-typedef enum 
-{
-    DEMO_KEM_LEVEL1,
-    DEMO_KEM_LEVEL3,
-    DEMO_KEM_LEVEL5
-} MASQ_KEM_DEMO_LEVEL;
-
 typedef struct _rand_handle {
     int seed_length;
     uint8_t seed[SEED_LEN];
@@ -109,7 +102,7 @@ int kem_demo(void)
 
     RAND_HANDLE rand_handle;
 
-    kem_handle = MASQ_KEM_init(DEMO_KEM_LEVEL5, rand_cf, rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&rand_handle);
+    kem_handle = MASQ_KEM_init(KEM_LEVEL5, rand_cf, rand_seed_cf, (struct MASQ_RAND_HANDLE_ *)&rand_handle);
     if (kem_handle == NULL) {
         goto bail;
     }

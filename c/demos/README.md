@@ -22,18 +22,18 @@ MASQ KEM demo is implemented in `src/demo_masq_kem.c` file.
 
 MASQ KEM supports below Key-Exchange algorithms:
 
-`ALG = hppk kyber`
+`ALG = hppk mlkem`
 
 The supported Big Number libraries are `BN = qtp gmp`
 
-> Note: Kyber library does not depend on any Big Number library. 
+> Note: ML-KEM library does not depend on any Big Number library.
 
 - Initialize MASQ using one of:
 
   1) QiSpace NGen random callback functions from QiSpace QEEP SDK, or
   2) User-provided random callback functions
 
-    The Defaults used for this demo are `ALG=hppk` for NIST Security level 3, using `BN=qtp` and QiSpace NGen as the Initialization API to generate random numbers.
+    The Defaults used for this demo are `ALG=mlkem` for NIST Security level 3, using random number generator from inside ML-KEM library.
 
 - Generate Keypair using the MASQ KEM API
 - Encrypt & Decrypt the message using MASQ KEM APIs
@@ -45,18 +45,18 @@ MASQ DS demo is implemented in `src/demo_masq_ds.c` file.
 
 MASQ DS supports below Digital Signature algorithms:
 
-`ALG = ghppk hppk dilithium`
+`ALG = ghppk mldsa`
 
 The supported Big Number libraries are `BN = qtp gmp`
 
-> Note: Dilithium library does not depend on any Big Number library.
+> Note: ML-DSA library does not depend on any Big Number library.
 
 - Initialize MASQ using one of:
 
   1) QiSpace NGen random callback functions from QiSpace QEEP SDK, or 
   2) User-provided random callback functions
 
-    The Defaults used for this demo are `ALG=ghppk` for NIST Security level 5, using `BN=qtp` and QiSpace NGen as the Initialization API to generate random numbers.
+    The Defaults used for this demo are `ALG=mldsa` for NIST Security level 5, using the demo provided random function.
 
 - Generate Keypair to sign the message
 - Sign the message

@@ -8,9 +8,11 @@ all: masq_kem masq_ds
 
 masq_kem:
 	make -f make.kem
+	make -f make.kem clean
 
 masq_ds: 
-	make -f make.ds 
+	make -f make.ds
+	make -f make.ds clean
 
 clean:
 	make -f make.kem clean
