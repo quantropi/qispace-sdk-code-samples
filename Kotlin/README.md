@@ -30,24 +30,16 @@ On the landing page, a user can access additional demo pages that illustrate the
     qispace-sdk-code-samples/Kotlin/QiSpace_SDK_Lib
     ├── TODO.md
     └── prebuilt
-        ├── arm64-v8a
-        │   ├── libqeep-android.a
-        │   └── libqeep-android.so
-        ├── armeabi-v7a
-        │   ├── libqeep-android.a
-        │   └── libqeep-android.so
         ├── error.h
+        ├── libqeep-android-clang-arm64-v8a.so
+        ├── libqeep-android-clang-armeabi-v7a.so
+        ├── libqeep-android-clang-x86.so
+        ├── libqeep-android-clang-x86_64.so
         ├── qispace_pqrnd.h
         ├── qispace_qeep.h
-        ├── qispace_sequr.h
-        ├── x86
-        │   ├── libqeep-android.a
-        │   └── libqeep-android.so
-        └── x86_64
-            ├── libqeep-android.a
-            └── libqeep-android.so
+        └── qispace_sequr.h
 
-    6 directories, 13 files
+    2 directories, 9 files
     ```
 4. Open and set up Android Studio with Android API 32 SDK and Pixel 2 API 31 as a device.
     * Note: If any of the files or folders mentioned above are not available, please contact the Quantropi support team.

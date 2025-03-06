@@ -32,7 +32,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/preb
 # define the varaible for the native shared library name
 set(
         QEEP_ANDROID_SO
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/prebuilt/${CMAKE_ANDROID_ARCH_ABI}/libqeep-android.so)
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/prebuilt/libqeep-android-clang-${CMAKE_ANDROID_ARCH_ABI}.so)
 
 # add the shared library into the project to be used and packaged into Android package (APK or AAB)
 add_library(
