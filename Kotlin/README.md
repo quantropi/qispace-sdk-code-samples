@@ -1,8 +1,8 @@
 # QiSpace-SDK-Demo-Kotlin-App
 
-A Kotlin-based Android demo application demonstrating the functionality and usage of QiSpace QEEP and SEQUR APIs. Developed on Android API 32.
+A Kotlin-based Android demo application demonstrating the functionality and usage of QiSpace QEEP and SEQUR APIs. Developed on Android API 35.
 
-Note: The application was developed on an emulated Google Pixel 2 running Android 12 (Pixel 2 API 31). UI elements may differ on devices with different displays. Internet access is required to properly run this app.
+Note: The application was developed on an emulated Google Pixel 9 running Android 15 (API 35). UI elements may differ on devices with different displays. Internet access is required to properly run this app.
 
 ## **Overview**
 - #### SEQUR: Demonstrates the functionality of SEQUR API to decode the Quantum Entropy (or any other QiSpace-retrieved payload) and the QiSpace QE REST API.
@@ -41,7 +41,7 @@ On the landing page, a user can access additional demo pages that illustrate the
 
     2 directories, 9 files
     ```
-4. Open and set up Android Studio with Android API 32 SDK and Pixel 2 API 31 as a device.
+4. Open and set up Android Studio with Android API 35 SDK and Pixel 9 API 35 as a device.
     * Note: If any of the files or folders mentioned above are not available, please contact the Quantropi support team.
 
 ## **Getting Started**
@@ -66,7 +66,7 @@ _Assume the sub_key and token are already established._
 
 ## **Libraries**
 *No installation required*
-- Android API 32
+- Android API 35
 - Android volley
 - org.json
 
