@@ -2,7 +2,7 @@
 # documentation: https://d.android.com/studio/projects/add-native-code.html
 
 # Sets the minimum version of CMake required to build the native library.
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 4.1.1)
 
 # Declares and names the project.
 project("QSCqeeplib")
@@ -31,12 +31,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/preb
 
 # define the varaible for the native shared library name
 set(
-        QEEP_ANDROID_SO
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/prebuilt/libqeep-android-clang-${CMAKE_ANDROID_ARCH_ABI}.so)
+        QEEP_ANDROID_A
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/prebuilt/libqeep-android-clang-${CMAKE_ANDROID_ARCH_ABI}.a)
 
 # add the shared library into the project to be used and packaged into Android package (APK or AAB)
 add_library(
-        qeep-android # it is for libqeep-android.so
+        qeep-android # it is for libqeep-android.a
         SHARED
         IMPORTED)
 
@@ -44,7 +44,7 @@ add_library(
 set_target_properties(
         qeep-android
         PROPERTIES
-        IMPORTED_LOCATION ${QEEP_ANDROID_SO})
+        IMPORTED_LOCATION ${QEEP_ANDROID_A})
 
 # Add the library to this project
 target_link_libraries(
