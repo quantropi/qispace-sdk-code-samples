@@ -24,7 +24,7 @@ import java.util.*
  * Currently, MainActivity is the landing page to navigate to 3 other pages:
  *   a. QueepActivity: handles QEEP operation and related QiSpace API for retrieving QK -> get QK, encrypt and decrypt
  *   b. SequrActivity: handles SEQUR operations and related Qispace API for retrieving QE -> setup subkey, get QE and get random numbers
- *   c. MasqActivity: MASQ API currently unsupported. Coming soon...
+ *   c. MasqActivity: handles MASQ KEM and DS APIs
  */
 
 class MainActivity : AppCompatActivity() {
@@ -64,10 +64,17 @@ class MainActivity : AppCompatActivity() {
             startActivity(toQeep)
         }
 
-        // BUTTON: Sends user to MASQ demo page
-        findViewById<Button>(R.id.button_to_masq).setOnClickListener{
-            val toMasq = Intent(this, masqActivity::class.java)
-            startActivity(toMasq)
+        // BUTTON: Sends user to MASQ-KEM demo page
+        findViewById<Button>(R.id.button_to_masq_kem).setOnClickListener{
+            val toMasqKem = Intent(this, masqKemActivity::class.java)
+            startActivity(toMasqKem)
         }
+
+        // BUTTON: Sends user to MASQ-DS demo page
+        findViewById<Button>(R.id.button_to_masq_ds).setOnClickListener{
+            val toMasqDs = Intent(this, masqDsActivity::class.java)
+            startActivity(toMasqDs)
+        }
+
     }
 }

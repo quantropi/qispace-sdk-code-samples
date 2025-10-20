@@ -4,9 +4,8 @@ plugins {
 }
 
 android {
-    compileSdkVersion "android-35"
-
     defaultConfig {
+        compileSdkVersion "android-35"
         applicationId "com.example.demoqispaceapp"
         minSdkVersion 35
         targetSdkVersion 35

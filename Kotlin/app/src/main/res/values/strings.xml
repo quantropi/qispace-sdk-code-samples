@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DemoQeepApp</string>
+    <string name="app_name">QiSpace SDK Demo App</string>
     <string name="decoded_message_text">Decoded message:</string>
     <string name="other">Other</string>
 </resources>
