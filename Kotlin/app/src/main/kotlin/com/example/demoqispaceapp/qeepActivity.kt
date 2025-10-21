@@ -32,7 +32,7 @@ import java.util.*
  * - An enterprise device token which will be used for QK retrieval from QiSpace Enterprise REST API
  * - A subkey intended for SEQUR decoding the QK after its retrieval. Realistically, subkey would be initialized on device setup
  *
- * **Ideally, setting up the subkey from SequrActivity must be done before getting QK as QK decryption requires subkey to be initialized
+ * **Ideally, setting up the subkey from sequrActivity must be done before getting QK as QK decryption requires subkey to be initialized
  * **Normally, it is initialized on device setup
  *
  * Logical Flow:
