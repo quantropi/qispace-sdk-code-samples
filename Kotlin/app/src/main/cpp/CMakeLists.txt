@@ -29,14 +29,14 @@ target_link_libraries( # Specifies the target library.
                        # included in the NDK.
                        ${log-lib} )
 
-# include the header path for search header files (here it is for 'qsc.h')
+# include the header path for search header files
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/qeep/lib/
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/ds/lib_ghppk/
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/kem/lib_hppk/
 )
 
-# define the variable for the native shared library name
+# define the variable for the native library name
 set(
         QEEP_ANDROID_A
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../QiSpace_SDK_Lib/qeep/lib/libqeep-android-clang-${CMAKE_ANDROID_ARCH_ABI}.a)
@@ -56,8 +56,8 @@ set(
 
 # add the shared library into the project to be used and packaged into Android package (APK or AAB)
 add_library(
-        qeep-android # it is for libqeep-android.a
-        SHARED
+        qeep-android
+        STATIC
         IMPORTED)
 add_library(
         masq-bn-android

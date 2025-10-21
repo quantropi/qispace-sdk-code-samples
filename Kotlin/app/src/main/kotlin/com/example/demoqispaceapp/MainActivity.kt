@@ -22,9 +22,10 @@ import java.util.*
 
 /**
  * Currently, MainActivity is the landing page to navigate to 3 other pages:
- *   a. QueepActivity: handles QEEP operation and related QiSpace API for retrieving QK -> get QK, encrypt and decrypt
- *   b. SequrActivity: handles SEQUR operations and related Qispace API for retrieving QE -> setup subkey, get QE and get random numbers
- *   c. MasqActivity: handles MASQ KEM and DS APIs
+ *   a. qeepActivity: handles QEEP operation and related QiSpace API for retrieving QK -> get QK, encrypt and decrypt
+ *   b. sequrActivity: handles SEQUR operations and related Qispace API for retrieving QE -> setup subkey, get QE and get random numbers
+ *   c. masqKemActivity: handles MASQ KEM operations -> generate keypair, encaps, decaps
+ *   d. masqDsActivity: handles MASQ DS operations -> generate keypair, sign the message, verify the message
  */
 
 class MainActivity : AppCompatActivity() {

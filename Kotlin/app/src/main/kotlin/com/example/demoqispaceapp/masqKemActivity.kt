@@ -18,6 +18,18 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 
+/**
+ * This page demonstrates a use of the MASQ KEM API to encrypt and decrypt a shared secret between Alice and Bob.
+ * Additionally, Charles attempts to capture the ciphertext and decapsulate it but fails.
+ *
+ * Logical Flow:
+ * 1. Select the NIST security level you want to run the demo.
+ * 2. Press 'Alice KEYPAIR' to generate keypair for Alice. It first initialized KEMs for Alice, Bob and Charles and also generated keypair for Charles.
+ * 3. Press 'Bob ENCAPS' to let Bob encapsulate a shared secret using Alice's public key.
+ * 4. Press 'Alice DECAPS' to let Alice decapsulate the ciphertext shared by Bob using her private key.
+ * 5. Press 'Charles ATTEMPTS TO DECAPS' to let Charles decapsulate Bob's ciphertext using his own private key.
+ */
+
 class masqKemActivity : Activity() {
     private lateinit var sdk_demo_msg: TextView
     private lateinit var step1_msg: TextView
@@ -109,10 +121,8 @@ class masqKemActivity : Activity() {
 
 
     private fun initializeKEM(algoLevel: Int) {
-
         Log.d("DEMO - MASQ_KEM", "[INIT] ---------------------------------------------------------------------------------------")
         try {
-
             // Initialize with Algo level for Alice, Bob and Charles
             aliceKemHandle = masqKem.masqKemQeepInit(algoLevel)
             bobKemHandle = masqKem.masqKemQeepInit(algoLevel)
@@ -124,14 +134,13 @@ class masqKemActivity : Activity() {
                 Log.d("DEMO - MASQ_KEM", "[INIT] Charles' API return code: ${charlesKemHandle}")
             } else {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Failed to initialize Alice's, Bob's, and Charles' KEM!"
+                sdk_demo_msg.statusMessage = "Failed to initialize Alice's, Bob's, and Charles' KEM handles!"
                 Log.e("DEMO - MASQ_KEM", "[INIT] API return code [Alive|Bob|Charles]: [${aliceKemHandle}|${bobKemHandle}|${charlesKemHandle}]")
                 cleanupKEM()
             }
-
         } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
-            sdk_demo_msg.statusMessage = "Exception error occurred while initializing Alice's, Bob's, and Charles' KEM!"
+            sdk_demo_msg.statusMessage = "Exception error occurred while initializing Alice's, Bob's, and Charles' KEM handles!"
             Log.e("DEMO - MASQ_KEM", "[INIT] Exception error: <${e.message}>")
             e.printStackTrace()
             cleanupKEM()
@@ -154,10 +163,7 @@ class masqKemActivity : Activity() {
             val charlesSeed = charlesSeedString.toByteArray()
             val charlesSeedResult = masqKem.masqKemSeed(charlesKemHandle, charlesSeed, charlesSeed.size)
 
-            if (aliceSeedResult == 0 && bobSeedResult == 0 && charlesSeedResult == 0) { // MASQ_KEM_SUCCESS = 0
-                //sdk_demo_msg.setTextColor(Color.GREEN)
-                //sdk_demo_msg.statusMessage = "Alice's, Bob's, and Charles' KEMs were successfully initialized (and seeded)."
-
+            if (aliceSeedResult == 0 && bobSeedResult == 0 && charlesSeedResult == 0) {
                 Log.d("DEMO - MASQ_KEM", "[SEED] Alice's API return code: ${aliceSeedResult}")
                 Log.d("DEMO - MASQ_KEM", "[SEED] Alice's seed len: ${aliceSeed.size}")
                 Log.d("DEMO - MASQ_KEM", "[SEED] Alice's seed used (str): ${aliceSeedString}")
@@ -172,16 +178,14 @@ class masqKemActivity : Activity() {
                 Log.d("DEMO - MASQ_KEM", "[SEED] Charles' seed len: ${charlesSeed.size}")
                 Log.d("DEMO - MASQ_KEM", "[SEED] Charles' seed used (str): ${charlesSeedString}")
                 Log.d("DEMO - MASQ_KEM", "[SEED] Charles' seed used (hex): ${byteArrayToString(charlesSeed)}")
-
             } else {
                 sdk_demo_msg.setTextColor(Color.RED)
                 sdk_demo_msg.statusMessage = "Alice’s, Bob's, and Charles' seeding operation failed!"
                 Log.e("DEMO - MASQ_KEM", "[SEED] API return code for [Alice|Bob|Charles]: [${aliceSeedResult}|${bobSeedResult}|${charlesSeedResult}]")
             }
-
         } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
-            sdk_demo_msg.statusMessage = "Exception error occurred while initializing Alice's, Bob's, and Charles' KEM!"
+            sdk_demo_msg.statusMessage = "Exception error occurred while initializing Alice's, Bob's, and Charles' KEM seed operation!"
             Log.e("DEMO - MASQ_KEM", "[SEED] Exception error: <${e.message}>")
             e.printStackTrace()
             cleanupKEM()
@@ -190,12 +194,10 @@ class masqKemActivity : Activity() {
 
 
     private fun charlesGenKeypair() {
-
          try {
-            
             if (charlesKemHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Charles' KEM is not initialized!"
+                sdk_demo_msg.statusMessage = "Charles' KEM handle is not initialized!"
                 return
             }
 
@@ -207,10 +209,7 @@ class masqKemActivity : Activity() {
             charlesSk = ByteArray(secretKeyLengthCharles)
 
             val resultCharles = masqKem.masqKemKeypair(charlesKemHandle, charlesPk!!, charlesSk!!)
-
-            if (resultCharles == 0) { // MASQ_KEM_SUCCESS
-                //sdk_demo_msg.setTextColor(Color.GREEN)
-                //sdk_demo_msg.statusMessage = "Charles' keypair generated successfully."
+            if (resultCharles == 0) {
                 Log.d("DEMO - MASQ_KEM", "[KEYPAIR] Charles' API return code: ${resultCharles}")
                 Log.d("DEMO - MASQ_KEM", "[KEYPAIR] Charles' pkLen: ${publicKeyLengthCharles}")
                 Log.d("DEMO - MASQ_KEM", "[KEYPAIR] Charles' skLen: ${secretKeyLengthCharles}")
@@ -222,8 +221,7 @@ class masqKemActivity : Activity() {
                 Log.e("DEMO - MASQ_KEM", "[KEYPAIR] API return code: $resultCharles")
                 Log.e("DEMO - MASQ_KEM", "[KEYPAIR] Keypair generation failed.")
             }
-
-        } catch (e: Exception) {       
+        } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
             sdk_demo_msg.statusMessage = "An exception occurred while generating the keypair!"
             Log.e("DEMO - MASQ_KEM", "[KEYPAIR] Exception error: <${e.message}>")
@@ -237,12 +235,12 @@ class masqKemActivity : Activity() {
         try {
             if (aliceKemHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Alice's KEM is not initialized!"
+                sdk_demo_msg.statusMessage = "Alice's KEM handle is not initialized!"
                 return
             }
 
             Log.d("DEMO - MASQ_KEM", "[KEYPAIR] -----------------------------------------------------------------------------------")
-    
+
             //if any, clean-up previous demo run
             listOf(step1_msg, step2_msg, step3_msg, step4_msg).forEach { it.text = "" }
             bobSharedSecretKey = byteArrayOf(); ct = byteArrayOf()
@@ -253,8 +251,7 @@ class masqKemActivity : Activity() {
             aliceSk = ByteArray(skLen)
 
             val result = masqKem.masqKemKeypair(aliceKemHandle, alicePk!!, aliceSk!!)
-
-            if (result == 0 ) { // MASQ_KEM_SUCCESS
+            if (result == 0 ) {
                 step1_msg.text = "pk: ${byteArrayToString(alicePk!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}  |  sk: ${byteArrayToString(aliceSk!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}"
                 sdk_demo_msg.setTextColor(Color.GREEN)
                 sdk_demo_msg.statusMessage = "Alice successfully generated her public-private key pair. She will share her public key with Bob."
@@ -269,8 +266,7 @@ class masqKemActivity : Activity() {
                 Log.e("DEMO - MASQ_KEM", "[KEYPAIR] API return code: $result")
                 Log.e("DEMO - MASQ_KEM", "[KEYPAIR] Keypair generation failed.")
             }
-
-        } catch (e: Exception) {       
+        } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
             sdk_demo_msg.statusMessage = "An exception occurred while generating the keypair!"
             Log.e("DEMO - MASQ_KEM", "[KEYPAIR] Exception error: <${e.message}>")
@@ -282,7 +278,7 @@ class masqKemActivity : Activity() {
         try {
             if (bobKemHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Bob's KEM is not initialized!"
+                sdk_demo_msg.statusMessage = "Bob's KEM hanlde is not initialized!"
                 return
             }
 
@@ -304,9 +300,8 @@ class masqKemActivity : Activity() {
             bobSharedSecretKey = ByteArray(sskLen) // { Random.nextInt(0, 256).toByte() }
 
             val result = masqKem.masqKemEncaps(bobKemHandle, alicePk!!, bobSharedSecretKey, ct)
-
-            if (result == 0) { // MASQ_KEM_SUCCESS
-                step2_msg.text = "Shared secret key (ssk): ${base64Encode(bobSharedSecretKey).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}\nEncapsulated ssk (ciphertext): ${base64Encode(
+            if (result == 0) {
+                step2_msg.text = "Shared secret (ss): ${base64Encode(bobSharedSecretKey).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}\n Ciphertext: ${base64Encode(
                     ct
                 ).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}"
                 sdk_demo_msg.setTextColor(Color.GREEN)
@@ -315,7 +310,7 @@ class masqKemActivity : Activity() {
                 Log.d("DEMO - MASQ_KEM", "[ENCAPS] Bob's ctLen: $ctLen")
                 Log.d("DEMO - MASQ_KEM", "[ENCAPS] Bob's sskLen: $sskLen")
                 Log.d("DEMO - MASQ_KEM", "[ENCAPS] Bob's ct: ${base64Encode(ct)}")
-                Log.d("DEMO - MASQ_KEM", "[ENCAPS] Bob's shared secret key: ${base64Encode(bobSharedSecretKey)}")
+                Log.d("DEMO - MASQ_KEM", "[ENCAPS] Bob's shared secret: ${base64Encode(bobSharedSecretKey)}")
             } else {
                 sdk_demo_msg.setTextColor(Color.RED)
                 sdk_demo_msg.statusMessage = "Encapsulation of the shared secret failed!"
@@ -334,7 +329,7 @@ class masqKemActivity : Activity() {
         try {
             if (aliceKemHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Alice's KEM is not initialized!"
+                sdk_demo_msg.statusMessage = "Alice's KEM handle is not initialized!"
                 return
             }
 
@@ -359,30 +354,27 @@ class masqKemActivity : Activity() {
             val aliceSharedSecretKey = ByteArray(sskLen)
 
             val result = masqKem.masqKemDecaps(aliceKemHandle, aliceSk!!, ct, aliceSharedSecretKey)
-
-            if (result == 0) { // MASQ_KEM_SUCCESS
-
+            if (result == 0) {
                 sdk_demo_msg.setTextColor(Color.GREEN)
                 sdk_demo_msg.statusMessage = "Alice successfully decapsulated Bob's ciphertext."
 
-                //step3_msg.text = "Alice's obtained shared secret key: ${base64Encode(aliceSharedSecretKey!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}"
-                step3_msg.text = base64Encode(aliceSharedSecretKey).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }.let { sharedKey -> SpannableStringBuilder("Alice's obtained shared secret key: $sharedKey").apply { setSpan(ForegroundColorSpan(Color.GREEN), indexOf(sharedKey), indexOf(sharedKey) + sharedKey.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) } }
+                step3_msg.text = base64Encode(aliceSharedSecretKey).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }.let { sharedKey -> SpannableStringBuilder("Alice's obtained shared secret: $sharedKey").apply { setSpan(ForegroundColorSpan(Color.GREEN), indexOf(sharedKey), indexOf(sharedKey) + sharedKey.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) } }
                 step2_msg.text = base64Encode(bobSharedSecretKey).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }.let { ssk -> base64Encode(
                     ct
-                ).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }.let { ctStr -> SpannableStringBuilder("Shared secret key (ssk): $ssk\nEncapsulated ssk (ciphertext): $ctStr").apply { setSpan(ForegroundColorSpan(Color.GREEN), indexOf(ssk), indexOf(ssk) + ssk.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) } } }
+                ).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }.let { ctStr -> SpannableStringBuilder("Shared secret (ssk): $ssk\n Ciphertext: $ctStr").apply { setSpan(ForegroundColorSpan(Color.GREEN), indexOf(ssk), indexOf(ssk) + ssk.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) } } }
 
 
                 Log.d("DEMO - MASQ_KEM", "[DECAPS] Alice's API return code: $result")
                 Log.d("DEMO - MASQ_KEM", "[DECAPS] Bob's ct: ${base64Encode(ct)}")
                 Log.d("DEMO - MASQ_KEM", "[DECAPS] Alice's sskLen: $sskLen")
                 Log.d("DEMO - MASQ_KEM", "[DECAPS] Alice's sk: ${byteArrayToString(aliceSk!!)}")
-                Log.d("DEMO - MASQ_KEM", "[DECAPS] Alice's shared secret key: ${base64Encode(aliceSharedSecretKey)}")
+                Log.d("DEMO - MASQ_KEM", "[DECAPS] Alice's shared secret: ${base64Encode(aliceSharedSecretKey)}")
 
                 // Verify that both parties have the same shared secret.
                 val secretsMatch = aliceSharedSecretKey.contentEquals(bobSharedSecretKey)
                 if (secretsMatch) {
                     sdk_demo_msg.setTextColor(Color.GREEN)
-                    sdk_demo_msg.statusMessage = "Alice successfully decapsulated Bob's ciphertext.\nNow, Alice and Bob share the same secret key!"
+                    sdk_demo_msg.statusMessage = "Alice successfully decapsulated Bob's ciphertext.\nNow, Alice and Bob share the same secret!"
                 } else {
                     sdk_demo_msg.setTextColor(Color.RED)
                     sdk_demo_msg.statusMessage = "Error! Shared secrets are not identical."
@@ -405,7 +397,7 @@ class masqKemActivity : Activity() {
         try {
             if (charlesKemHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Charles' KEM is not initialized!"
+                sdk_demo_msg.statusMessage = "Charles' KEM handle is not initialized!"
                 return
             }
 
@@ -429,29 +421,26 @@ class masqKemActivity : Activity() {
             val result = masqKem.masqKemDecaps(charlesKemHandle, charlesSk!!,
                 ct, charlesSharedSecretKey)
 
-            if (result == 0) { // MASQ_KEM_SUCCESS
-
+            if (result == 0) {
                 sdk_demo_msg.setTextColor(Color.GREEN)
                 sdk_demo_msg.statusMessage = "Charles successfully decapsulated Bob's ciphertext."
 
-                //step4_msg.text = "Charles' obtained shared secret key: ${base64Encode(charlesSharedSecretKey!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}"
-                step4_msg.text = base64Encode(charlesSharedSecretKey).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }.let { sharedKey -> SpannableStringBuilder("Charles' obtained shared secret key: $sharedKey").apply { setSpan(ForegroundColorSpan(Color.RED), indexOf(sharedKey), indexOf(sharedKey) + sharedKey.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) } }
-
+                step4_msg.text = base64Encode(charlesSharedSecretKey).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }.let { sharedKey -> SpannableStringBuilder("Charles' obtained shared secret: $sharedKey").apply { setSpan(ForegroundColorSpan(Color.RED), indexOf(sharedKey), indexOf(sharedKey) + sharedKey.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) } }
 
                 Log.d("DEMO - MASQ_KEM", "[DECAPS] Charles' API return code: $result")
                 Log.d("DEMO - MASQ_KEM", "[DECAPS] Bob's ct: ${base64Encode(ct)}")
                 Log.d("DEMO - MASQ_KEM", "[DECAPS] Charles' sskLen: $sskLen")
                 Log.d("DEMO - MASQ_KEM", "[DECAPS] Charles' sk: ${byteArrayToString(charlesSk!!)}")
-                Log.d("DEMO - MASQ_KEM", "[DECAPS] Charles' shared secret key: ${base64Encode(charlesSharedSecretKey)}")
+                Log.d("DEMO - MASQ_KEM", "[DECAPS] Charles' shared secret: ${base64Encode(charlesSharedSecretKey)}")
 
                 // Verify that both parties have the same shared secret.
                 val secretsMatch = charlesSharedSecretKey.contentEquals(bobSharedSecretKey)
                 if (secretsMatch) {
                     sdk_demo_msg.setTextColor(Color.RED)
-                    sdk_demo_msg.statusMessage = "Charles successfully decapsulated Bob's ciphertext — this shouldn't happen!\nCharles and Bob share the same secret key."
+                    sdk_demo_msg.statusMessage = "Charles successfully decapsulated Bob's ciphertext — this shouldn't happen!\nCharles and Bob share the same secret."
                 } else {
                     sdk_demo_msg.setTextColor(Color.parseColor("#FFA500"))
-                    sdk_demo_msg.statusMessage = "Shared secret key exchange failed  — this is expected!\nCharles and Bob do not share the same key!"
+                    sdk_demo_msg.statusMessage = "Shared secret exchange failed  — this is expected!\nCharles and Bob do not share the same secret!"
                 }
             } else {
                 sdk_demo_msg.setTextColor(Color.RED)
@@ -468,14 +457,13 @@ class masqKemActivity : Activity() {
     }
 
 
-
     private fun cleanupKEM() {
         if (aliceKemHandle != 0L) {
             try {
                 masqKem.masqKemQeepFree(aliceKemHandle)
                 aliceKemHandle = 0L
             } catch (e: Exception) {
-                Log.e("DEMO - MASQ_KEM", "Error freeing Alice's kem_handle: ${e.message}")
+                Log.e("DEMO - MASQ_KEM", "Error freeing Alice's kem handle: ${e.message}")
             }
         }
 
@@ -484,10 +472,20 @@ class masqKemActivity : Activity() {
                 masqKem.masqKemQeepFree(bobKemHandle)
                 bobKemHandle = 0L
             } catch (e: Exception) {
-                Log.e("DEMO - MASQ_KEM", "Error freeing Bob's kem_handle: ${e.message}")
+                Log.e("DEMO - MASQ_KEM", "Error freeing Bob's kem handle: ${e.message}")
+            }
+        }
+
+        if (charlesKemHandle != 0L) {
+            try {
+                masqKem.masqKemQeepFree(charlesKemHandle)
+                charlesKemHandle = 0L
+            } catch (e: Exception) {
+                Log.e("DEMO - MASQ_KEM", "Error freeing Charles's kem handle: ${e.message}")
             }
         }
     }
+
 
     private fun base64Encode(data: ByteArray): String {
         return Base64.getEncoder().encodeToString(data)

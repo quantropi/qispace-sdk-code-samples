@@ -18,6 +18,18 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 
+/**
+ * This page demonstrates a use of the MASQ DS API to sign and verify a message between Alice and Bob.
+ * Additionally, Charles attempts to verify the message and signature but fails.
+ *
+ * Logical Flow:
+ * 1. Select the NIST security level you want to run the demo.
+ * 2. Press 'Alice KEYPAIR' to generate keypair for Alice. It first initialized KEMs for Alice, Bob and Charles and also generated keypair for Charles.
+ * 3. Press 'Alice SIGN' to let Alice sign a message with her private key.
+ * 4. Press 'Bob VERIFY' to let Bob verify the authenticity of the message and signature using Alice’s public key.
+ * 5. Press 'Charles ATTEMPTS TO VERIFY' to let Charles attempt to verify the authenticity of the message and its signature using his public key.
+**/
+
 class masqDsActivity : Activity() {
     private lateinit var sdk_demo_msg: TextView
     private lateinit var step1_msg: TextView
@@ -126,13 +138,13 @@ class masqDsActivity : Activity() {
                 Log.d("DEMO - MASQ_DS", "[INIT] Charles' API return code: ${charlesDsHandle}")
             } else {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Failed to initialize Alice's, Bob's, and Charles' DS!"
+                sdk_demo_msg.statusMessage = "Failed to initialize Alice's, Bob's, and Charles' DS handles!"
                 Log.e("DEMO - MASQ_DS", "[INIT] API return code [Alive|Bob|Charles]: [${aliceDsHandle}|${bobDsHandle}|${charlesDsHandle}]")
                 cleanupDS()
             }
         } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
-            sdk_demo_msg.statusMessage = "Exception error occurred while initializing Alice's, Bob's, and Charles' DS!"
+            sdk_demo_msg.statusMessage = "Exception error occurred while initializing Alice's, Bob's, and Charles' DS handles!"
             Log.e("DEMO - MASQ_DS", "[INIT] Exception error: <${e.message}>")
             e.printStackTrace()
             cleanupDS()
@@ -155,10 +167,7 @@ class masqDsActivity : Activity() {
             val charlesSeed = charlesSeedString.toByteArray()
             val charlesSeedResult = masqDs.masqDsSeed(charlesDsHandle, charlesSeed, charlesSeed.size)
 
-            if (aliceSeedResult == 0 && bobSeedResult == 0 && charlesSeedResult == 0) { // MASQ_DS_SUCCESS = 0
-                //sdk_demo_msg.setTextColor(Color.GREEN)
-                //sdk_demo_msg.statusMessage = "Alice's, Bob's, and Charles' DSs were successfully initialized (and seeded)."
-
+            if (aliceSeedResult == 0 && bobSeedResult == 0 && charlesSeedResult == 0) {
                 Log.d("DEMO - MASQ_DS", "[SEED] Alice's API return code: ${aliceSeedResult}")
                 Log.d("DEMO - MASQ_DS", "[SEED] Alice's seed len: ${aliceSeed.size}")
                 Log.d("DEMO - MASQ_DS", "[SEED] Alice's seed used (str): ${aliceSeedString}")
@@ -173,7 +182,6 @@ class masqDsActivity : Activity() {
                 Log.d("DEMO - MASQ_DS", "[SEED] Charles' seed len: ${charlesSeed.size}")
                 Log.d("DEMO - MASQ_DS", "[SEED] Charles' seed used (str): ${charlesSeedString}")
                 Log.d("DEMO - MASQ_DS", "[SEED] Charles' seed used (hex): ${byteArrayToString(charlesSeed)}")
-
             } else {
                 sdk_demo_msg.setTextColor(Color.RED)
                 sdk_demo_msg.statusMessage = "Alice’s, Bob's, and Charles' seeding operation failed!"
@@ -181,7 +189,7 @@ class masqDsActivity : Activity() {
             }
         } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
-            sdk_demo_msg.statusMessage = "Exception error occurred while initializing Alice's, Bob's, and Charles' DS!"
+            sdk_demo_msg.statusMessage = "Exception error occurred while initializing Alice's, Bob's, and Charles' DS seed operation!"
             Log.e("DEMO - MASQ_DS", "[SEED] Exception error: <${e.message}>")
             e.printStackTrace()
             cleanupDS()
@@ -193,7 +201,7 @@ class masqDsActivity : Activity() {
         try {
             if (charlesDsHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Charles' DS is not initialized!"
+                sdk_demo_msg.statusMessage = "Charles' DS handle is not initialized!"
                 return
             }
 
@@ -206,10 +214,7 @@ class masqDsActivity : Activity() {
             charlesSk = ByteArray(secretKeyLengthCharles)
 
             val resultCharles = masqDs.masqDsKeypair(charlesDsHandle, charlesPk!!, charlesSk!!)
-
-            if (resultCharles == 0) { // MASQ_DS_SUCCESS
-                //sdk_demo_msg.setTextColor(Color.GREEN)
-                //sdk_demo_msg.statusMessage = "Charles' keypair generated successfully."
+            if (resultCharles == 0) {
                 Log.d("DEMO - MASQ_DS", "[KEYPAIR] Charles' API return code: ${resultCharles}")
                 Log.d("DEMO - MASQ_DS", "[KEYPAIR] Charles' pkLen: ${publicKeyLengthCharles}")
                 Log.d("DEMO - MASQ_DS", "[KEYPAIR] Charles' skLen: ${secretKeyLengthCharles}")
@@ -221,7 +226,6 @@ class masqDsActivity : Activity() {
                 Log.e("DEMO - MASQ_DS", "[KEYPAIR] API return code: $resultCharles")
                 Log.e("DEMO - MASQ_DS", "[KEYPAIR] Keypair generation failed.")
             }
-
         } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
             sdk_demo_msg.statusMessage = "An exception occurred while generating the keypair!"
@@ -236,7 +240,7 @@ class masqDsActivity : Activity() {
         try {
             if (aliceDsHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Alice's DS is not initialized!"
+                sdk_demo_msg.statusMessage = "Alice's DS handle is not initialized!"
                 return
             }
 
@@ -253,7 +257,7 @@ class masqDsActivity : Activity() {
 
             val result = masqDs.masqDsKeypair(aliceDsHandle, alicePk!!, aliceSk!!)
 
-            if (result == 0 ) { // MASQ_DS_SUCCESS
+            if (result == 0 ) {
                 step1_msg.text = "pk: ${byteArrayToString(alicePk!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}  |  sk: ${byteArrayToString(aliceSk!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}"
                 sdk_demo_msg.setTextColor(Color.GREEN)
                 sdk_demo_msg.statusMessage = "Alice successfully generated her public-private key pair. She is set to sign her message now."
@@ -268,7 +272,6 @@ class masqDsActivity : Activity() {
                 Log.e("DEMO - MASQ_DS", "[KEYPAIR] API return code: $result")
                 Log.e("DEMO - MASQ_DS", "[KEYPAIR] Keypair generation failed.")
             }
-
         } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
             sdk_demo_msg.statusMessage = "An exception occurred while generating the keypair!"
@@ -281,7 +284,7 @@ class masqDsActivity : Activity() {
         try {
             if (aliceDsHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Bob's DS is not initialized!"
+                sdk_demo_msg.statusMessage = "Bob's DS handle is not initialized!"
                 return
             }
 
@@ -299,12 +302,10 @@ class masqDsActivity : Activity() {
             val signLengthAlice = masqDs.masqDsSignatureLength(aliceDsHandle)
             aliceSign = ByteArray(signLengthAlice)
 
-            //var aliceMsgString = "Hello world!"
             aliceMsg = aliceMsgString.toByteArray()
 
             val result = masqDs.masqDsSign(aliceDsHandle, aliceSk!!, aliceMsg!!, aliceMsg!!.size, aliceSign, signLengthAlice)
-
-            if (result == 0) { // MASQ_DS_SUCCESS
+            if (result == 0) {
                 step2_msg.text = "Message: \"${aliceMsgString}\"\nAlice's digital signature: ${base64Encode(
                     aliceSign
                 ).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}"
@@ -334,13 +335,13 @@ class masqDsActivity : Activity() {
         try {
             if (aliceDsHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Alice's DS is not initialized!"
+                sdk_demo_msg.statusMessage = "Alice's DS handle is not initialized!"
                 return
             }
 
             if (bobDsHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Bob's DS is not initialized!"
+                sdk_demo_msg.statusMessage = "Bob's DS handle is not initialized!"
                 return
             }
 
@@ -364,13 +365,10 @@ class masqDsActivity : Activity() {
             val signLengthAlice = masqDs.masqDsSignatureLength(aliceDsHandle)
 
             val result = masqDs.masqDsVerify(bobDsHandle, alicePk!!, aliceMsg!!, aliceMsg!!.size, aliceSign, signLengthAlice )
-
-            if (result == 0) { // MASQ_DS_SUCCESS
-
+            if (result == 0) {
                 sdk_demo_msg.setTextColor(Color.GREEN)
                 sdk_demo_msg.statusMessage = "Bob successfully verifies the digital signature of Alice's message using her public key."
 
-                //step3_msg.text = "Alice's msg: \"${aliceMsgString}\"\nAlice's digital signature: ${base64Encode(aliceSign).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}\nAlice's public key: ${byteArrayToString(alicePk!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}\nSDK API call return code: ${result}"
                 step3_msg.text = SpannableStringBuilder(
                     "Alice's msg: \"$aliceMsgString\"\nAlice's digital signature: ${
                         base64Encode(aliceSign).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }
@@ -378,13 +376,11 @@ class masqDsActivity : Activity() {
                         byteArrayToString(alicePk!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }
                     }")
 
-
                 Log.d("DEMO - MASQ_DS", "[VER] Bob's API return code: ${result}")
                 Log.d("DEMO - MASQ_DS", "[VER] Alice's msgLen: ${aliceMsg!!.size}")
                 Log.d("DEMO - MASQ_DS", "[VER] Alice's msg: ${byteArrayToString(aliceMsg!!)}")
                 Log.d("DEMO - MASQ_DS", "[VER] Alice's signLen: $signLengthAlice")
                 Log.d("DEMO - MASQ_DS", "[VER] Alice's signature: ${base64Encode(aliceSign)}")
-
             } else {
                 sdk_demo_msg.setTextColor(Color.RED)
                 sdk_demo_msg.statusMessage = "Verification of the signed message failed!"
@@ -403,7 +399,7 @@ class masqDsActivity : Activity() {
         try {
             if (charlesDsHandle == 0L) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Charles' DS is not initialized!"
+                sdk_demo_msg.statusMessage = "Charles' DS handle is not initialized!"
                 return
             }
 
@@ -428,13 +424,11 @@ class masqDsActivity : Activity() {
 
             val result = masqDs.masqDsVerify(charlesDsHandle, charlesPk!!, aliceMsg!!, aliceMsg!!.size, aliceSign, signLengthAlice )
 
-            //step4_msg.text = "Charles' public key: ${byteArrayToString(charlesPk!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}\nSDK API call return code: ${result}"
             step4_msg.text = SpannableStringBuilder("Charles' public key: ${byteArrayToString(charlesPk!!).let { if (it.length <= 12) it else it.take(5) + "..." + it.takeLast(5) }}")
 
-            if (result == 0) { // MASQ_DS_SUCCESS
-
+            if (result == 0) {
                 sdk_demo_msg.setTextColor(Color.RED)
-                sdk_demo_msg.statusMessage = "Charles was able to verify Alice's message's digital signature using his public key — this shouldn't happen!"
+                sdk_demo_msg.statusMessage = "Charles was able to verify Alice's message & digital signature using his public key — this shouldn't happen!"
 
                 Log.d("DEMO - MASQ_DS", "[VER] Charles' API return code: ${result}")
                 Log.d("DEMO - MASQ_DS", "[VER] Alice's msgLen: ${aliceMsg!!.size}")
@@ -444,9 +438,9 @@ class masqDsActivity : Activity() {
 
             } else {
                 sdk_demo_msg.setTextColor(Color.parseColor("#FFA500"))
-                sdk_demo_msg.statusMessage = "Charles's verification of the message's digital signature failed — this is expected!"
+                sdk_demo_msg.statusMessage = "Charles's verification of the message & digital signature failed — this is expected!"
                 Log.e("DEMO - MASQ_DS", "[VER] API return code: $result")
-                Log.e("DEMO - MASQ_DS", "[VER] Charles's verification of the message's digital signature failed — this is expected!")
+                Log.e("DEMO - MASQ_DS", "[VER] Charles's verification of the message & digital signature failed — this is expected!")
             }
         } catch (e: Exception) {
             sdk_demo_msg.setTextColor(Color.RED)
@@ -463,7 +457,7 @@ class masqDsActivity : Activity() {
                 masqDs.masqDsQeepFree(aliceDsHandle)
                 aliceDsHandle = 0L
             } catch (e: Exception) {
-                Log.e("DEMO - MASQ_DS", "Error freeing Alice's kem_handle: ${e.message}")
+                Log.e("DEMO - MASQ_DS", "Error freeing Alice's ds handle: ${e.message}")
             }
         }
 
@@ -472,7 +466,16 @@ class masqDsActivity : Activity() {
                 masqDs.masqDsQeepFree(bobDsHandle)
                 bobDsHandle = 0L
             } catch (e: Exception) {
-                Log.e("DEMO - MASQ_DS", "Error freeing Bob's kem_handle: ${e.message}")
+                Log.e("DEMO - MASQ_DS", "Error freeing Bob's ds handle: ${e.message}")
+            }
+        }
+
+        if (charlesDsHandle != 0L) {
+            try {
+                masqDs.masqDsQeepFree(charlesDsHandle)
+                charlesDsHandle = 0L
+            } catch (e: Exception) {
+                Log.e("DEMO - MASQ_DS", "Error freeing Charles's ds handle: ${e.message}")
             }
         }
     }

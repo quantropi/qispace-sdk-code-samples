@@ -23,8 +23,6 @@
 // It maps each function mentioned in sequr.h and qeep.h to a JNI function,
 // which can be called in kotlin code
 
-
-
 // The function name must include the path of the class accessing it
 // Each directory is separated by a "_"
 // There is a "1" in the path because there is a "_" character in the folder name
@@ -39,7 +37,6 @@
 extern "C"
 JNIEXPORT jlong
 JNICALL Java_com_example_demoqispaceapp_qeepKotlinWrapper_QPinit(
-
         JNIEnv* env,
         jobject ) {
     QEEP_RET ret;
@@ -137,6 +134,7 @@ JNIEXPORT jlong JNICALL Java_com_example_demoqispaceapp_sequrKotlinWrapper_QSCin
     if (ret != QEEP_OK)  qsc_handle = 0;
     return (unsigned long)(qsc_handle);
 }
+
 extern "C"
 JNIEXPORT jint JNICALL Java_com_example_demoqispaceapp_sequrKotlinWrapper_QSCqeepKeyLoad(JNIEnv *env, jobject thiz,
                                                              jlong handle, jbyteArray qk,
@@ -147,6 +145,7 @@ JNIEXPORT jint JNICALL Java_com_example_demoqispaceapp_sequrKotlinWrapper_QSCqee
     (*env).ReleaseByteArrayElements(qk, jqk, 0);
     return (int)ret;
 }
+
 extern "C"
 JNIEXPORT jint JNICALL Java_com_example_demoqispaceapp_sequrKotlinWrapper_QSCqeepIvSet(JNIEnv *env, jobject thiz, jlong handle,
                                                            jbyteArray iv, jint iv_len) {
@@ -155,7 +154,7 @@ JNIEXPORT jint JNICALL Java_com_example_demoqispaceapp_sequrKotlinWrapper_QSCqee
     ret = QSC_qeep_iv_set((QSC_Handle)(unsigned long)handle, (uint8_t*)jiv, iv_len);
     return (int)ret;
 }
-//DONE
+
 extern "C"
 JNIEXPORT jint JNICALL Java_com_example_demoqispaceapp_sequrKotlinWrapper_QSCqeepDecode(JNIEnv *env, jobject thiz, jlong handle,
                                                             jbyteArray input, jint in_len,
@@ -169,6 +168,7 @@ JNIEXPORT jint JNICALL Java_com_example_demoqispaceapp_sequrKotlinWrapper_QSCqee
     (*env).ReleaseByteArrayElements(out, jout, 0);
     return (int) ret;
 }
+
 extern "C"
 JNIEXPORT jint JNICALL Java_com_example_demoqispaceapp_sequrKotlinWrapper_QSCclose(JNIEnv *env, jobject thiz, jlong handle) {
     QEEP_RET ret;
@@ -442,8 +442,10 @@ JNICALL Java_com_example_demoqispaceapp_masqKemKotlinWrapper_masqKemQeepFree(
     MASQ_KEM_qeep_free((MASQ_KEM_handle*)handle);
 }
 
-
+//-------------------------------------------------------------------------------------------
+//  Wrapping MASQ DS APIs
 // MASQ DS JNI functions
+
 // MASQ DS QEEP init
 extern "C"
 JNIEXPORT jlong
@@ -451,7 +453,7 @@ JNICALL Java_com_example_demoqispaceapp_masqDsKotlinWrapper_masqDsQeepInit(
         JNIEnv* env,
         jobject /* this */,
         jint algo) {
-    // Dereference the pointer returned by the function
+
     MASQ_DS_handle* handle_ptr;
     switch (algo) {
         case 1: handle_ptr = MASQ_DS_qeep_init(DS_LEVEL1); break;
@@ -460,7 +462,6 @@ JNICALL Java_com_example_demoqispaceapp_masqDsKotlinWrapper_masqDsQeepInit(
         default: handle_ptr = nullptr;
     }
     return (jlong)handle_ptr;
-
 }
 
 // MASQ DS Seed
